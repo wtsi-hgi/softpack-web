@@ -101,6 +101,14 @@ function Hero() {
           >
             Check it out!
           </Button>
+          <Button
+            component={RouterLink}
+            to="/graphql"
+            size="large"
+            variant="contained"
+          >
+            GraphQL Demo
+          </Button>
           <Grid container spacing={3} mt={5}>
             <Grid item md={6}>
               <MuiAvatar>

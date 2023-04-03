@@ -54,23 +54,23 @@ let environments = [
 
 let packages = [
   {
-    name: 'Robert Martin',
+    name: 'Package 1',
     version: "afa51ab0-344d-11e9-a414-719c6709cf3e",
   },
   {
-    name: 'Martin Fowler',
+    name: 'Package 2',
     version: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
   },
   {
-    name: 'Fyodor Dostoevsky',
+    name: 'Package 3',
     version: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
   },
   { 
-    name: 'Joshua Kerievsky',
+    name: 'Package 4',
     version: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
   },
   { 
-    name: 'Sandi Metz',
+    name: 'Package 5',
     version: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
 ]
@@ -94,11 +94,11 @@ const typeDefs = `
 
   type Query {
     allUsers: [User!]
-    allPackages: [User!]
-    allEnvironments: [User!]
+    allPackages: [Package!]
+    allEnvironments: [Environment!]
     findUser(name:String!): [User!]
-    findPackage(name:String!): [User!]
-    findEnvironment(name:String!): [User!]
+    findPackage(name:String!): [Package!]
+    findEnvironment(name:String!): [Environment!]
   }
 
   type Mutation {

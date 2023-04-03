@@ -3,24 +3,24 @@ import Environments from './environments'
 import { Helmet } from 'react-helmet-async'
 
 const GraphQL = () => {
-  const [page, setPage] = useState('authors')
+  const [page, setPage] = useState('environments')
 
   return (
     <div>
       <Helmet>
-        <title>Sample text</title>
+        <title>GraphQL Demo</title>
       </Helmet>
       <div>
-        <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('environments')}>environments</button>
+        <button onClick={() => setPage('users')}>users</button>
+        <button onClick={() => setPage('add user')}>add user</button>
       </div>
 
-      <Environments show={page === 'authors'} />
+      <Environments show={page === 'environments'} />
 
-      {/* <Books show={page === 'books'} />
+      {/* <Users show={page === 'users'} />
 
-      <NewBook show={page === 'add'} /> */}
+      <AddUser show={page === 'add user'} /> */}
     </div>
   )
 }

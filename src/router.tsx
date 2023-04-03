@@ -7,6 +7,8 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
+import GraphQL from './content/graphQL';
+
 const Loader = (Component) => (props) =>
   (
     <Suspense fallback={<SuspenseLoader />}>
@@ -17,6 +19,7 @@ const Loader = (Component) => (props) =>
 // Pages
 
 const Overview = Loader(lazy(() => import('src/content/overview')));
+const Graphql = Loader(lazy(() => import('src/content/graphQL')));
 
 // Dashboards
 
@@ -67,6 +70,10 @@ const StatusMaintenance = Loader(
 );
 
 const routes: RouteObject[] = [
+  {
+    path: 'graphql',
+    element: <GraphQL />,
+  },
   {
     path: '',
     element: <BaseLayout />,
