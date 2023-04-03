@@ -125,19 +125,19 @@ function WatchListColumn() {
   };
   const chart1Data = [
     {
-      name: 'Bitcoin Price',
+      name: 'Sample text',
       data: [55.701, 57.598, 48.607, 46.439, 58.755, 46.978, 58.16]
     }
   ];
   const chart2Data = [
     {
-      name: 'Ethereum Price',
+      name: 'Sample text',
       data: [13, 16, 14, 20, 8, 11, 20]
     }
   ];
   const chart3Data = [
     {
-      name: 'Cardano Price',
+      name: 'Sample text',
       data: [51.85, 41.77, 22.09, 42.0, 71.9, 51.84, 31.84]
     }
   ];
@@ -164,16 +164,16 @@ function WatchListColumn() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Bitcoin
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  BTC
+                  Sample text
                 </Typography>
               </Box>
             </Box>
@@ -192,10 +192,10 @@ function WatchListColumn() {
                   mb: 1
                 }}
               >
-                $56,475.99
+                Sample text
               </Typography>
               <Text color="success">
-                <b>+12.5%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <Box
@@ -205,7 +205,7 @@ function WatchListColumn() {
                 justifyContent: 'flex-start'
               }}
             >
-              <Label color="success">+$500</Label>
+              <Label color="success">Sample text</Label>
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -213,7 +213,7 @@ function WatchListColumn() {
                   pl: 1
                 }}
               >
-                last 24h
+                Sample text
               </Typography>
             </Box>
           </Box>
@@ -239,16 +239,16 @@ function WatchListColumn() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="ETH"
-                  src="/static/images/placeholders/logo/ethereum.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Ethereum
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  ETH
+                  Sample text
                 </Typography>
               </Box>
             </Box>
@@ -267,10 +267,10 @@ function WatchListColumn() {
                   mb: 1
                 }}
               >
-                $1,968.00
+                Sample text
               </Typography>
               <Text color="error">
-                <b>-3.24%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <Box
@@ -280,7 +280,7 @@ function WatchListColumn() {
                 justifyContent: 'flex-start'
               }}
             >
-              <Label color="error">-$90</Label>
+              <Label color="error">Sample text</Label>
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -288,7 +288,7 @@ function WatchListColumn() {
                   pl: 1
                 }}
               >
-                last 24h
+                Sample text
               </Typography>
             </Box>
           </Box>
@@ -314,16 +314,16 @@ function WatchListColumn() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="ADA"
-                  src="/static/images/placeholders/logo/cardano.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Cardano
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  ADA
+                  Sample text
                 </Typography>
               </Box>
             </Box>
@@ -342,10 +342,10 @@ function WatchListColumn() {
                   mb: 1
                 }}
               >
-                $23.00
+                Sample text
               </Typography>
               <Text color="error">
-                <b>-0.33%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <Box
@@ -355,7 +355,7 @@ function WatchListColumn() {
                 justifyContent: 'flex-start'
               }}
             >
-              <Label color="error">-$5</Label>
+              <Label color="error">Sample text</Label>
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -363,7 +363,7 @@ function WatchListColumn() {
                   pl: 1
                 }}
               >
-                last 24h
+                Sample text
               </Typography>
             </Box>
           </Box>

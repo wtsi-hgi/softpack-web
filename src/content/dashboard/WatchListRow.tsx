@@ -117,21 +117,21 @@ function WatchListRow() {
 
   const Box1Data = [
     {
-      name: 'Bitcoin',
+      name: 'Sample text',
       data: [55.701, 57.598, 48.607, 46.439, 58.755, 46.978, 58.16]
     }
   ];
 
   const Box2Data = [
     {
-      name: 'Ethereum',
+      name: 'Sample text',
       data: [1.854, 1.873, 1.992, 2.009, 1.909, 1.942, 1.884]
     }
   ];
 
   const Box3Data = [
     {
-      name: 'Cardano',
+      name: 'Sample text',
       data: [13, 16, 14, 18, 8, 11, 20]
     }
   ];
@@ -159,20 +159,20 @@ function WatchListRow() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Bitcoin
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  BTC
+                  Sample text
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
+            <Label color="secondary">Sample text</Label>
           </Box>
           <Box
             mt={3}
@@ -193,10 +193,10 @@ function WatchListRow() {
                   pr: 1
                 }}
               >
-                $56,475.99
+                Sample text
               </Typography>
               <Text color="success">
-                <b>+12.5%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <TrendingUpTwoToneIcon
@@ -228,20 +228,20 @@ function WatchListRow() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="ETH"
-                  src="/static/images/placeholders/logo/ethereum.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Ethereum
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  ETH
+                  Sample text
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
+            <Label color="secondary">Sample text</Label>
           </Box>
           <Box
             mt={3}
@@ -262,10 +262,10 @@ function WatchListRow() {
                   pr: 1
                 }}
               >
-                $1,968.00
+                Sample text
               </Typography>
               <Text color="error">
-                <b>-3.24%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <TrendingDownTwoToneIcon
@@ -297,20 +297,20 @@ function WatchListRow() {
             <Box display="flex" alignItems="center">
               <AvatarWrapper>
                 <img
-                  alt="ADA"
-                  src="/static/images/placeholders/logo/cardano.png"
+                  alt=""
+                  src=""
                 />
               </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Cardano
+                  Sample text
                 </Typography>
                 <Typography variant="subtitle1" noWrap>
-                  ADA
+                  Sample text
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
+            <Label color="secondary">Sample text</Label>
           </Box>
           <Box
             mt={3}
@@ -331,10 +331,10 @@ function WatchListRow() {
                   pr: 1
                 }}
               >
-                $23.00
+                Sample text
               </Typography>
               <Text color="error">
-                <b>-0.33%</b>
+                <b>Sample text</b>
               </Text>
             </Box>
             <TrendingFlatTwoToneIcon
@@ -362,7 +362,7 @@ function WatchListRow() {
           justifyContent: 'center'
         }}
       >
-        <Button variant="outlined">View more assets</Button>
+        <Button variant="outlined">Sample text</Button>
       </CardActions>
     </Card>
   );

@@ -55,7 +55,7 @@ function AccountSecurity() {
 
   return (
     <Card>
-      <CardHeader title="Account Security" />
+      <CardHeader title="Sample text" />
       <Divider />
       <List disablePadding>
         <ListItem
@@ -69,7 +69,7 @@ function AccountSecurity() {
             </AvatarWrapperError>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">2FA Authentication</Text>}
+            primary={<Text color="black">Sample text</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -77,7 +77,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="error">Disabled</Text>}
+            secondary={<Text color="error">Sample text</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch
@@ -99,7 +99,7 @@ function AccountSecurity() {
             </AvatarWrapperSuccess>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">Phone Verification</Text>}
+            primary={<Text color="black">Sample text</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -107,7 +107,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="success">Active</Text>}
+            secondary={<Text color="success">Sample text</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch
@@ -129,7 +129,7 @@ function AccountSecurity() {
             </AvatarWrapperWarning>
           </ListItemAvatar>
           <ListItemText
-            primary={<Text color="black">Recovery Email</Text>}
+            primary={<Text color="black">Sample text</Text>}
             primaryTypographyProps={{
               variant: 'body1',
               fontWeight: 'bold',
@@ -137,7 +137,7 @@ function AccountSecurity() {
               gutterBottom: true,
               noWrap: true
             }}
-            secondary={<Text color="warning">Not completed</Text>}
+            secondary={<Text color="warning">Sample text</Text>}
             secondaryTypographyProps={{ variant: 'body2', noWrap: true }}
           />
           <Switch

@@ -138,18 +138,18 @@ function AccountBalance() {
               }}
               variant="h4"
             >
-              Account Balance
+              Sample text here
             </Typography>
             <Box>
               <Typography variant="h1" gutterBottom>
-                $54,584.23
+                Sample text here
               </Typography>
               <Typography
                 variant="h4"
                 fontWeight="normal"
                 color="text.secondary"
               >
-                1.0045983485234 BTC
+                Sample text here
               </Typography>
               <Box
                 display="flex"
@@ -167,9 +167,9 @@ function AccountBalance() {
                   <TrendingUp fontSize="large" />
                 </AvatarSuccess>
                 <Box>
-                  <Typography variant="h4">+ $3,594.00</Typography>
+                  <Typography variant="h4">Sample text</Typography>
                   <Typography variant="subtitle2" noWrap>
-                    this month
+                    Sample text
                   </Typography>
                 </Box>
               </Box>
@@ -177,12 +177,12 @@ function AccountBalance() {
             <Grid container spacing={3}>
               <Grid sm item>
                 <Button fullWidth variant="outlined">
-                  Send
+                  Sample text
                 </Button>
               </Grid>
               <Grid sm item>
                 <Button fullWidth variant="contained">
-                  Receive
+                  Sample text
                 </Button>
               </Grid>
             </Grid>
@@ -233,14 +233,14 @@ function AccountBalance() {
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
                       <img
-                        alt="BTC"
-                        src="/static/images/placeholders/logo/bitcoin.png"
+                        alt=""
+                        src=""
                       />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="BTC"
+                      primary="Sample text"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Bitcoin"
+                      secondary="Sample text"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
@@ -248,22 +248,22 @@ function AccountBalance() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        20%
+                      Sample text
                       </Typography>
-                      <Text color="success">+2.54%</Text>
+                      <Text color="success">Sample text</Text>
                     </Box>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
                       <img
-                        alt="XRP"
-                        src="/static/images/placeholders/logo/ripple.png"
+                        alt=""
+                        src=""
                       />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="XRP"
+                      primary="Sample text"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ripple"
+                      secondary="Sample text"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
@@ -271,22 +271,22 @@ function AccountBalance() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        10%
+                        Sample text
                       </Typography>
-                      <Text color="error">-1.22%</Text>
+                      <Text color="error">Sample text</Text>
                     </Box>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
                       <img
-                        alt="ADA"
-                        src="/static/images/placeholders/logo/cardano.png"
+                        alt=""
+                        src=""
                       />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="ADA"
+                      primary="Sample text"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Cardano"
+                      secondary="Sample text"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
@@ -294,22 +294,22 @@ function AccountBalance() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        40%
+                        Sample text
                       </Typography>
-                      <Text color="success">+10.50%</Text>
+                      <Text color="success">Sample text</Text>
                     </Box>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemAvatarWrapper>
                       <img
-                        alt="ETH"
-                        src="/static/images/placeholders/logo/ethereum.png"
+                        alt=""
+                        src=""
                       />
                     </ListItemAvatarWrapper>
                     <ListItemText
-                      primary="ETH"
+                      primary="Sample text"
                       primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ethereum"
+                      secondary="Sample text"
                       secondaryTypographyProps={{
                         variant: 'subtitle2',
                         noWrap: true
@@ -317,9 +317,9 @@ function AccountBalance() {
                     />
                     <Box>
                       <Typography align="right" variant="h4" noWrap>
-                        30%
+                        Sample text
                       </Typography>
-                      <Text color="error">-12.38%</Text>
+                      <Text color="error">Sample text</Text>
                     </Box>
                   </ListItem>
                 </List>

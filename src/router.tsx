@@ -20,21 +20,11 @@ const Overview = Loader(lazy(() => import('src/content/overview')));
 
 // Dashboards
 
-const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
+const Crypto = Loader(lazy(() => import('src/content/dashboard')));
 
 // Applications
-
-const Messenger = Loader(
-  lazy(() => import('src/content/applications/Messenger'))
-);
-const Transactions = Loader(
-  lazy(() => import('src/content/applications/Transactions'))
-);
-const UserProfile = Loader(
-  lazy(() => import('src/content/applications/Users/profile'))
-);
 const UserSettings = Loader(
-  lazy(() => import('src/content/applications/Users/settings'))
+  lazy(() => import('src/content/applications'))
 );
 
 // Components
@@ -132,10 +122,6 @@ const routes: RouteObject[] = [
         path: 'crypto',
         element: <Crypto />
       },
-      {
-        path: 'messenger',
-        element: <Messenger />
-      }
     ]
   },
   {
@@ -146,20 +132,13 @@ const routes: RouteObject[] = [
         path: '',
         element: <Navigate to="transactions" replace />
       },
-      {
-        path: 'transactions',
-        element: <Transactions />
-      },
+
       {
         path: 'profile',
         children: [
           {
             path: '',
             element: <Navigate to="details" replace />
-          },
-          {
-            path: 'details',
-            element: <UserProfile />
           },
           {
             path: 'settings',
