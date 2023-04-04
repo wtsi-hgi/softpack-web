@@ -4,24 +4,13 @@ import { Box, Typography } from "@mui/material"
 import { ALL_USERS } from "./queries"
 import { useQuery } from "@apollo/client"
 
-const User = ({ person, onClose }) => {
-  return (
-    <div>
-      <h2>{person.name}</h2>
-      <div>
-        {person.address.street} {person.address.city}
-      </div>
-      <div>{person.phone}</div>
-      <button onClick={onClose}>close</button>
-    </div>
-  )
-}
-
 const Users = (props: { show: boolean }) => {
-  const [users, setUsers] = useState(null)
-
   const result = useQuery(ALL_USERS)
   console.log(result)
+
+  if (result.loading) {
+    return <div>loading...</div>
+  }
 
   if (!props.show) {
     return null

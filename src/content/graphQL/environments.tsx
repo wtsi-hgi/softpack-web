@@ -7,6 +7,10 @@ const Environments = (props: { show: boolean }) => {
   const result = useQuery(ALL_ENVIRONMENTS)
   console.log(result)
 
+  if (result.loading) {
+    return <div>loading...</div>
+  }
+
   if (!props.show) {
     return null
   }
