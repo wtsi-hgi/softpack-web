@@ -13,8 +13,14 @@ export const ALL_ENVIRONMENTS = gql`
   query {
     allEnvironments  {
       name
-      packages
-      owners
+      packages {
+        name
+        version
+      }
+      owners {
+        id
+        name
+      }
     }
   }
 `

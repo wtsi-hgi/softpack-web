@@ -127,7 +127,6 @@ const resolvers = {
     findEnvironment: (root, args) => 
       environments.find(u => u.name === args.name),
   },
-
 }
 
 const server = new ApolloServer({
