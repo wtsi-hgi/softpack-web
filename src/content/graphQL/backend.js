@@ -1,5 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require('graphql')
+const { v1: uuid } = require('uuid')
 
 let users = [
   {
@@ -93,24 +95,27 @@ const typeDefs = `
   }
 
   type Query {
-    allUsers: [User!]
-    allPackages: [Package!]
-    allEnvironments: [Environment!]
+    allUsers: [User!]!
+    allPackages: [Package!]!
+    allEnvironments: [Environment!]!
+
     findUser(name:String!): [User!]
     findPackage(name:String!): [Package!]
     findEnvironment(name:String!): [Environment!]
   }
 
   type Mutation {
-    addEnvironment(
-      name: String!
-    ):Environment!
-    editEnvironment(
-      name: String!
-    ):Environment!
-    removeEnvironment(
-      name: String!
-    ):Environment!
+    addUser(name: String!): User!
+    editUser(name: String!): User!
+    removeUser(name: String!): User!
+    
+    addEnvironment(name: String!): Environment!
+    editEnvironment(name: String!): Environment!
+    removeEnvironment(name: String!): Environment!
+    
+    addPackage(name: String!): Package!
+    editPackage(name: String!): Package!
+    removePackage(name: String!): Package!
   }
 `
 // can have two options: find exact package match, or close package match
@@ -127,6 +132,33 @@ const resolvers = {
     findEnvironment: (root, args) => 
       environments.find(u => u.name === args.name),
   },
+
+  Mutation: {
+    addUser: (root, args) => {
+      if (users.find(p => p.name === args.name)) {
+        throw new GraphQLError('Name must be unique', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      if ((args.name === '') || (args.name === ' ')) {
+        throw new GraphQLError('Name must not be empty', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      const user = { ...args, id: uuid() }
+      console.log("new user created", user)
+      users = users.concat(user)
+      return user
+    }
+  }
 }
 
 const server = new ApolloServer({

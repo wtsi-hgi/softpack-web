@@ -33,3 +33,14 @@ export const ALL_PACKAGES = gql`
     }
   }
 `
+
+export const CREATE_USER = gql`
+  mutation createUser($name: String!) {
+    addUser(
+      name: $name,
+    ) {
+      name
+      id
+    }
+  }
+`
