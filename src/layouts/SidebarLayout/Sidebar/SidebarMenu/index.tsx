@@ -199,7 +199,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/dashboard"
+                  to="/graphql"
                   startIcon={<DesignServicesTwoToneIcon />}
                 >
                   GraphQL Demonstration

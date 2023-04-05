@@ -31,26 +31,31 @@ let environments = [
     name: 'whistling-acorn',
     packages: [],
     owners: [],
+    id: "hdfhs7an-344d-11e9-a414-719c6709cf3e",
   },
   {
     name: 'jumping-humpback',
     packages: [],
     owners: [],
+    id: "hh37kjsd-344d-11e9-a414-719c6709cf3e",
   },
   {
     name: 'spotted-peacock',
     packages: [],
     owners: [],
+    id: "dhs82jfd-344d-11e9-a414-719c6709cf3e",
   },
   { 
     name: 'hasty-daffodil',
     packages: [],
     owners: [],
+    id: "df8skjfl-344d-11e9-a414-719c6709cf3e",
   },
   { 
     name: 'dusty-leaf',
     packages: [],
     owners: [],
+    id: "22dxzmgl-344d-11e9-a414-719c6709cf3e",
   },
 ]
 
@@ -82,6 +87,7 @@ const typeDefs = `
     name: String!
     packages: [Package!]!
     owners: [User!]!
+    id: ID!
   }
 
   type Package {
@@ -109,7 +115,7 @@ const typeDefs = `
     editUser(name: String!): User!
     removeUser(name: String!): User!
     
-    addEnvironment(name: String!): Environment!
+    addEnvironment(name: String!, packages: [String!]!, owners: [String!]!): Environment!
     editEnvironment(name: String!): Environment!
     removeEnvironment(name: String!): Environment!
     
@@ -157,6 +163,52 @@ const resolvers = {
       console.log("new user created", user)
       users = users.concat(user)
       return user
+    },
+
+    addEnvironment: (root, args) => {
+      if (environments.find(e => e.name === args.name)) {
+        throw new GraphQLError('Name must be unique', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      if ((args.name === '') || (args.name === ' ')) {
+        throw new GraphQLError('Name must not be empty', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      console.log("received args", args)
+
+      var packages = []
+      for (var i = 0; i < args.packages.length; i++) {
+        const package = { name: args.packages[i], version: uuid() }
+        packages.push(package)
+      }
+
+      var owners = []
+      for (var i = 0; i < args.owners.length; i++) {
+        const user = { name: args.owners[i], id: uuid() }
+        owners.push(user)
+      }
+      
+      const environment = { 
+        name: args.name,
+        packages: packages,
+        owners: owners,
+        id: uuid() 
+      }
+
+      console.log("new environment created", environment)
+      environments = environments.concat(environment)
+      console.log("new environments", environments)
+      return environment
     }
   }
 }

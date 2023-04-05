@@ -3,6 +3,26 @@ import { Box, Typography } from "@mui/material"
 import { ALL_ENVIRONMENTS } from "./queries"
 import { useQuery } from "@apollo/client"
 
+const Owner = (owner: any) => {
+  return (
+    <Box key={owner.id}>
+      <Typography variant="h3">Owner:</Typography>
+      <Typography>Name: {owner.name}</Typography>
+      <Typography>Owner ID: {owner.id}</Typography>
+    </Box>
+  )
+}
+
+const Package = (pckg: any) => {
+  return (
+    <Box key={pckg.version}>
+      <Typography variant="h3">Package:</Typography>
+      <Typography>Name: {pckg.name}</Typography>
+      <Typography>Package Version: {pckg.version}</Typography>
+    </Box>
+  )
+}
+
 const Environments = (props: { show: boolean }) => {
   const result = useQuery(ALL_ENVIRONMENTS)
   console.log(result)
@@ -18,14 +38,16 @@ const Environments = (props: { show: boolean }) => {
   return (
     <div>
       <h2>Environments</h2>
+
+      {console.log(result.data.allEnvironments)}
       
       {result.data.allEnvironments.map((env: {name:string, packages:any[], owners:any[]}) => {
         return (
           <Box key={env.name}>
             <Typography>----------------------------------------------------</Typography>
             <Typography>Environment Name: {env.name}</Typography>
-            <Typography>Environment Packages: {env.packages}</Typography>
-            <Typography>Environment Owners: {env.owners}</Typography>
+            {env.owners.map((owner) => Owner(owner))}
+            {env.packages.map((pckg) => Package(pckg))}
           </Box>
         )
       })}

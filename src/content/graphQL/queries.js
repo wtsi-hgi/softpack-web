@@ -44,3 +44,24 @@ export const CREATE_USER = gql`
     }
   }
 `
+
+export const CREATE_ENVIRONMENT = gql`
+  mutation createEnvironment($name: String!, $packages: [String!]!, 
+    $owners: [String!]!) {
+    addEnvironment(
+      name: $name,
+      packages: $packages,
+      owners: $owners,
+    ) {
+      name
+      packages {
+        name
+        version
+      }
+      owners {
+        id
+        name
+      }
+    }
+  }
+`

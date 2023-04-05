@@ -13,8 +13,6 @@ const AddUser = (props: { show: boolean }) => {
     onError: (error) => {
       console.log(error)
       const message = error.graphQLErrors[0].message
-      //const errors = error.graphQLErrors[0].error.errors
-      //const messages = Object.values(errors).map(e => e.message).join('\n')
       setErrorMessage(message)
     }
   })

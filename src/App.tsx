@@ -16,7 +16,6 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         {content}
       </LocalizationProvider>
-      {/* <DashboardCrypto /> */}
     </ThemeProvider>
   );
 }
