@@ -16,7 +16,7 @@ Then, once the above steps are complete, the user must also start the server, wh
 This is done by,
 
 1. Opening another terminal, and navigating towards `softpack-web/src/content/graphQL` (a slightly obscure location albeit, but this will be changed before production, and this documentation will be updated accordingly).
-2. Then, typing `node index.js` - this will start the [Apollo] Server(https://www.apollographql.com/docs/apollo-server/).
+2. Then, typing `node index.js` - this will start the [Apollo](https://www.apollographql.com/docs/apollo-server/) Server.
 
 ### Using the app
 Once complete, you should be able to use the app and explore the range of features which Softpack Web has to offer!
