@@ -141,23 +141,8 @@ const resolvers = {
 
   Mutation: {
     addUser: (root, args) => {
-      if (users.find(p => p.name === args.name)) {
-        throw new GraphQLError('Name must be unique', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name
-          }
-        })
-      }
-
-      if ((args.name === '') || (args.name === ' ')) {
-        throw new GraphQLError('Name must not be empty', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name
-          }
-        })
-      }
+      checkNameDuplicate(users, args.name)
+      checkNameNotEmpty(args.name)
 
       const user = { ...args, id: uuid() }
       console.log("new user created", user)
@@ -166,23 +151,8 @@ const resolvers = {
     },
 
     addEnvironment: (root, args) => {
-      if (environments.find(e => e.name === args.name)) {
-        throw new GraphQLError('Name must be unique', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name
-          }
-        })
-      }
-
-      if ((args.name === '') || (args.name === ' ')) {
-        throw new GraphQLError('Name must not be empty', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name
-          }
-        })
-      }
+      checkNameDuplicate(environments, args.name)
+      checkNameNotEmpty(args.name)
 
       console.log("received args", args)
 
@@ -209,6 +179,32 @@ const resolvers = {
       console.log("new environments", environments)
       return environment
     }
+  }
+}
+
+// checkNameDuplicate checks whether the supplied name already exists within the
+// supplied database, throwing an error if so.
+function checkNameDuplicate(database, name) {
+  if (database.find(db => db.name === name)) {
+    throw new GraphQLError('Name must be unique', {
+      extensions: {
+        code: 'BAD_USER_INPUT',
+        invalidArgs: name
+      }
+    })
+  }
+}
+
+// checkNameNotEmpty checks if the supplied name is empty, or contains special
+// characters, numbers, etc. throwing an error if so.
+function checkNameNotEmpty(name) {
+  if ((!/^[A-Za-z]*$/.test(name)) || (name.length === 0)){
+    throw new GraphQLError('Name must be non-empty, and contain only characters a-z, A-Z', {
+      extensions: {
+        code: 'BAD_USER_INPUT',
+        invalidArgs: name
+      }
+    })
   }
 }
 

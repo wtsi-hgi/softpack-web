@@ -14,7 +14,9 @@ const addEnvironment = (props: { show: boolean }) => {
   const [ createEnvironment ] = useMutation(CREATE_ENVIRONMENT, {
     refetchQueries: [ {query: ALL_ENVIRONMENTS} ],
     onError: (error) => {
-      setErrorMessage(error)
+      console.log(error)
+      const message = error.graphQLErrors[0].message
+      setErrorMessage(message)
     }
   })
 
@@ -43,6 +45,11 @@ const addEnvironment = (props: { show: boolean }) => {
   return (
     <div>
       <h2>Create New Environment</h2>
+
+      {errorMessage && 
+        <div style={{color:'red'}}>
+        {errorMessage}
+      </div>}
 
       <form onSubmit={submit}>
         <div>
