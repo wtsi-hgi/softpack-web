@@ -191,7 +191,7 @@ function SidebarMenu() {
                   to="/overview"
                   startIcon={<DesignServicesTwoToneIcon />}
                 >
-                  Overview
+                  Home
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -199,10 +199,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/graphql"
+                  to="/dashboard"
                   startIcon={<DesignServicesTwoToneIcon />}
                 >
-                  GraphQL Demonstration
+                  Dashboard
                 </Button>
               </ListItem>
             </List>
@@ -223,10 +223,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/status/coming-soon"
+                  to="/graphql/view-environments"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View Available
+                  View Environments
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -234,10 +234,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/status/coming-soon"
+                  to="/graphql/create-environment"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Create New
+                  Create Environment
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -245,10 +245,69 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/status/coming-soon"
+                  to="/graphql/compare"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Compare
+                  Compare Environments
+                </Button>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Packages
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
+            <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/graphql/packages"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  View Packages
+                </Button>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Users
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/graphql/users"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  View Users
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/graphql/add-user"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Add User
                 </Button>
               </ListItem>
             </List>

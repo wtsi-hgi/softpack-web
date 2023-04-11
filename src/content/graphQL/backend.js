@@ -205,7 +205,6 @@ const resolvers = {
         id: uuid() 
       }
 
-      console.log("new environment created", environment)
       environments = environments.concat(environment)
       console.log("new environments", environments)
       return environment

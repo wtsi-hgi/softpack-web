@@ -82,7 +82,7 @@ function Hero() {
         <Grid item md={10} lg={8} mx="auto">
           <LabelWrapper color="success">Version 0.0.1</LabelWrapper>
           <TypographyH1 sx={{ mb: 2 }} variant="h1">
-            Softpack
+            SoftPack
           </TypographyH1>
           <TypographyH2
             sx={{ lineHeight: 1.5, pb: 4 }}
@@ -95,19 +95,11 @@ function Hero() {
           </TypographyH2>
           <Button
             component={RouterLink}
-            to="/dashboards/crypto"
+            to="/dashboard"
             size="large"
             variant="contained"
           >
             Check it out!
-          </Button>
-          <Button
-            component={RouterLink}
-            to="/graphql"
-            size="large"
-            variant="contained"
-          >
-            GraphQL Demo
           </Button>
           <Grid container spacing={3} mt={5}>
             <Grid item md={6}>

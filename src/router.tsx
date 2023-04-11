@@ -19,11 +19,15 @@ const Loader = (Component) => (props) =>
 // Pages
 
 const Overview = Loader(lazy(() => import('src/content/overview')));
-const Graphql = Loader(lazy(() => import('src/content/graphQL')));
+const Environments = Loader(lazy(() => import('src/content/graphQL/environments')));
+const AddUser = Loader(lazy(() => import('src/content/graphQL/addUser')));
+const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/addEnvironment')));
+const Packages = Loader(lazy(() => import('src/content/graphQL/packages')));
+const Users = Loader(lazy(() => import('src/content/graphQL/users')));
 
 // Dashboards
 
-const Crypto = Loader(lazy(() => import('src/content/dashboard')));
+const Dashboard = Loader(lazy(() => import('src/content/dashboard')));
 
 // Applications
 const UserSettings = Loader(
@@ -72,7 +76,33 @@ const StatusMaintenance = Loader(
 const routes: RouteObject[] = [
   {
     path: 'graphql',
-    element: <GraphQL />,
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <Navigate to="environments" replace />
+      },
+      {
+        path: 'view-environments',
+        element: <Environments />
+      },
+      {
+        path: 'create-environment',
+        element: <AddEnvironment />
+      },
+      {
+        path: 'packages',
+        element: <Packages />
+      },
+      {
+        path: 'users',
+        element: <AddUser />
+      },
+      {
+        path: 'add-user',
+        element: <Users />
+      },
+    ]
   },
   {
     path: '',
@@ -118,16 +148,12 @@ const routes: RouteObject[] = [
     ]
   },
   {
-    path: 'dashboards',
+    path: 'dashboard',
     element: <SidebarLayout />,
     children: [
       {
         path: '',
-        element: <Navigate to="crypto" replace />
-      },
-      {
-        path: 'crypto',
-        element: <Crypto />
+        element: <Dashboard />
       },
     ]
   },

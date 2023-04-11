@@ -17,10 +17,6 @@ const AddUser = (props: { show: boolean }) => {
     }
   })
 
-  if (!props.show) {
-    return null
-  }
-
   const submit = async (event) => {
     event.preventDefault()
 

@@ -10,10 +10,6 @@ const Packages = (props: { show: boolean }) => {
   if (result.loading) {
     return <div>loading...</div>
   }
-
-  if (!props.show) {
-    return null
-  }
   
   return (
     <div>
