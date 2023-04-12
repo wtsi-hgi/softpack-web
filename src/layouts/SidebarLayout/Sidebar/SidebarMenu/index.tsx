@@ -226,7 +226,7 @@ function SidebarMenu() {
                   to="/graphql/view-environments"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View Environments
+                  View
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -237,7 +237,7 @@ function SidebarMenu() {
                   to="/graphql/create-environment"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Create Environment
+                  Create
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -248,7 +248,7 @@ function SidebarMenu() {
                   to="/graphql/compare"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Compare Environments
+                  Compare
                 </Button>
               </ListItem>
             </List>
@@ -272,7 +272,7 @@ function SidebarMenu() {
                   to="/graphql/packages"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View Packages
+                  View
                 </Button>
               </ListItem>
             </List>
@@ -296,7 +296,7 @@ function SidebarMenu() {
                   to="/graphql/users"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View Users
+                  View
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -307,7 +307,7 @@ function SidebarMenu() {
                   to="/graphql/add-user"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Add User
+                  Add
                 </Button>
               </ListItem>
             </List>

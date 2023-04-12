@@ -50,7 +50,7 @@ const Environments = (props: { show: boolean }) => {
   
   return (
     <div>
-      <h2>Environments</h2>
+      <Typography variant="h2">Environments</Typography>
 
       {console.log(result.data.allEnvironments)}
       

@@ -1,5 +1,5 @@
 import React from "react"
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_USERS, CREATE_USER } from "./queries"
@@ -27,7 +27,7 @@ const AddUser = (props: { show: boolean }) => {
   
   return (
     <div>
-      <h2>Create New User</h2>
+      <Typography variant="h2">Create New User</Typography>
 
       {errorMessage && 
         <div style={{color:'red'}}>

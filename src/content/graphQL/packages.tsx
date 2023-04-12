@@ -13,7 +13,7 @@ const Packages = (props: { show: boolean }) => {
   
   return (
     <div>
-      <h2>Packages</h2>
+      <Typography variant="h2">Packages</Typography >
       
       {result.data.allPackages.map((pkg: {name:string, version:string}) => {
         return (

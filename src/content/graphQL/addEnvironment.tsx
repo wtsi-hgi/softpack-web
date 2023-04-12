@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_ENVIRONMENTS, CREATE_ENVIRONMENT } from "./queries"
+import { Box, FormControl, FormHelperText, Input, InputLabel, Typography } from '@mui/material'
 
 const addEnvironment = (props: { show: boolean }) => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -14,12 +15,9 @@ const addEnvironment = (props: { show: boolean }) => {
   const [ createEnvironment ] = useMutation(CREATE_ENVIRONMENT, {
     refetchQueries: [ {query: ALL_ENVIRONMENTS} ],
     onError: (error) => {
-      console.log(error)
-      const message = error.graphQLErrors[0].message
-      setErrorMessage(message)
+      setErrorMessage(error)
     }
   })
-
 
   const submit = async (event) => {
     event.preventDefault()
@@ -44,12 +42,12 @@ const addEnvironment = (props: { show: boolean }) => {
   
   return (
     <div>
-      <h2>Create New Environment</h2>
+      <Typography variant='h2'>Create New Environment</Typography>
 
-      {errorMessage && 
-        <div style={{color:'red'}}>
-        {errorMessage}
-      </div>}
+      <FormControl>
+        <InputLabel htmlFor="name">Name</InputLabel>
+        <Input id="my-input" aria-describedby="my-helper-text"/>
+      </FormControl>
 
       <form onSubmit={submit}>
         <div>

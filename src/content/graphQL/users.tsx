@@ -14,7 +14,7 @@ const Users = (props: { show: boolean }) => {
   
   return (
     <div>
-      <h2>Users</h2>
+      <Typography variant="h2">Users</Typography>
       
       {result.data.allUsers.map((user: {id:string, name:string}) => {
         return (
