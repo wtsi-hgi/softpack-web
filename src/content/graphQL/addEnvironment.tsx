@@ -7,10 +7,6 @@ import {
   Divider,
   Button,
   TextField,
-  MenuItem,
-  InputLabel,
-  FormHelperText,
-  FormControl,
   Chip,
   Alert,
   Dialog,
@@ -28,17 +24,15 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
+  Tab,
+  styled,
+  Checkbox
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
-import Text from 'src/components/Text';
-import Label from 'src/components/Label';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 
@@ -60,39 +54,37 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   return (
-    <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Hold on!
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Your environment closely matches *three others*, are you sure you would not like to use any of these?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Create my own environment</Button>
-          <Button onClick={handleClose} autoFocus>
-            Use already existing environment
-          </Button>
-        </DialogActions>
-      </Dialog>
+  <Dialog
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">
+      Hold on!
+    </DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        Your environment closely matches *three others*, are you sure you would not like to use any of these?
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleClose}>Create my own environment</Button>
+      <Button onClick={handleClose} autoFocus>
+        Use already existing environment
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 
 function AddEnvironment(props: { show: boolean }) {
-  const [pythonVersion, setPython] = useState('');
-  const [rVersion, setRVersion] = useState('');
-  const [otherVersion, setOtherVersion] = useState('');
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(emails[1]);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [value, setValue] = useState('1');
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setPython(event.target.value as string);
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
   };
 
   const handleClickOpen = () => {
@@ -103,6 +95,10 @@ function AddEnvironment(props: { show: boolean }) {
     setOpen(false);
     setSelectedValue(value);
   };
+
+  const pythonPackages = ['numpy', 'pandas', 'matplotlib', 'seaborn'];
+  const RPackages = ['tidyverse', 'devtools'];
+  const otherPackages = ['ant', 'cmake'];
 
   return (
     <Grid container spacing={3}>
@@ -130,7 +126,7 @@ function AddEnvironment(props: { show: boolean }) {
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <TextField id='name-field'></TextField>
+                  <TextField id='name-field' variant='standard'></TextField>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
@@ -138,7 +134,11 @@ function AddEnvironment(props: { show: boolean }) {
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <TextField id='description-field' multiline rows={4} sx={{ width: '75%' }}></TextField>
+                  <TextField 
+                    id='description-field' 
+                    multiline rows={4} 
+                    sx={{ width: '75%' }}
+                    variant='standard'></TextField>
                 </Grid>
               </Grid>
             </Typography>
@@ -168,71 +168,58 @@ function AddEnvironment(props: { show: boolean }) {
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Version:
+                    Select:
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={8} md={4} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box sx={{ width:'100px' }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="python-select-label">Python</InputLabel>
-                      <Select
-                        labelId="python-select-label"
-                        id="select"
-                        value={pythonVersion}
-                        label="Python"
-                        onChange={(e) => console.log(e)}
-                        >
-                        <MenuItem value={"3.11"}>3.11</MenuItem>
-                        <MenuItem value={"3.10"}>3.10</MenuItem>
-                        <MenuItem value={"3.9"}>3.9</MenuItem>
-                      </Select>
-                    </FormControl>             
-                  </Box>
-                  <Box sx={{ width:'100px' }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="R-select-label">R</InputLabel>
-                      <Select
-                        labelId="R-select-label"
-                        id="select"
-                        value={rVersion}
-                        label="Python"
-                        onChange={(e) => console.log(e)}
-                        >
-                        <MenuItem value={"3.11"}>3.11</MenuItem>
-                        <MenuItem value={"3.10"}>3.10</MenuItem>
-                        <MenuItem value={"3.9"}>3.9</MenuItem>
-                      </Select>
-                    </FormControl>             
-                  </Box>
-                  <Box sx={{ width:'100px' }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="other-select-label">Other</InputLabel>
-                      <Select
-                        labelId="other-select-label"
-                        id="select"
-                        value={otherVersion}
-                        label="Python"
-                        onChange={(e) => console.log(e)}
-                        >
-                        <MenuItem value={"3.11"}>3.11</MenuItem>
-                        <MenuItem value={"3.10"}>3.10</MenuItem>
-                        <MenuItem value={"3.9"}>3.9</MenuItem>
-                      </Select>
-                    </FormControl>             
-                  </Box>
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} sx={{ marginTop:'1%' }}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Search:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    { /* <SearchIcon/> */ }
-                    <TextField id='name-field'></TextField>
-                  </Box>
+                <Grid item xs={12} sm={8} md={4}>
+                  <TabContext value={value}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <Tab label="Python" value="1" />
+                        <Tab label="R" value="2" />
+                        <Tab label="System" value="3" />
+                      </TabList>
+                    </Box>
+                    <TabPanel value="1" sx={{ paddingLeft: '0', paddingTop: '0' }}>
+                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
+                        {pythonPackages.map((pckg) => { 
+                          return (
+                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
+                          <ListItemButton>
+                            <ListItemText>{pckg}</ListItemText>
+                          </ListItemButton>
+                          <Checkbox/>
+                        </ListItem>)
+                        })}
+                      </List>
+                    </TabPanel>
+                    <TabPanel value="2" sx={{ paddingLeft: '0', paddingTop: '0' }}>
+                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
+                        {RPackages.map((pckg) => { 
+                          return (
+                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
+                          <ListItemButton>
+                            <ListItemText>{pckg}</ListItemText>
+                          </ListItemButton>
+                          <Checkbox/>
+                        </ListItem>)
+                        })}
+                      </List>
+                    </TabPanel>
+                    <TabPanel value="3" sx={{ paddingLeft: '0', paddingTop: '0' }}>
+                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
+                        {otherPackages.map((pckg) => { 
+                          return (
+                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
+                          <ListItemButton>
+                            <ListItemText>{pckg}</ListItemText>
+                          </ListItemButton>
+                          <Checkbox/>
+                        </ListItem>)
+                        })}
+                      </List>
+                    </TabPanel>
+                  </TabContext>
                 </Grid>
               </Grid>
               <Grid container spacing={1} sx={{ marginTop:'1%' }}>
@@ -244,6 +231,7 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={7}>
                   <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
                     <Grid container rowSpacing={1} columnSpacing={1.5}>
+                      {}
                       <Grid item sx={{padding:'0'}}>
                         <Chip label="pandas" onDelete={(e) => console.log(e)} />
                       </Grid>
