@@ -212,7 +212,43 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Environments
+              Create
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
+            
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/graphql/create-environment"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Environment
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/graphql/add-user"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  User
+                </Button>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              View
             </ListSubheader>
           }
         >
@@ -226,45 +262,10 @@ function SidebarMenu() {
                   to="/graphql/view-environments"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View
+                  Environments
                 </Button>
               </ListItem>
               <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/graphql/create-environment"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  Create
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/graphql/compare"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  Compare
-                </Button>
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Packages
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
-            <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
@@ -272,22 +273,9 @@ function SidebarMenu() {
                   to="/graphql/packages"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View
+                  Packages
                 </Button>
               </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Users
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
               <ListItem component="div">
                 <Button
                   disableRipple
@@ -296,18 +284,31 @@ function SidebarMenu() {
                   to="/graphql/users"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  View
+                  Users
                 </Button>
               </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Other
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
               <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/graphql/add-user"
+                  to="/graphql/compare"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Add
+                  Compare Env
                 </Button>
               </ListItem>
             </List>
