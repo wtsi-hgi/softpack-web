@@ -218,7 +218,6 @@ function SidebarMenu() {
         >
           <SubMenuWrapper>
             <List component="div">
-            
               <ListItem component="div">
                 <Button
                   disableRipple

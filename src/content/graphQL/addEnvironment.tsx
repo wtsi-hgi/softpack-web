@@ -11,9 +11,28 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-  Chip
+  Chip,
+  Alert,
+  Dialog,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TableContainer,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
 } from '@mui/material';
 
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
 import Text from 'src/components/Text';
@@ -21,14 +40,68 @@ import Label from 'src/components/Label';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
 
+const emails = ['username@gmail.com', 'user02@gmail.com'];
+
+export interface SimpleDialogProps {
+  open: boolean;
+  selectedValue: string;
+  onClose: (value: string) => void;
+}
+
+function SimpleDialog(props: SimpleDialogProps) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value: string) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Hold on!
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Your environment closely matches *three others*, are you sure you would not like to use any of these?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Create my own environment</Button>
+          <Button onClick={handleClose} autoFocus>
+            Use already existing environment
+          </Button>
+        </DialogActions>
+      </Dialog>
+  );
+}
 
 function AddEnvironment(props: { show: boolean }) {
   const [pythonVersion, setPython] = useState('');
   const [rVersion, setRVersion] = useState('');
   const [otherVersion, setOtherVersion] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(emails[1]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setPython(event.target.value as string);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value: string) => {
+    setOpen(false);
+    setSelectedValue(value);
   };
 
   return (
@@ -148,17 +221,29 @@ function AddEnvironment(props: { show: boolean }) {
                     </FormControl>             
                   </Box>
                 </Grid>
-              
               </Grid>
-              <Grid container spacing={1} sx={{ marginTop:'2%' }}>
+              <Grid container spacing={1} sx={{ marginTop:'1%' }}>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Search:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    { /* <SearchIcon/> */ }
+                    <TextField id='name-field'></TextField>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container spacing={1} sx={{ marginTop:'1%' }}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
                     Packages:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={4} md={7}>
-                  <Box>
-                    <Grid container rowSpacing={1} columnSpacing={1.5} sx={{ paddingBottom: '1%', border: 1, borderRadius: 1, borderColor: 'grey.500' }}>
+                  <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
+                    <Grid container rowSpacing={1} columnSpacing={1.5}>
                       <Grid item sx={{padding:'0'}}>
                         <Chip label="pandas" onDelete={(e) => console.log(e)} />
                       </Grid>
@@ -182,6 +267,20 @@ function AddEnvironment(props: { show: boolean }) {
                 </Grid>
               </Grid>
             </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', margin: '2% 0 2% 0'}}>
+              <Alert severity='info'>See below: you can use an already existing environment
+               that matches your criteria</Alert>   
+              <Button 
+              variant='contained' 
+              startIcon={<AddIcon />} 
+              onClick={handleClickOpen}
+              sx={{ marginLeft:'auto', width:'10%' }}>Create</Button>
+              <SimpleDialog
+                selectedValue={selectedValue}
+                open={open}
+                onClose={handleClose}
+              />           
+            </Box>
           </CardContent>
         </Card>
       </Grid>
@@ -189,51 +288,40 @@ function AddEnvironment(props: { show: boolean }) {
         <Card>
           <Box
             p={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                Email Addresses
+                Environments Matching Your Criteria
               </Typography>
               <Typography variant="subtitle2">
-                Manage details related to your associated email addresses
+                Save time and space by selecting one of the options below
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
-            <Typography variant="subtitle2">
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Email ID:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>example@demo.com</b>
-                  </Text>
-                  <Box pl={1} component="span">
-                    <Label color="success">Primary</Label>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Email ID:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>demo@example.com</b>
-                  </Text>
-                </Grid>
-              </Grid>
-            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Environment</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>tremendous-mandrill</TableCell>
+                    <TableCell align="left">Mauris laoreet blandit odio, 
+                    vitae mollis enim feugiat sit amet.</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>ubiquitous-clam</TableCell>
+                    <TableCell align="left">Pellentesque feugiat accumsan 
+                    consectetur. Nulla vitae portitor purus.</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
           </CardContent>
         </Card>
       </Grid>
