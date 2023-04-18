@@ -96,6 +96,13 @@ function AddEnvironment(props: { show: boolean }) {
     }
   }
 
+  const checkboxActive = (packageName: string) => {
+    const checked = selectedPackages.indexOf(packageName) != -1
+    console.log(checked)
+    
+    return checked 
+  }
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -204,7 +211,9 @@ function AddEnvironment(props: { show: boolean }) {
                               <ListItemText>{pckg}</ListItemText>
                             </ListItemButton>
                             <Checkbox
+                              id={key}
                               onChange={(e) => handlePackageChange(pckg)}
+                              checked={checkboxActive(pckg)}
                             />
                           </ListItem>)
                         })}
@@ -221,7 +230,9 @@ function AddEnvironment(props: { show: boolean }) {
                               <ListItemText>{pckg}</ListItemText>
                             </ListItemButton>
                             <Checkbox
+                              id={key}
                               onChange={(e) => handlePackageChange(pckg)}
+                              checked={checkboxActive(pckg)}
                             />
                           </ListItem>)
                         })}
@@ -238,7 +249,9 @@ function AddEnvironment(props: { show: boolean }) {
                             <ListItemText>{pckg}</ListItemText>
                           </ListItemButton>
                           <Checkbox
+                            id={key}
                             onChange={(e) => handlePackageChange(pckg)}
+                            checked={checkboxActive(pckg)}
                           />
                         </ListItem>)
                         })}
