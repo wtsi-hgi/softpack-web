@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import SimpleDialog from './DialogBox';
 import CollapseRow from './CollapseRow';
@@ -274,7 +274,7 @@ function AddEnvironment(props: { show: boolean }) {
           <Divider />
           <CardContent sx={{ p: 4 }}>
             <TableContainer component={Paper}>
-              <Table aria-label="collapsible table">
+              <Table aria-label="collapsible table" size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell />
