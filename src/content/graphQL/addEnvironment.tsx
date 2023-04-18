@@ -34,7 +34,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -82,6 +81,20 @@ function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const [value, setValue] = useState('1');
+  const [selectedPackages, setSelectedPackages] = useState([]);
+
+  const handlePackageChange = (packageName: string) => {
+    const packageIndex = selectedPackages.indexOf(packageName)
+
+    if (packageIndex != -1 ) {
+      const newPackages = selectedPackages.filter(function (pckg) {
+        return pckg !== packageName
+    })
+      setSelectedPackages(newPackages)
+    } else {
+      setSelectedPackages(selectedPackages.concat(packageName))
+    }
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -182,39 +195,51 @@ function AddEnvironment(props: { show: boolean }) {
                     </Box>
                     <TabPanel value="1" sx={{ paddingLeft: '0', paddingTop: '0' }}>
                       <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {pythonPackages.map((pckg) => { 
+                        {pythonPackages.map((pckg, index) => { 
+                          var key = pckg + '-' + index
+
                           return (
-                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
-                          <ListItemButton>
-                            <ListItemText>{pckg}</ListItemText>
-                          </ListItemButton>
-                          <Checkbox/>
-                        </ListItem>)
+                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
+                            <ListItemButton>
+                              <ListItemText>{pckg}</ListItemText>
+                            </ListItemButton>
+                            <Checkbox
+                              onChange={(e) => handlePackageChange(pckg)}
+                            />
+                          </ListItem>)
                         })}
                       </List>
                     </TabPanel>
                     <TabPanel value="2" sx={{ paddingLeft: '0', paddingTop: '0' }}>
                       <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {RPackages.map((pckg) => { 
+                        {RPackages.map((pckg, index) => { 
+                          var key = pckg + '-' + index
+
                           return (
-                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
-                          <ListItemButton>
-                            <ListItemText>{pckg}</ListItemText>
-                          </ListItemButton>
-                          <Checkbox/>
-                        </ListItem>)
+                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
+                            <ListItemButton>
+                              <ListItemText>{pckg}</ListItemText>
+                            </ListItemButton>
+                            <Checkbox
+                              onChange={(e) => handlePackageChange(pckg)}
+                            />
+                          </ListItem>)
                         })}
                       </List>
                     </TabPanel>
                     <TabPanel value="3" sx={{ paddingLeft: '0', paddingTop: '0' }}>
                       <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {otherPackages.map((pckg) => { 
+                        {otherPackages.map((pckg, index) => { 
+                          var key = pckg + '-' + index
+
                           return (
-                          <ListItem key={pckg} sx={{ paddingLeft: '0' }}>
+                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
                           <ListItemButton>
                             <ListItemText>{pckg}</ListItemText>
                           </ListItemButton>
-                          <Checkbox/>
+                          <Checkbox
+                            onChange={(e) => handlePackageChange(pckg)}
+                          />
                         </ListItem>)
                         })}
                       </List>
@@ -231,7 +256,6 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={7}>
                   <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
                     <Grid container rowSpacing={1} columnSpacing={1.5}>
-                      {}
                       <Grid item sx={{padding:'0'}}>
                         <Chip label="pandas" onDelete={(e) => console.log(e)} />
                       </Grid>
@@ -250,6 +274,27 @@ function AddEnvironment(props: { show: boolean }) {
                       <Grid item sx={{padding:'0'}}>
                         <Chip label="h5py == 3.8.0" variant="outlined" onDelete={(e) => console.log(e)} />
                       </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Packages:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={4} md={7}>
+                  <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
+                    <Grid container rowSpacing={1} columnSpacing={1.5}>
+                      {selectedPackages.map((pckg, index) => {
+                        var key = index + '-' + pckg 
+                        var pckgVariant: "filled" | "outlined" = index % 2 == 0 ? "filled" : "outlined"
+
+                        return (
+                          <Grid key={key} item sx={{padding:'0'}}>
+                            <Chip label={pckg} variant={pckgVariant} onDelete={(e) => console.log(e)} />
+                          </Grid>
+                        )
+                      })}
                     </Grid>
                   </Box>
                 </Grid>
