@@ -234,7 +234,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/graphql/add-user"
+                  to="/graphql/users"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   User
@@ -280,7 +280,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/graphql/users"
+                  to="/graphql/add-user"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   Users

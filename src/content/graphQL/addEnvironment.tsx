@@ -27,55 +27,20 @@ import {
   TableRow,
   Tab,
   styled,
-  Checkbox
+  Checkbox,
+  Accordion,
+  AccordionSummary,
+  Collapse,
+  IconButton
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Fragment, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-
-
-export interface SimpleDialogProps {
-  open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
-}
-
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, selectedValue, open } = props;
-
-  const handleClose = () => {
-    onClose(selectedValue);
-  };
-
-  const handleListItemClick = (value: string) => {
-    onClose(value);
-  };
-
-  return (
-  <Dialog
-    open={open}
-    onClose={handleClose}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">
-      Hold on!
-    </DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-        Your environment closely matches *three others*, are you sure you would not like to use any of these?
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleClose}>Create my own environment</Button>
-      <Button onClick={handleClose} autoFocus>
-        Use already existing environment
-      </Button>
-    </DialogActions>
-  </Dialog>
-  );
-}
+import SimpleDialog from './DialogBox';
 
 function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
@@ -97,10 +62,7 @@ function AddEnvironment(props: { show: boolean }) {
   }
 
   const checkboxActive = (packageName: string) => {
-    const checked = selectedPackages.indexOf(packageName) != -1
-    console.log(checked)
-    
-    return checked 
+    return selectedPackages.indexOf(packageName) != -1
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -119,6 +81,13 @@ function AddEnvironment(props: { show: boolean }) {
   const pythonPackages = ['numpy', 'pandas', 'matplotlib', 'seaborn'];
   const RPackages = ['tidyverse', 'devtools'];
   const otherPackages = ['ant', 'cmake'];
+  const matchingEnvs = [
+    {'Environment':'tremendous-mandril',
+     'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
+  
+    {'Environment':'ubiquitous-clam',
+    'Description':'Pellentesque feugiat accumsan consectetur. Nulla vitae portitor purus.'},
+  ];
 
   return (
     <Grid container spacing={3}>
@@ -146,7 +115,7 @@ function AddEnvironment(props: { show: boolean }) {
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <TextField id='name-field' variant='standard'></TextField>
+                  <TextField required label='Required' id='name-field' variant='standard'></TextField>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
@@ -155,6 +124,7 @@ function AddEnvironment(props: { show: boolean }) {
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <TextField 
+                    required label='Required'
                     id='description-field' 
                     multiline rows={4} 
                     sx={{ width: '75%' }}
@@ -284,20 +254,19 @@ function AddEnvironment(props: { show: boolean }) {
                 </Grid>
               </Grid>
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', margin: '2% 0 2% 0'}}>
-              <Alert severity='info'>See below: you can use an already existing environment
-               that matches your criteria</Alert>   
-              <Button 
+
+            <Alert severity='info' sx={{ margin: '2% 0 2% 0' }}>See below: you 
+              can use an already existing environment that matches your criteria</Alert>  
+            <Button
               variant='contained' 
               startIcon={<AddIcon />} 
               onClick={handleClickOpen}
-              sx={{ marginLeft:'auto', width:'10%' }}>Create</Button>
+              sx={{ float:'right', width:'10%', marginBottom: '2%' }}>Create</Button>
               <SimpleDialog
                 selectedValue={selectedValue}
                 open={open}
                 onClose={handleClose}
-              />           
-            </Box>
+              />   
           </CardContent>
         </Card>
       </Grid>
@@ -318,24 +287,20 @@ function AddEnvironment(props: { show: boolean }) {
           <Divider />
           <CardContent sx={{ p: 4 }}>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+              <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
+                    <TableCell />
                     <TableCell>Environment</TableCell>
                     <TableCell align="left">Description</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
-                    <TableCell>tremendous-mandrill</TableCell>
-                    <TableCell align="left">Mauris laoreet blandit odio, 
-                    vitae mollis enim feugiat sit amet.</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>ubiquitous-clam</TableCell>
-                    <TableCell align="left">Pellentesque feugiat accumsan 
-                    consectetur. Nulla vitae portitor purus.</TableCell>
-                  </TableRow>
+                  {matchingEnvs.map((row, index) => {
+                    return (
+                      <CollapseRow key={index} row={row}/>
+                    )
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -343,6 +308,51 @@ function AddEnvironment(props: { show: boolean }) {
         </Card>
       </Grid>
     </Grid>
+  );
+}
+
+
+
+function CollapseRow(row) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.row.Environment}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.row.Description}
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Packages
+              </Typography>
+              <List>
+                <ListItem>Package 1</ListItem>
+                <ListItem>Pacakge 2</ListItem>
+                <ListItem>Pacakge 3</ListItem>
+                <ListItem>Pacakge 4</ListItem>
+              </List>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </Fragment>
   );
 }
 
