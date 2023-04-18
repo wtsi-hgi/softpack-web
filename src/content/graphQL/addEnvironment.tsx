@@ -256,35 +256,6 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={7}>
                   <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
                     <Grid container rowSpacing={1} columnSpacing={1.5}>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="pandas" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="numpy" variant="outlined" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="matplotlib" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="keras" variant="outlined" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="seaborn" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                      <Grid item sx={{padding:'0'}}>
-                        <Chip label="h5py == 3.8.0" variant="outlined" onDelete={(e) => console.log(e)} />
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Packages:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4} md={7}>
-                  <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
-                    <Grid container rowSpacing={1} columnSpacing={1.5}>
                       {selectedPackages.map((pckg, index) => {
                         var key = index + '-' + pckg 
                         var pckgVariant: "filled" | "outlined" = index % 2 == 0 ? "filled" : "outlined"
