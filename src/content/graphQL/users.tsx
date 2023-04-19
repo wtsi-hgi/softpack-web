@@ -5,11 +5,27 @@ import { ALL_USERS } from "./queries"
 import { useQuery } from "@apollo/client"
 
 const Users = (props: { show: boolean }) => {
-  const result = useQuery(ALL_USERS)
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const result = useQuery(ALL_USERS, {
+    onError: (error) => {
+      console.log(error)
+      const message = error.graphQLErrors[0].message
+      setErrorMessage(message)
+    }
+  })
   console.log(result)
 
   if (result.loading) {
     return <div>loading...</div>
+  }
+
+  if (result.error) {
+    return (
+      <div style={{color:'red'}}>
+        {result.error.message}
+      </div>
+    )
   }
   
   return (
