@@ -25,6 +25,8 @@ const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/addEnvironm
 const Packages = Loader(lazy(() => import('src/content/graphQL/packages')));
 const Users = Loader(lazy(() => import('src/content/graphQL/users')));
 
+const ApplicationsTransactions = Loader(lazy(() => import('src/content/graphQL/Table/index')));
+
 // Dashboards
 
 const Dashboard = Loader(lazy(() => import('src/content/dashboard')));
