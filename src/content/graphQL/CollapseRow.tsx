@@ -31,7 +31,16 @@ function CollapseRow(row) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Packages
+                  Non-matching Packages
+                </Typography>
+                <List>
+                  <ListItem>Package 1</ListItem>
+                  <ListItem>Pacakge 2</ListItem>
+                </List>
+              </Box>
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Matching Packages
                 </Typography>
                 <List>
                   <ListItem>Package 1</ListItem>
