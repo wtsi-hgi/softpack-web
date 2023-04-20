@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material"
 
-import { ALL_ENVIRONMENTS, ALL_ENVS, ALL_USERS } from "./queries"
+import { ALL_ENVIRONMENTS, ALL_ENVS } from "./queries"
 import { useQuery } from "@apollo/client"
 import { useState } from "react"
 import ApplicationsTransactions from "./Table"
@@ -28,7 +28,7 @@ const Package = (pckg: any) => {
 const Environments = (props: { show: boolean }) => {
   const [errorMessage, setErrorMessage] = useState(null)
 
-  {/*const result = useQuery(ALL_ENVIRONMENTS, {
+  const result = useQuery(ALL_ENVIRONMENTS, {
     onError: (error) => {
       console.log(error)
       const message = error.graphQLErrors[0].message
@@ -47,13 +47,12 @@ const Environments = (props: { show: boolean }) => {
         {result.error.message}
       </div>
     )
-  }*/}
+  }
   
   return (
     <div>
       <ApplicationsTransactions />
 
-      {/*{console.log(result.data.allEnvironments)}
       
       {result.data.allEnvironments.map((env: {name:string, packages:any[], owners:any[]}) => {
         return (
@@ -64,7 +63,7 @@ const Environments = (props: { show: boolean }) => {
             {env.packages.map((pckg) => Package(pckg))}
           </Box>
         )
-      })}*/}
+      })}
     </div>
   )
 }
