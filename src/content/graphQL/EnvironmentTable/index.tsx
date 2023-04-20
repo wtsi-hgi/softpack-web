@@ -4,7 +4,6 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container, Card } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import Environments from './Environments';
 import { useQuery } from '@apollo/client';
 import { ALL_ENVIRONMENTS } from '../queries';
 import { useState } from 'react';

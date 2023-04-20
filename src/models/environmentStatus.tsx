@@ -1,4 +1,4 @@
-export type Status = 'completed' | 'pending' | 'failed';
+export type Status = 'Completed' | 'Pending' | 'Failed';
 
 export interface EnvironmentStatus {
   id: string;

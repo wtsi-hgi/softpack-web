@@ -42,23 +42,23 @@ interface Filters {
   status?: Status;
 }
 
-const getStatusLabel = (environments: Status): JSX.Element => {
+const getStatusLabel = (environment: Status): JSX.Element => {
   const map = {
-    failed: {
-      text: 'failed',
+    Failed: {
+      text: 'Failed',
       color: 'error'
     },
-    completed: {
-      text: 'completed',
+    Completed: {
+      text: 'Completed',
       color: 'success'
     },
-    pending: {
-      text: 'pending',
+    Pending: {
+      text: 'Pending',
       color: 'warning'
     }
   };
 
-  const { text, color }: any = map[environments];
+  const { text, color }: any = map[environment];
 
   return <Label color={color}>{text}</Label>;
 };
