@@ -30,6 +30,8 @@ import { EnvironmentStatus, Status } from 'src/models/environmentStatus';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
+import { useQuery } from '@apollo/client';
+import { ALL_ENVIRONMENTS } from '../queries';
 
 interface EnvironmentTableProps {
   className?: string;
@@ -43,15 +45,15 @@ interface Filters {
 const getStatusLabel = (environments: Status): JSX.Element => {
   const map = {
     failed: {
-      text: 'Failed',
+      text: 'failed',
       color: 'error'
     },
     completed: {
-      text: 'Completed',
+      text: 'completed',
       color: 'success'
     },
     pending: {
-      text: 'Pending',
+      text: 'pending',
       color: 'warning'
     }
   };
@@ -84,7 +86,7 @@ const applyPagination = (
   return environments.slice(page * limit, page * limit + limit);
 };
 
-const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
+const EnvironmentTable = (data) => {
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
     []
   );
@@ -132,7 +134,7 @@ const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
   ): void => {
     setSelectedEnvironments(
       event.target.checked
-        ? environments.map((env) => env.id)
+        ? data.map((env) => env.id)
         : []
     );
   };
@@ -161,21 +163,21 @@ const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredEnvironments = applyFilters(environments, filters);
-  const paginatedEnvironments = applyPagination(
+  //const filteredEnvironments = applyFilters(data, filters);
+  {/*const paginatedEnvironments = applyPagination(
     filteredEnvironments,
     page,
     limit
-  );
+  );*/}
   const selectedSomeCryptoOrders =
     selectedEnvironments.length > 0 &&
-    selectedEnvironments.length < environments.length;
+    selectedEnvironments.length < data.length;
   const selectedAllCryptoOrders =
-    selectedEnvironments.length === environments.length;
+    selectedEnvironments.length === data.length;
   const theme = useTheme();
 
   return (
-    <Card>
+    <Card>    
       {selectedBulkActions && (
         <Box flex={1} p={2}>
           <BulkActions />
@@ -227,24 +229,25 @@ const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedEnvironments.map((environment) => {
+            {data.environments.map((environment) => {
+              console.log('environment', environment)
               const isEnvironmentSelected = selectedEnvironments.includes(
                 environment.id
               );
+
               return (
                 <TableRow
                   hover
                   key={environment.id}
-                  selected={isEnvironmentSelected}
-                >
+                  selected={isEnvironmentSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isEnvironmentSelected}
+                      checked={false}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
                         handleSelectOneEnvironment(event, environment.id)
                       }
-                      value={isEnvironmentSelected}
+                      value={false}
                     />
                   </TableCell>
                   <TableCell align="left">
@@ -257,10 +260,14 @@ const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
                     {environment.description}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.owner}
+                    {environment.owners.map((owner) => {
+                      return (
+                        <Typography key={owner.name}>{owner.name}</Typography>
+                      );
+                    })}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.dateCreated}
+                    {environment.creationDate}
                   </TableCell>
                   <TableCell align="left">
                     {getStatusLabel(environment.status)}
@@ -302,7 +309,7 @@ const EnvironmentTable: FC<EnvironmentTableProps> = ({ environments }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredEnvironments.length}
+          count={5}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

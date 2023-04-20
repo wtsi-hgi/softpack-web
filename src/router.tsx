@@ -19,13 +19,13 @@ const Loader = (Component) => (props) =>
 // Pages
 
 const Overview = Loader(lazy(() => import('src/content/overview')));
-const Environments = Loader(lazy(() => import('src/content/graphQL/environments')));
+const EnvironmentsTable = Loader(lazy(() => import('src/content/graphQL/EnvironmentTable/index')));
 const AddUser = Loader(lazy(() => import('src/content/graphQL/addUser')));
 const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/addEnvironment')));
 const Packages = Loader(lazy(() => import('src/content/graphQL/packages')));
 const Users = Loader(lazy(() => import('src/content/graphQL/users')));
 
-const ApplicationsTransactions = Loader(lazy(() => import('src/content/graphQL/Table/index')));
+const ApplicationsTransactions = Loader(lazy(() => import('src/content/graphQL/EnvironmentTable/index')));
 
 // Dashboards
 
@@ -86,7 +86,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'view-environments',
-        element: <Environments />
+        element: <EnvironmentsTable />
       },
       {
         path: 'create-environment',

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Environments from './environments'
 import Users from './users'
 import AddUser from './addUser'
 import { Helmet } from 'react-helmet-async'
@@ -22,8 +21,6 @@ const GraphQL = () => {
         <button onClick={() => setPage('add user')}>add user</button>
         <button onClick={() => setPage('add environment')}>add environment</button>
       </div>
-
-      <Environments show={page === 'environments'} />
 
       <Users show={page === 'users'} />
 

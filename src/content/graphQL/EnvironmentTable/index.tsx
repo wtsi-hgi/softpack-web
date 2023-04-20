@@ -1,12 +1,32 @@
 import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { Grid, Container } from '@mui/material';
+import { Grid, Container, Card } from '@mui/material';
 import Footer from 'src/components/Footer';
 
 import Environments from './Environments';
+import { useQuery } from '@apollo/client';
+import { ALL_ENVIRONMENTS } from '../queries';
+import { useState } from 'react';
+import EnvironmentTable from './EnvironmentTable';
 
-function ApplicationsTransactions() {
+function EnvironmentsTable() {
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS)
+ 
+  if (loading) {
+    return <div>loading...</div>
+  }
+
+  if (error) {
+    return (
+      <div style={{color:'red'}}>
+        {error.message}
+      </div>
+    )
+  }
+  
   return (
     <>
       <Helmet>
@@ -24,7 +44,9 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Environments />
+            <Card>
+              <EnvironmentTable environments={data.allEnvironments} />
+            </Card>
           </Grid>
         </Grid>
       </Container>
@@ -33,4 +55,4 @@ function ApplicationsTransactions() {
   );
 }
 
-export default ApplicationsTransactions;
+export default EnvironmentsTable;

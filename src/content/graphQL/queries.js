@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const ALL_ENVS = gql`
+export const ALL_ENVIRONMENTS = gql`
   query {
-    allEnvs {
+    allEnvironments {
       creationDate
       description
       id
@@ -30,7 +30,7 @@ export const ALL_USERS = gql`
   }
 `
 
-export const ALL_ENVIRONMENTS = gql`
+{/*export const ALL_ENVIRONMENTS = gql`
   query {
     allEnvironments  {
       name
@@ -44,7 +44,7 @@ export const ALL_ENVIRONMENTS = gql`
       }
     }
   }
-`
+`*/}
 
 export const ALL_PACKAGES = gql`
   query {

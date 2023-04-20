@@ -103,7 +103,7 @@ const typeDefs = `
   type Query {
     allUsers: [User!]!
     allPackages: [Package!]!
-    allEnvironments: [Environment!]!
+    allEnvs: [Environment!]!
 
     findUser(name:String!): [User!]
     findPackage(name:String!): [Package!]
@@ -130,7 +130,7 @@ const resolvers = {
   Query: {
     allUsers: () => users,
     allPackages: () => packages,
-    allEnvironments: () => environments,
+    allEnvs: () => environments,
     findUser: (root, args) => 
       users.find(u => u.name === args.name),
     findPackage: (root, args) => 

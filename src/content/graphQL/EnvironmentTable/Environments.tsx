@@ -2,8 +2,12 @@ import { Card } from '@mui/material';
 import { EnvironmentStatus } from 'src/models/environmentStatus';
 import EnvironmentTable from './EnvironmentTable';
 import { subDays } from 'date-fns';
+import { useQuery } from '@apollo/client';
+import { ALL_ENVIRONMENTS } from '../queries';
+import { useState } from 'react';
 
-function Environments() {
+function Environments(data) {
+  
   const environments: EnvironmentStatus[] = [
     {
       id: '1',
@@ -89,7 +93,7 @@ function Environments() {
 
   return (
     <Card>
-      <EnvironmentTable environments={environments} />
+      <EnvironmentTable environments={data} />
     </Card>
   );
 }
