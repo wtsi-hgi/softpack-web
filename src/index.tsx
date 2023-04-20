@@ -10,7 +10,7 @@ import { SidebarProvider } from 'src/contexts/SidebarContext';
 import * as serviceWorker from 'src/serviceWorker';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000',
+  uri: 'http://0.0.0.0:8000/graphql',
   cache: new InMemoryCache(),
 })
 

@@ -1,5 +1,26 @@
 import { gql } from '@apollo/client'
 
+export const ALL_ENVS = gql`
+  query {
+    allEnvs {
+      creationDate
+      description
+      id
+      name
+      owners {
+        email
+        id
+        name
+      }
+      packages {
+        name
+        version
+      }
+      status
+    }
+  }
+`
+
 export const ALL_USERS = gql`
   query {
     allUsers  {

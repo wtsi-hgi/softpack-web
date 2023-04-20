@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material"
 
-import { ALL_ENVIRONMENTS } from "./queries"
+import { ALL_ENVIRONMENTS, ALL_ENVS, ALL_USERS } from "./queries"
 import { useQuery } from "@apollo/client"
 import { useState } from "react"
 
