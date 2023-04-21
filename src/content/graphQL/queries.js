@@ -29,7 +29,11 @@ export const ALL_PACKAGES = gql`
   query {
     allPackages  {
       name
-      version
+      packages {
+        name
+        version
+      }
+      id
     }
   }
 `

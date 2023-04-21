@@ -29,12 +29,30 @@ import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import SimpleDialog from './DialogBox';
 import CollapseRow from './CollapseRow';
+import { useQuery } from '@apollo/client';
+import { ALL_PACKAGES } from './queries';
 
 function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const [value, setValue] = useState('1');
   const [selectedPackages, setSelectedPackages] = useState([]);
+
+  const { loading, data, error } = useQuery(ALL_PACKAGES)
+
+  if (loading) {
+    return <div>loading...</div>
+  }
+
+  if (error) {
+    return (
+      <div style={{color:'red'}}>
+        {error.message}
+      </div>
+    )
+  }
+
+  console.log(data.allPackages)
 
   const handlePackageChange = (packageName: string) => {
     const packageIndex = selectedPackages.indexOf(packageName)
@@ -66,9 +84,6 @@ function AddEnvironment(props: { show: boolean }) {
     setSelectedValue(value);
   };
 
-  const pythonPackages = ['numpy', 'pandas', 'matplotlib', 'seaborn'];
-  const RPackages = ['tidyverse', 'devtools'];
-  const otherPackages = ['ant', 'cmake'];
   const matchingEnvs = [
     {'Environment':'tremendous-mandril',
      'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
@@ -153,68 +168,34 @@ function AddEnvironment(props: { show: boolean }) {
                   <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                       <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Python" value="1" />
-                        <Tab label="R" value="2" />
-                        <Tab label="System" value="3" />
+                        {data.allPackages.map((pckgEntry, index) => {
+                          return (
+                            <Tab key={index} label={pckgEntry.name} value={index + 1} />
+                          );
+                        })}
                       </TabList>
                     </Box>
-                    <TabPanel value="1" sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {pythonPackages.map((pckg, index) => { 
-                          var key = pckg + '-' + index
-
-                          return (
-                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
-                            <ListItemButton>
-                              <ListItemText>{pckg}</ListItemText>
-                            </ListItemButton>
-                            <Checkbox
-                              id={key}
-                              onChange={(e) => handlePackageChange(pckg)}
-                              checked={checkboxActive(pckg)}
-                            />
-                          </ListItem>)
-                        })}
-                      </List>
-                    </TabPanel>
-                    <TabPanel value="2" sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {RPackages.map((pckg, index) => { 
-                          var key = pckg + '-' + index
-
-                          return (
-                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
-                            <ListItemButton>
-                              <ListItemText>{pckg}</ListItemText>
-                            </ListItemButton>
-                            <Checkbox
-                              id={key}
-                              onChange={(e) => handlePackageChange(pckg)}
-                              checked={checkboxActive(pckg)}
-                            />
-                          </ListItem>)
-                        })}
-                      </List>
-                    </TabPanel>
-                    <TabPanel value="3" sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                      <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                        {otherPackages.map((pckg, index) => { 
-                          var key = pckg + '-' + index
-
-                          return (
-                          <ListItem key={key} sx={{ paddingLeft: '0' }}>
-                          <ListItemButton>
-                            <ListItemText>{pckg}</ListItemText>
-                          </ListItemButton>
-                          <Checkbox
-                            id={key}
-                            onChange={(e) => handlePackageChange(pckg)}
-                            checked={checkboxActive(pckg)}
-                          />
-                        </ListItem>)
-                        })}
-                      </List>
-                    </TabPanel>
+                    {data.allPackages.map((pckgEntry, index) => {
+                      return (
+                        <TabPanel key={pckgEntry.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
+                          <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
+                            {pckgEntry.packages.map((pckgName) => { 
+                              return (
+                              <ListItem key={pckgEntry.id} sx={{ paddingLeft: '0' }}>
+                                <ListItemButton>
+                                  <ListItemText>{pckgName.name}</ListItemText>
+                                </ListItemButton>
+                                <Checkbox
+                                  id={pckgEntry.id}
+                                  onChange={(e) => handlePackageChange(pckgName.name)}
+                                  checked={checkboxActive(pckgName.name)}
+                                />
+                              </ListItem>)
+                            })}
+                          </List>
+                        </TabPanel>
+                      );
+                    })}
                   </TabContext>
                 </Grid>
               </Grid>
