@@ -22,7 +22,8 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  TextField
 } from '@mui/material';
 
 import Label from 'src/components/Label';
@@ -87,6 +88,9 @@ const applyPagination = (
 };
 
 const EnvironmentTable = (data) => {
+  const [masterCopyRows, setMasterCopyRows] = useState(data.environments)
+  const [rows, setRows] = useState(data.environments)
+
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
     []
   );
@@ -134,23 +138,23 @@ const EnvironmentTable = (data) => {
   ): void => {
     setSelectedEnvironments(
       event.target.checked
-        ? data.map((env) => env.id)
+        ? rows.map((row) => row.id)
         : []
     );
   };
 
   const handleSelectOneEnvironment = (
     event: ChangeEvent<HTMLInputElement>,
-    envId: string
+    rowID: string
   ): void => {
-    if (!selectedEnvironments.includes(envId)) {
+    if (!selectedEnvironments.includes(rowID)) {
       setSelectedEnvironments((prevSelected) => [
         ...prevSelected,
-        envId
+        rowID
       ]);
     } else {
       setSelectedEnvironments((prevSelected) =>
-        prevSelected.filter((id) => id !== envId)
+        prevSelected.filter((id) => id !== rowID)
       );
     }
   };
@@ -171,9 +175,9 @@ const EnvironmentTable = (data) => {
   );*/}
   const selectedSomeCryptoOrders =
     selectedEnvironments.length > 0 &&
-    selectedEnvironments.length < data.length;
+    selectedEnvironments.length < rows.length;
   const selectedAllCryptoOrders =
-    selectedEnvironments.length === data.length;
+    selectedEnvironments.length === rows.length;
   const theme = useTheme();
 
   return (
@@ -229,48 +233,48 @@ const EnvironmentTable = (data) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.environments.map((environment) => {
-              console.log('environment', environment)
+            {rows.map((row) => {
+              console.log('environment', row)
               const isEnvironmentSelected = selectedEnvironments.includes(
-                environment.id
+                row.id
               );
 
               return (
                 <TableRow
                   hover
-                  key={environment.id}
+                  key={row.id}
                   selected={isEnvironmentSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
                       checked={false}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEnvironment(event, environment.id)
+                        handleSelectOneEnvironment(event, row.id)
                       }
                       value={false}
                     />
                   </TableCell>
                   <TableCell align="left">
-                    {environment.id}
+                    {row.id}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.name}
+                    {row.name}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.description}
+                    {row.description}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.owners.map((owner) => {
+                    {row.owners.map((owner) => {
                       return (
                         <Typography key={owner.name}>{owner.name}</Typography>
                       );
                     })}
                   </TableCell>
                   <TableCell align="left">
-                    {environment.creationDate}
+                    {row.creationDate}
                   </TableCell>
                   <TableCell align="left">
-                    {getStatusLabel(environment.status)}
+                    {getStatusLabel(row.status)}
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edit" arrow>
