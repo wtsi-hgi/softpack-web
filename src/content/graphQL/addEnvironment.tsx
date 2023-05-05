@@ -22,9 +22,11 @@ import {
   TableRow,
   Tab,
   Checkbox,
+  Tooltip,
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import SimpleDialog from './DialogBox';
@@ -113,16 +115,22 @@ function AddEnvironment(props: { show: boolean }) {
             <Typography variant="subtitle2">
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Name:
+                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                    <Typography variant='h5'>Name:</Typography>
+                    <Tooltip title={"Help text here about name"}>
+                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                    </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <TextField required label='Required' id='name-field' variant='standard'></TextField>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Description:
+                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                    <Typography variant='h5'>Description:</Typography>
+                    <Tooltip title={"Help text here about description"}>
+                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                    </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
@@ -148,8 +156,8 @@ function AddEnvironment(props: { show: boolean }) {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                Package Settings
-              </Typography>
+                  Package Settings
+                </Typography>
               <Typography variant="subtitle2">
                 Manage details related to your environment packages
               </Typography>
@@ -201,8 +209,11 @@ function AddEnvironment(props: { show: boolean }) {
               </Grid>
               <Grid container spacing={1} sx={{ marginTop:'1%' }}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Packages:
+                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                    <Typography variant='h5'>Packages:</Typography>
+                    <Tooltip title={"Help text here about packages"}>
+                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                    </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={4} md={7}>
