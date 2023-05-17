@@ -44,6 +44,7 @@ function AddEnvironment(props: { show: boolean }) {
   const [selectedValue, setSelectedValue] = useState('');
   const [value, setValue] = useState('1');
   const [selectedPackages, setSelectedPackages] = useState([]);
+  const [destination, setDestination] = useState();
 
   const { loading, data, error } = useQuery(ALL_PACKAGES)
 
@@ -120,7 +121,7 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
                     <Typography variant='h5'>Name:</Typography>
-                    <Tooltip title={"Help text here about name"}>
+                    <Tooltip title={"Choose a name for your environment"}>
                       <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
                     </Tooltip>
                   </Box>
@@ -131,7 +132,7 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
                     <Typography variant='h5'>Description:</Typography>
-                    <Tooltip title={"Help text here about description"}>
+                    <Tooltip title={"What is the purpose of your environment?"}>
                       <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
                     </Tooltip>
                   </Box>
@@ -147,24 +148,21 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
                     <Typography variant='h5'>Folder:</Typography>
-                    <Tooltip title={"Help text here about name"}>
+                    <Tooltip title={"Select where you would like your environment to go"}>
                       <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
                     </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <FormControl>
-                    <InputLabel>Age</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={10}
-                      label="Age"
-                      onChange={(e) => console.log(e)}
+                      value={destination}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={10}>users/kj789</MenuItem>
+                      <MenuItem value={20}>hgi/projects</MenuItem>
+                      <MenuItem value={30}>humgen/projects</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
