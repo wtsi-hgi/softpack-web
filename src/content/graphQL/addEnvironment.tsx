@@ -23,6 +23,11 @@ import {
   Tab,
   Checkbox,
   Tooltip,
+  Collapse,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -98,9 +103,7 @@ function AddEnvironment(props: { show: boolean }) {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card>
-          <Box
-            p={3}
-          >
+          <Box p={3}>
             <Box>
               <Typography variant="h4" gutterBottom>
                 Environment Settings
@@ -140,6 +143,30 @@ function AddEnvironment(props: { show: boolean }) {
                     multiline rows={4} 
                     sx={{ width: '75%' }}
                     variant='standard'></TextField>
+                </Grid>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                    <Typography variant='h5'>Folder:</Typography>
+                    <Tooltip title={"Help text here about name"}>
+                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                    </Tooltip>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  <FormControl>
+                    <InputLabel>Age</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={10}
+                      label="Age"
+                      onChange={(e) => console.log(e)}
+                    >
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
             </Typography>
