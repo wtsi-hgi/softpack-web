@@ -29,6 +29,7 @@ import {
   MenuItem,
   Select,
   Autocomplete,
+  InputAdornment,
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -135,36 +136,47 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
                     <Typography variant='h5'>Name:</Typography>
-                    <Tooltip title={"Choose a name for your environment"}>
-                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
-                    </Tooltip>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <TextField required label='Required' id='name-field' variant='standard'></TextField>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                    <Typography variant='h5'>Description:</Typography>
-                    <Tooltip title={"What is the purpose of your environment?"}>
-                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
-                    </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <TextField 
-                    required label='Required'
+                    id='name-field' 
+                    variant='standard' 
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title={"Choose a name for your environment"}>
+                            <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                    <Typography variant='h5'>Description:</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  <TextField 
                     id='description-field' 
                     multiline rows={4} 
                     sx={{ width: '75%' }}
-                    variant='standard'></TextField>
+                    variant='standard'
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title={"What is the purpose of your environment?"}>
+                            <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}></TextField>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
                     <Typography variant='h5'>Folder:</Typography>
-                    <Tooltip title={"Select where you would like your environment to go"}>
-                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
-                    </Tooltip>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
@@ -180,33 +192,6 @@ function AddEnvironment(props: { show: boolean }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                {/*<Grid container spacing={1}>
-                    <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                      <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                        <Typography variant='h5'>Select:</Typography>
-                      </Box>
-                    </Grid>
-                  {data.allPackages.map((pckgEntry, index) => {
-                    return (
-                      <>
-                      <Grid key={index} item xs={12} sm={4} md={7} textAlign={{ sm: 'right' }}>
-                        <Autocomplete
-                          multiple
-                          id="tags-standard"
-                          options={options}
-                          //getOptionLabel={(option) => option.title}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="standard"
-                              label={pckgEntry.name}
-                            />
-                          )}
-                        />
-                      </Grid></>
-                    );
-                  })}
-                </Grid>*/}
               </Grid>
             </Typography>
           </CardContent>
