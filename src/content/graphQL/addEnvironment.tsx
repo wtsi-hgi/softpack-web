@@ -28,6 +28,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Autocomplete,
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -58,6 +59,19 @@ function AddEnvironment(props: { show: boolean }) {
         {error.message}
       </div>
     )
+  }
+
+  const flattenedPackages = (packages) => {
+    var flattenedPackages: string[] = [];
+
+    packages.map((library, libraryIndex) => {
+      library.packages.map((pckg) => {
+        const packageName = pckg.name + ' (' + pckg.version + ')';
+        flattenedPackages.push(packageName);
+      })
+    })
+
+    return flattenedPackages;
   }
 
   console.log(data.allPackages)
@@ -166,6 +180,33 @@ function AddEnvironment(props: { show: boolean }) {
                     </Select>
                   </FormControl>
                 </Grid>
+                {/*<Grid container spacing={1}>
+                    <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                      <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+                        <Typography variant='h5'>Select:</Typography>
+                      </Box>
+                    </Grid>
+                  {data.allPackages.map((pckgEntry, index) => {
+                    return (
+                      <>
+                      <Grid key={index} item xs={12} sm={4} md={7} textAlign={{ sm: 'right' }}>
+                        <Autocomplete
+                          multiple
+                          id="tags-standard"
+                          options={options}
+                          //getOptionLabel={(option) => option.title}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              label={pckgEntry.name}
+                            />
+                          )}
+                        />
+                      </Grid></>
+                    );
+                  })}
+                </Grid>*/}
               </Grid>
             </Typography>
           </CardContent>
@@ -197,65 +238,19 @@ function AddEnvironment(props: { show: boolean }) {
                     Select:
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={8} md={4}>
-                  <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        {data.allPackages.map((pckgEntry, index) => {
-                          return (
-                            <Tab key={index} label={pckgEntry.name} value={index + 1} />
-                          );
-                        })}
-                      </TabList>
-                    </Box>
-                    {data.allPackages.map((pckgEntry, index) => {
-                      return (
-                        <TabPanel key={pckgEntry.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                          <List dense sx={{ width: '100%', maxWidth: 360, paddingLeft: '0' }}>
-                            {pckgEntry.packages.map((pckgName) => { 
-                              return (
-                              <ListItem key={pckgEntry.id} sx={{ paddingLeft: '0' }}>
-                                <ListItemButton>
-                                  <ListItemText>{pckgName.name}</ListItemText>
-                                </ListItemButton>
-                                <Checkbox
-                                  id={pckgEntry.id}
-                                  onChange={(e) => handlePackageChange(pckgName.name)}
-                                  checked={checkboxActive(pckgName.name)}
-                                />
-                              </ListItem>)
-                            })}
-                          </List>
-                        </TabPanel>
-                      );
-                    })}
-                  </TabContext>
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} sx={{ marginTop:'1%' }}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                    <Typography variant='h5'>Packages:</Typography>
-                    <Tooltip title={"Help text here about packages"}>
-                      <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
-                    </Tooltip>
-                  </Box>
-                </Grid>
                 <Grid item xs={12} sm={4} md={7}>
-                  <Box p={2} sx={{ border: 1, borderRadius: 1, borderColor: 'grey.400' }}>
-                    <Grid container rowSpacing={1} columnSpacing={1.5}>
-                      {selectedPackages.map((pckg, index) => {
-                        var key = index + '-' + pckg 
-                        var pckgVariant: "filled" | "outlined" = index % 2 == 0 ? "filled" : "outlined"
-
-                        return (
-                          <Grid key={key} item sx={{padding:'0'}}>
-                            <Chip label={pckg} variant={pckgVariant} onDelete={(e) => console.log(e)} />
-                          </Grid>
-                        )
-                      })}
-                    </Grid>
-                  </Box>
+                  <Autocomplete
+                    multiple
+                    id="tags-standard"
+                    options={flattenedPackages(data.allPackages)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="standard"
+                        label="Packages"
+                      />
+                    )}
+                  />
                 </Grid>
               </Grid>
             </Typography>
