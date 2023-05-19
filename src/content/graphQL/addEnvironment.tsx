@@ -62,16 +62,14 @@ function AddEnvironment(props: { show: boolean }) {
     )
   }
 
-  const flattenedPackages = (packages) => {
+  const flattenPackages = (packages) => {
     var flattenedPackages: string[] = [];
 
-    packages.map((library, libraryIndex) => {
-      library.packages.map((pckg) => {
-        const packageName = pckg.name + ' (' + pckg.version + ')';
-        flattenedPackages.push(packageName);
-      })
+    packages.map((pckg) => {
+      const packageName = pckg.name + ' (' + pckg.version + ')';
+      flattenedPackages.push(packageName);
     })
-
+    
     return flattenedPackages;
   }
 
@@ -223,19 +221,37 @@ function AddEnvironment(props: { show: boolean }) {
                     Select:
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={4} md={7}>
-                  <Autocomplete
-                    multiple
-                    id="tags-standard"
-                    options={flattenedPackages(data.allPackages)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="standard"
-                        label="Packages"
-                      />
-                    )}
-                  />
+                <Grid item xs={12} sm={8} md={7}>
+                  <TabContext value={value}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        {data.allPackages.map((pckgEntry, index) => {
+                          return (
+                            <Tab key={index} label={pckgEntry.name} value={index + 1} />
+                          );
+                        })}
+                      </TabList>
+                    </Box>
+                    {data.allPackages.map((pckgEntry, index) => {
+                      return (
+                        <TabPanel key={pckgEntry.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
+                          {console.log('packages', pckgEntry.packages)}
+                          <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            options={flattenPackages(pckgEntry.packages)}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="standard"
+                                label={pckgEntry.name + " Packages"}
+                              />
+                            )}
+                          />
+                        </TabPanel>
+                      );
+                    })}
+                  </TabContext>
                 </Grid>
               </Grid>
             </Typography>
