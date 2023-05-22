@@ -254,7 +254,12 @@ function AddEnvironment(props: { show: boolean }) {
                                   current[library.name] = e_value;
                                   setSelectedPackages(current);
                                 }
-                              }
+                              } else {
+                                current = selectedPackages[library.name];
+                                current[library.name] = e_value;
+                                setSelectedPackages(current);
+                              } 
+                              console.log(selectedPackages);
                             }}
                             value={selectedPackages[library.name]}
                             renderInput={(params) => (
