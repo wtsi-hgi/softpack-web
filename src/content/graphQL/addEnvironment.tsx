@@ -34,7 +34,7 @@ import {
 
 import AddIcon from '@mui/icons-material/Add';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import SimpleDialog from './DialogBox';
 import CollapseRow from './CollapseRow';
@@ -45,10 +45,10 @@ function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const [value, setValue] = useState('1');
-  const [selectedPackages, setSelectedPackages] = useState({});
   const [destination, setDestination] = useState();
 
-  const { loading, data, error } = useQuery(ALL_PACKAGES)
+  const { loading, data, error } = useQuery(ALL_PACKAGES);
+  const [selectedPackages, setSelectedPackages] = useState(createInitialPackages);
 
   if (loading) {
     return <div>loading...</div>
@@ -60,6 +60,20 @@ function AddEnvironment(props: { show: boolean }) {
         {error.message}
       </div>
     )
+  }
+
+  function createInitialPackages() {
+    if (!data) {
+      console.log('no data');
+      return {}
+    }
+
+    console.log('data found');
+    var initialPackages = {};
+    data.allPackages.map((library) => {
+      initialPackages[library.name] = [];
+    })
+    return initialPackages;
   }
 
   const flattenPackages = (packages) => {
@@ -233,6 +247,7 @@ function AddEnvironment(props: { show: boolean }) {
                       </TabList>
                     </Box>
                     {data.allPackages.map((library, index) => {
+                      console.log('selectedPackages', selectedPackages);
                       return (
                         <TabPanel key={library.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
                           <Autocomplete
@@ -242,33 +257,37 @@ function AddEnvironment(props: { show: boolean }) {
                             onChange={(e, e_value, reason) => {
                               console.log('reason', reason)
                               if (reason == 'selectOption'){
-                                const hasKey = library.name in selectedPackages;
-
-                                if (!hasKey) {
-                                  const libraryName = library.name;
-                                  var current = selectedPackages;
-                                  current[libraryName] = [e_value];
-                                  console.log(current);
-                                } else {
-                                  current = selectedPackages[library.name];
-                                  current[library.name] = e_value;
-                                  setSelectedPackages(current);
-                                }
-                              } else {
+                                var current = selectedPackages;
+                                console.log(e_value);
+                                current[library.name] = e_value;
+                                setSelectedPackages(current);                                
+                              } else if (reason == 'removeOption'){
+                                console.log(e);
+                                //current = selectedPackages;
+                                //current[library.name] = e_value;
+                                //setSelectedPackages(current); 
+                                //console.log(e);
+                                
+                              } /*{else if (reason == 'clear'){
                                 current = selectedPackages[library.name];
+                                console.log(current);
+                                console.log(e_value);
                                 current[library.name] = e_value;
                                 setSelectedPackages(current);
-                              } 
-                              console.log(selectedPackages);
+                              }}*/
+                              console.log('selectedPackages', selectedPackages);
                             }}
                             value={selectedPackages[library.name]}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="standard"
-                                label={library.name + " Packages"}
-                              />
-                            )}
+                            renderInput={(params) => {
+                              console.log('params', params);
+                              return (
+                                <TextField
+                                  {...params}
+                                  variant="standard"
+                                  label={library.name + " Packages"}
+                                />
+                              );
+                            }}
                           />
                         </TabPanel>
                       );
@@ -278,7 +297,7 @@ function AddEnvironment(props: { show: boolean }) {
               </Grid>
             </Typography>
             <Alert severity='info' sx={{ margin: '2% 0 2% 0' }}>See below: you 
-              can use an already existing environment that matches your criteria</Alert>  
+              can use an already existing environment that matches your criteria</Alert>
             <Button
               variant='contained' 
               startIcon={<AddIcon />} 
