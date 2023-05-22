@@ -45,7 +45,7 @@ function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
   const [value, setValue] = useState('1');
-  const [selectedPackages, setSelectedPackages] = useState([]);
+  const [selectedPackages, setSelectedPackages] = useState({});
   const [destination, setDestination] = useState();
 
   const { loading, data, error } = useQuery(ALL_PACKAGES)
@@ -75,7 +75,7 @@ function AddEnvironment(props: { show: boolean }) {
 
   console.log(data.allPackages)
 
-  const handlePackageChange = (packageName: string) => {
+  {/*const handlePackageChange = (packageName: string) => {
     const packageIndex = selectedPackages.indexOf(packageName)
 
     if (packageIndex != -1 ) {
@@ -90,7 +90,7 @@ function AddEnvironment(props: { show: boolean }) {
 
   const checkboxActive = (packageName: string) => {
     return selectedPackages.indexOf(packageName) != -1
-  }
+  }*/}
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -224,27 +224,44 @@ function AddEnvironment(props: { show: boolean }) {
                 <Grid item xs={12} sm={8} md={7}>
                   <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        {data.allPackages.map((pckgEntry, index) => {
+                      <TabList onChange={handleChange}>
+                        {data.allPackages.map((package_, index) => {
                           return (
-                            <Tab key={index} label={pckgEntry.name} value={index + 1} />
+                            <Tab key={index} label={package_.name} value={index + 1} />
                           );
                         })}
                       </TabList>
                     </Box>
-                    {data.allPackages.map((pckgEntry, index) => {
+                    {data.allPackages.map((library, index) => {
                       return (
-                        <TabPanel key={pckgEntry.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                          {console.log('packages', pckgEntry.packages)}
+                        <TabPanel key={library.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
                           <Autocomplete
                             multiple
                             id="tags-standard"
-                            options={flattenPackages(pckgEntry.packages)}
+                            options={flattenPackages(library.packages)}
+                            onChange={(e, e_value, reason) => {
+                              console.log('reason', reason)
+                              if (reason == 'selectOption'){
+                                const hasKey = library.name in selectedPackages;
+
+                                if (!hasKey) {
+                                  const libraryName = library.name;
+                                  var current = selectedPackages;
+                                  current[libraryName] = [e_value];
+                                  console.log(current);
+                                } else {
+                                  current = selectedPackages[library.name];
+                                  current[library.name] = e_value;
+                                  setSelectedPackages(current);
+                                }
+                              }
+                            }}
+                            value={selectedPackages[library.name]}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
                                 variant="standard"
-                                label={pckgEntry.name + " Packages"}
+                                label={library.name + " Packages"}
                               />
                             )}
                           />
