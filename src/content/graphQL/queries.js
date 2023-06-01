@@ -1,5 +1,19 @@
 import { gql } from '@apollo/client'
 
+export const TEST = gql`
+  query {
+    packageCollections {
+      id
+      name
+      packages {
+        id
+        name
+        versions
+      }
+    }
+  }
+`
+
 export const ALL_USERS = gql`
   query {
     allUsers  {

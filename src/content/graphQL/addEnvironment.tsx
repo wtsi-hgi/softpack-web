@@ -40,6 +40,8 @@ import SimpleDialog from './DialogBox';
 import CollapseRow from './CollapseRow';
 import { useQuery } from '@apollo/client';
 import { ALL_PACKAGES } from './queries';
+import PackageSelect from './packageSelect';
+import TabbedAutocomplete from './packageSelect';
 
 function AddEnvironment(props: { show: boolean }) {
   const [open, setOpen] = useState(false);
@@ -236,63 +238,7 @@ function AddEnvironment(props: { show: boolean }) {
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={7}>
-                  <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <TabList onChange={handleChange}>
-                        {data.allPackages.map((package_, index) => {
-                          return (
-                            <Tab key={index} label={package_.name} value={index + 1} />
-                          );
-                        })}
-                      </TabList>
-                    </Box>
-                    {data.allPackages.map((library, index) => {
-                      console.log('selectedPackages', selectedPackages);
-                      return (
-                        <TabPanel key={library.id} value={index + 1} sx={{ paddingLeft: '0', paddingTop: '0' }}>
-                          <Autocomplete
-                            multiple
-                            id="tags-standard"
-                            options={flattenPackages(library.packages)}
-                            onChange={(e, e_value, reason) => {
-                              console.log('reason', reason)
-                              if (reason == 'selectOption'){
-                                var current = selectedPackages;
-                                console.log(e_value);
-                                current[library.name] = e_value;
-                                setSelectedPackages(current);                                
-                              } else if (reason == 'removeOption'){
-                                console.log(e);
-                                //current = selectedPackages;
-                                //current[library.name] = e_value;
-                                //setSelectedPackages(current); 
-                                //console.log(e);
-                                
-                              } /*{else if (reason == 'clear'){
-                                current = selectedPackages[library.name];
-                                console.log(current);
-                                console.log(e_value);
-                                current[library.name] = e_value;
-                                setSelectedPackages(current);
-                              }}*/
-                              console.log('selectedPackages', selectedPackages);
-                            }}
-                            value={selectedPackages[library.name]}
-                            renderInput={(params) => {
-                              console.log('params', params);
-                              return (
-                                <TextField
-                                  {...params}
-                                  variant="standard"
-                                  label={library.name + " Packages"}
-                                />
-                              );
-                            }}
-                          />
-                        </TabPanel>
-                      );
-                    })}
-                  </TabContext>
+                  <TabbedAutocomplete packages={data.allPackages}/>
                 </Grid>
               </Grid>
             </Typography>

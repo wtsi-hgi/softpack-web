@@ -24,6 +24,7 @@ const AddUser = Loader(lazy(() => import('src/content/graphQL/addUser')));
 const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/addEnvironment')));
 const Packages = Loader(lazy(() => import('src/content/graphQL/packages')));
 const Users = Loader(lazy(() => import('src/content/graphQL/users')));
+const Test = Loader(lazy(() => import('src/content/graphQL/CreateEnvironment/index')));
 
 // Dashboards
 
@@ -101,6 +102,10 @@ const routes: RouteObject[] = [
       {
         path: 'add-user',
         element: <Users />
+      },
+      {
+        path: 'test',
+        element: <Test />
       },
     ]
   },
