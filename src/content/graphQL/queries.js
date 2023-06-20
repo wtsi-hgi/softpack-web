@@ -11,6 +11,17 @@ export const TEST = gql`
         versions
       }
     }
+    environments {
+      description
+      id
+      name
+      path
+      packages {
+        id
+        name
+        version
+      }
+    }
   }
 `
 

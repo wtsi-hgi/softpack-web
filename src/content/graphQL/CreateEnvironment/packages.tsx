@@ -3,19 +3,18 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Autocomplete, Box, Tab, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
-function Test(data) {
+function Packages(data) {
   const [value, setValue] = useState(null);
-  const [pythonPackages, setPythonPackages] = useState([]);
+  const [pythonPackages, setPythonPackages] = useState(['hi']);  
 
   useEffect(() => {
-    const namesArray = data.packages.packages.map(item => item.name);
-    setPythonPackages(namesArray)
+    const packages = data.packages.packages.map(item => item.name);
+    setPythonPackages(packages)
     
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
       setValue(newValue);
     }
   })
-  
   
   return (
     <Box> 
@@ -27,4 +26,4 @@ function Test(data) {
   );
 }
 
-export default Test;
+export default Packages;

@@ -6,7 +6,8 @@ import Footer from 'src/components/Footer';
 import { useQuery } from '@apollo/client';
 import { ALL_ENVIRONMENTS, TEST } from '../queries';
 import { useState } from 'react';
-import Test from './test';
+import EnvSelect from './envSelect';
+import Packages from './packages';
 
 function EnvironmentsTable() {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -26,6 +27,7 @@ function EnvironmentsTable() {
   }
 
   console.log(data.packageCollections[0]);
+  console.log(data.environments[0]);
   
   return (
     <>
@@ -41,10 +43,13 @@ function EnvironmentsTable() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Card>
-              <Test packages={data.packageCollections[0]}/>
-            </Card>
+            <Packages packages={data.packageCollections[0]}/>
           </Grid>
+
+          <Grid item xs={12}>
+            <EnvSelect data={data.environments[0]}/>
+          </Grid>
+          
         </Grid>
       </Container>
       <Footer />
