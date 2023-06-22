@@ -16,12 +16,12 @@ import {
 
 import CollapseRow from '../CollapseRow';
 import { useQuery } from '@apollo/client';
-import { TEST } from '../queries';
+import { ALL_PACKAGES } from '../queries';
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
 
 function AddEnvironment(props: { show: boolean }) {
-  const { loading, data, error } = useQuery(TEST);
+  const { loading, data, error } = useQuery(ALL_PACKAGES);
 
   if (loading) {
     return <div>loading...</div>

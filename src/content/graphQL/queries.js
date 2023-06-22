@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const TEST = gql`
+export const TEST_ALL = gql`
   query {
     packageCollections {
       id
@@ -36,15 +36,15 @@ export const ALL_USERS = gql`
 
 export const ALL_ENVIRONMENTS = gql`
   query {
-    allEnvironments  {
+    environments {
+      description
+      id
       name
+      path
       packages {
-        name
-        version
-      }
-      owners {
         id
         name
+        version
       }
     }
   }
@@ -52,13 +52,14 @@ export const ALL_ENVIRONMENTS = gql`
 
 export const ALL_PACKAGES = gql`
   query {
-    allPackages  {
+    packageCollections {
+      id
       name
       packages {
+        id
         name
-        version
+        versions
       }
-      id
     }
   }
 `
