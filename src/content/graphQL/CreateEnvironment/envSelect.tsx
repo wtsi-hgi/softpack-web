@@ -1,6 +1,4 @@
-import { useQuery } from "@apollo/client";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Autocomplete, Box, Divider, Tab, TextField, Typography } from "@mui/material";
+import { Box, Chip, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 interface Environment {
@@ -25,10 +23,6 @@ function EnvSelect(data) {
   useEffect(() => {
     const random = [data.data]
     setEnvironments(random);
-
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-      setValue(newValue);
-    }
   }, [])
   
   return (
@@ -43,8 +37,12 @@ function EnvSelect(data) {
             <Typography><Typography variant={"h4"}>Description:</Typography> {env.description}</Typography>            
             {env.packages.map((package_) => {
               return (
-                <Box key={package_.id}>
-                  <Typography>Package Name: {package_.name}</Typography>
+                <Box key={package_.id} sx={{display:"inline-flex"}}>
+                  <Chip 
+                    label={package_.name}
+                    variant="outlined"
+                    onDelete={(e) => console.log(e)}
+                  />
                   {package_.version && <Typography>Package Version: {package_.version}</Typography>}
                 </Box>
               );

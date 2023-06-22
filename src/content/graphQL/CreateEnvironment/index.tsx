@@ -1,19 +1,28 @@
-import { Helmet } from 'react-helmet-async';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { Grid, Container, Card } from '@mui/material';
-import Footer from 'src/components/Footer';
+import {
+  Grid,
+  Typography,
+  CardContent,
+  Card,
+  Box,
+  Divider,
+  TableContainer,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
+import CollapseRow from '../CollapseRow';
 import { useQuery } from '@apollo/client';
-import { ALL_ENVIRONMENTS, TEST } from '../queries';
-import { useState } from 'react';
-import EnvSelect from './envSelect';
-import Packages from './packages';
+import { TEST } from '../queries';
+import EnvironmentSettings from './EnvironmentSettings';
+import PackageSettings from './PackageSettings';
 
-function EnvironmentsTable() {
-  const [errorMessage, setErrorMessage] = useState(null)
-
+function AddEnvironment(props: { show: boolean }) {
   const { loading, data, error } = useQuery(TEST);
-   
+
   if (loading) {
     return <div>loading...</div>
   }
@@ -26,35 +35,61 @@ function EnvironmentsTable() {
     )
   }
 
-  console.log(data.packageCollections[0]);
-  console.log(data.environments[0]);
+  const matchingEnvs = [
+    {'Environment':'tremendous-mandril',
+     'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
   
-  return (
-    <>
-      <Helmet>
-        <title>Environments</title>
-      </Helmet>
-      <Container maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs={12}>
-            <Packages packages={data.packageCollections[0]}/>
-          </Grid>
+    {'Environment':'ubiquitous-clam',
+    'Description':'Pellentesque feugiat accumsan consectetur. Nulla vitae portitor purus.'},
+  ];
 
-          <Grid item xs={12}>
-            <EnvSelect data={data.environments[0]}/>
-          </Grid>
-          
-        </Grid>
-      </Container>
-      <Footer />
-    </>
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <EnvironmentSettings />
+      </Grid>
+      <Grid item xs={12}>
+        <PackageSettings data={data.packageCollections}/>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <Box
+            p={3}
+          >
+            <Box>
+              <Typography variant="h4" gutterBottom>
+                Environments Matching Your Criteria
+              </Typography>
+              <Typography variant="subtitle2">
+                Save time and space by selecting one of the options below
+              </Typography>
+            </Box>
+          </Box>
+          <Divider />
+          <CardContent sx={{ p: 4 }}>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table" size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Environment</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {matchingEnvs.map((row, index) => {
+                    return (
+                      <CollapseRow key={index} row={row}/>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 }
 
-export default EnvironmentsTable;
+export default AddEnvironment;

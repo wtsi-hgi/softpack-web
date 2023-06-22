@@ -4,7 +4,7 @@ import Users from './users'
 import AddUser from './addUser'
 import { Helmet } from 'react-helmet-async'
 import Packages from './packages'
-import AddEnvironment from './addEnvironment'
+import AddEnvironment from './CreateEnvironment'
 
 const GraphQL = () => {
   const [page, setPage] = useState('environments')

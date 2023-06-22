@@ -3,12 +3,12 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Autocomplete, Box, Tab, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
-function Packages(data) {
+function Packages(props) {
   const [value, setValue] = useState(null);
-  const [pythonPackages, setPythonPackages] = useState(['hi']);  
+  const [pythonPackages, setPythonPackages] = useState([]);  
 
   useEffect(() => {
-    const packages = data.packages.packages.map(item => item.name);
+    const packages = props.packages.map(item => item.name);
     setPythonPackages(packages)
     
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -19,9 +19,17 @@ function Packages(data) {
   return (
     <Box> 
       <Autocomplete
+        multiple
         options={pythonPackages}
-        renderInput={(params) => <TextField {...params} label="10,000 options" />}
-        />
+        renderInput={(params) => {
+          return (
+            <TextField
+              {...params}
+              variant="standard"
+            />
+          );
+        }}
+      />
     </Box>
   );
 }

@@ -21,7 +21,7 @@ const Loader = (Component) => (props) =>
 const Overview = Loader(lazy(() => import('src/content/overview')));
 const Environments = Loader(lazy(() => import('src/content/graphQL/environments')));
 const AddUser = Loader(lazy(() => import('src/content/graphQL/addUser')));
-const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/addEnvironment')));
+const AddEnvironment = Loader(lazy(() => import('src/content/graphQL/CreateEnvironment/index')));
 const Packages = Loader(lazy(() => import('src/content/graphQL/packages')));
 const Users = Loader(lazy(() => import('src/content/graphQL/users')));
 const Test = Loader(lazy(() => import('src/content/graphQL/CreateEnvironment/index')));
