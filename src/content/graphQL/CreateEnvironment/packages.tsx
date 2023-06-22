@@ -1,26 +1,37 @@
 import { useQuery } from "@apollo/client";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Autocomplete, Box, Tab, TextField } from "@mui/material";
+import { Autocomplete, Box, Tab, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import ChipDropdown from "src/components/ChipDropdown";
 
 function Packages(props) {
   const [value, setValue] = useState(null);
-  const [pythonPackages, setPythonPackages] = useState([]);  
+  const [packages, setPackages] = useState([]);
 
   useEffect(() => {
     const packages = props.packages.map(item => item.name);
-    setPythonPackages(packages)
+    setPackages(packages)
     
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
       setValue(newValue);
     }
   })
+
+  const renderTags = (value) => {
+    return value.map((option, index) => (
+      <ChipDropdown 
+        key={index}
+        data={option}
+      />
+    ))
+  }
   
   return (
     <Box> 
       <Autocomplete
         multiple
-        options={pythonPackages}
+        options={packages}
+        renderTags={renderTags}
         renderInput={(params) => {
           return (
             <TextField
