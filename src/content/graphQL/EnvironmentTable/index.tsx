@@ -12,7 +12,7 @@ import EnvironmentTable from './EnvironmentTable';
 function EnvironmentsTable() {
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS)
+  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
  
   if (loading) {
     return <div>loading...</div>
@@ -44,7 +44,7 @@ function EnvironmentsTable() {
         >
           <Grid item xs={12}>
             <Card>
-              <EnvironmentTable environments={data.allEnvironments} />
+              <EnvironmentTable environments={data.environments} />
             </Card>
           </Grid>
         </Grid>

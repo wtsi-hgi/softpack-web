@@ -2,21 +2,16 @@ import { gql } from '@apollo/client'
 
 export const ALL_ENVIRONMENTS = gql`
   query {
-    allEnvironments {
-      creationDate
+    environments {
       description
       id
       name
-      owners {
-        email
-        id
-        name
-      }
+      path
       packages {
+        id
         name
         version
       }
-      status
     }
   }
 `

@@ -1,336 +1,52 @@
-import { FC, ChangeEvent, useState } from 'react';
-import { format } from 'date-fns';
-import numeral from 'numeral';
-import PropTypes from 'prop-types';
-import {
-  Tooltip,
-  Divider,
-  Box,
-  FormControl,
-  InputLabel,
-  Card,
-  Checkbox,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableContainer,
-  Select,
-  MenuItem,
-  Typography,
-  useTheme,
-  CardHeader,
-  TextField
-} from '@mui/material';
+import { Box, Chip, Divider, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import CustomChip from "./CustomChip";
 
-import Label from 'src/components/Label';
-import { EnvironmentStatus, Status } from 'src/models/environmentStatus';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import BulkActions from './BulkActions';
-import { useQuery } from '@apollo/client';
-import { ALL_ENVIRONMENTS } from '../queries';
-
-interface EnvironmentTableProps {
-  className?: string;
-  environments: EnvironmentStatus[];
+interface Environment {
+  description: string;
+  id: string;
+  name: string;
+  packages: Package[];
+  path: string;
+  __typename: string;
 }
 
-interface Filters {
-  status?: Status;
+interface Package {
+  id: string;
+  name: string;
+  version: string;
 }
 
-const getStatusLabel = (environment: Status): JSX.Element => {
-  const map = {
-    Failed: {
-      text: 'Failed',
-      color: 'error'
-    },
-    Completed: {
-      text: 'Completed',
-      color: 'success'
-    },
-    Pending: {
-      text: 'Pending',
-      color: 'warning'
-    }
-  };
+function EnvSelect(data) {
+  const [value, setValue] = useState(null);
+  const [environments, setEnvironments] = useState<Environment[]>([]);
 
-  const { text, color }: any = map[environment];
-
-  return <Label color={color}>{text}</Label>;
-};
-
-const applyFilters = (
-  environments: EnvironmentStatus[],
-  filters: Filters
-): EnvironmentStatus[] => {
-  return environments.filter((env) => {
-    let matches = true;
-
-    if (filters.status && env.status !== filters.status) {
-      matches = false;
-    }
-
-    return matches;
-  });
-};
-
-const applyPagination = (
-  environments: EnvironmentStatus[],
-  page: number,
-  limit: number
-): EnvironmentStatus[] => {
-  return environments.slice(page * limit, page * limit + limit);
-};
-
-const EnvironmentTable = (data) => {
-  const [masterCopyRows, setMasterCopyRows] = useState(data.environments)
-  const [rows, setRows] = useState(data.environments)
-
-  const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
-    []
-  );
-  const selectedBulkActions = selectedEnvironments.length > 0;
-  const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
-
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: 'completed',
-      name: 'Completed'
-    },
-    {
-      id: 'pending',
-      name: 'Pending'
-    },
-    {
-      id: 'failed',
-      name: 'Failed'
-    }
-  ];
-
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
-
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
-  };
-
-  const handleSelectAllEnvironments = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedEnvironments(
-      event.target.checked
-        ? rows.map((row) => row.id)
-        : []
-    );
-  };
-
-  const handleSelectOneEnvironment = (
-    event: ChangeEvent<HTMLInputElement>,
-    rowID: string
-  ): void => {
-    if (!selectedEnvironments.includes(rowID)) {
-      setSelectedEnvironments((prevSelected) => [
-        ...prevSelected,
-        rowID
-      ]);
-    } else {
-      setSelectedEnvironments((prevSelected) =>
-        prevSelected.filter((id) => id !== rowID)
-      );
-    }
-  };
-
-  const handlePageChange = (event: any, newPage: number): void => {
-    setPage(newPage);
-  };
-
-  const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
-  };
-
-  //const filteredEnvironments = applyFilters(data, filters);
-  {/*const paginatedEnvironments = applyPagination(
-    filteredEnvironments,
-    page,
-    limit
-  );*/}
-  const selectedSomeCryptoOrders =
-    selectedEnvironments.length > 0 &&
-    selectedEnvironments.length < rows.length;
-  const selectedAllCryptoOrders =
-    selectedEnvironments.length === rows.length;
-  const theme = useTheme();
-
+  useEffect(() => {
+    const random = data.environments
+    setEnvironments(random);
+  }, [])
+  
   return (
-    <Card>    
-      {selectedBulkActions && (
-        <Box flex={1} p={2}>
-          <BulkActions />
-        </Box>
-      )}
-      {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={filters.status || 'all'}
-                  onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
-                >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          }
-        />
-      )}
-      <Divider />
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllEnvironments}
-                />
-              </TableCell>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell align="left">Description</TableCell>
-              <TableCell align="left">Owner</TableCell>
-              <TableCell align="left">Date Created</TableCell>
-              <TableCell align="left">Status</TableCell>
-              <TableCell align="right"></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => {
-              console.log('environment', row)
-              const isEnvironmentSelected = selectedEnvironments.includes(
-                row.id
-              );
-
+    <Box>     
+      {environments.map((env) => {
+        return (
+          <Box key={env.id} pb={4}>
+            <Typography><Typography variant={"h4"}>Name:</Typography> {env.name}</Typography>
+            <Typography><Typography variant={"h4"}>Path:</Typography> {env.path}</Typography>
+            <Typography><Typography variant={"h4"}>Description:</Typography> {env.description}</Typography>            
+            {env.packages.map((package_) => {
               return (
-                <TableRow
-                  hover
-                  key={row.id}
-                  selected={isEnvironmentSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={false}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEnvironment(event, row.id)
-                      }
-                      value={false}
-                    />
-                  </TableCell>
-                  <TableCell align="left">
-                    {row.id}
-                  </TableCell>
-                  <TableCell align="left">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="left">
-                    {row.description}
-                  </TableCell>
-                  <TableCell align="left">
-                    {row.owners.map((owner) => {
-                      return (
-                        <Typography key={owner.name}>{owner.name}</Typography>
-                      );
-                    })}
-                  </TableCell>
-                  <TableCell align="left">
-                    {row.creationDate}
-                  </TableCell>
-                  <TableCell align="left">
-                    {getStatusLabel(row.status)}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
+                <Box key={package_.id} sx={{display:"inline-flex"}}>
+                  <CustomChip name={package_.name}/>
+                  {package_.version && <Typography>Package Version: {package_.version}</Typography>}
+                </Box>
               );
             })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box p={2}>
-        <TablePagination
-          component="div"
-          count={5}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleLimitChange}
-          page={page}
-          rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
-        />
-      </Box>
-    </Card>
+          </Box>
+        );
+      })}
+    </Box>
   );
-};
+}
 
-EnvironmentTable.propTypes = {
-  environments: PropTypes.array.isRequired
-};
-
-EnvironmentTable.defaultProps = {
-  environments: []
-};
-
-export default EnvironmentTable;
+export default EnvSelect;
