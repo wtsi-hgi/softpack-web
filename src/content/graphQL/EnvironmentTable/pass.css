@@ -1,0 +1,11 @@
+.bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+  }
+  
+.red {
+background-color: red;
+}

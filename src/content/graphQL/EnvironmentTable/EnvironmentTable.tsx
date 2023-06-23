@@ -1,6 +1,5 @@
-import { Box, Chip, Divider, Typography } from "@mui/material";
+import { Box, Chip, Divider, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import CustomChip from "./CustomChip";
 
 interface Environment {
   description: string;
@@ -30,18 +29,50 @@ function EnvSelect(data) {
     <Box>     
       {environments.map((env) => {
         return (
-          <Box key={env.id} pb={4}>
-            <Typography><Typography variant={"h4"}>Name:</Typography> {env.name}</Typography>
-            <Typography><Typography variant={"h4"}>Path:</Typography> {env.path}</Typography>
-            <Typography><Typography variant={"h4"}>Description:</Typography> {env.description}</Typography>            
-            {env.packages.map((package_) => {
-              return (
-                <Box key={package_.id} sx={{display:"inline-flex"}}>
-                  <CustomChip name={package_.name}/>
-                  {package_.version && <Typography>Package Version: {package_.version}</Typography>}
-                </Box>
-              );
-            })}
+          <Box key={env.id} 
+            sx={{
+              borderRadius:'10px', 
+              backgroundColor:'rgba(34, 51, 84, 0.02)', 
+              padding:'18px', 
+              margin:'0 0 18px 0', 
+              position:'relative'
+            }}>
+            <Tooltip title="Successful" placement="top">
+              <Box
+                sx={{
+                  content: "''",
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '10px',
+                  height: '100%',
+                  backgroundColor: 'rgb(87, 202, 34)',
+                  borderRadius:'10px'
+                }}
+              />
+            </Tooltip>
+            <Box sx={{
+              display:'flex', 
+              alignItems:'baseline'}}>
+              <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
+              <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
+              <Typography variant='h4'>{env.path}</Typography>
+            </Box>
+            <Typography sx={{padding:'9px 0 9px 20.7px'}}>{env.description}</Typography>
+            <Box sx={{paddingLeft:'20.7px'}}>
+              {env.packages.map((package_) => {
+                return (
+                  <Box key={package_.id} sx={{display:"inline-flex"}}>
+                    <Tooltip title="Version here" placement="top">
+                      <Chip 
+                        label={package_.name} 
+                        sx={{m:'4px', color:'#5569ff', border:'1px solid rgba(85, 105, 255, 0.7)', backgroundColor:'transparent'}} 
+                      />
+                    </Tooltip>
+                  </Box>
+                );
+              })}
+            </Box>
           </Box>
         );
       })}
