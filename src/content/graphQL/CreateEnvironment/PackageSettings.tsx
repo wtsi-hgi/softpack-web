@@ -8,6 +8,8 @@ function PackageSettings(props) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
 
+  console.log('props coming from index', props);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -41,12 +43,14 @@ function PackageSettings(props) {
               return (
                 <Grid key={program.id} container spacing={1}>
                   <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                    <Box pr={3} pb={5}>
+                    <Box pr={3} pb={4}>
                       {program.name} Packages:
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={8} md={7}>
-                    <Packages packages={program.packages}/>
+                    <Box pr={3} pb={4}>
+                      <Packages packages={program.packages}/>
+                    </Box>
                   </Grid>
                 </Grid>
               );

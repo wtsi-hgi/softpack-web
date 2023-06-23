@@ -5,23 +5,33 @@ import { useEffect, useState } from "react";
 import ChipDropdown from "src/components/ChipDropdown";
 
 function Packages(props) {
-  const [value, setValue] = useState(null);
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
     const packages = props.packages.map(item => item.name);
     setPackages(packages)
-    
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-      setValue(newValue);
-    }
   })
 
+  const findPackageVersionsFromName = (names: string[]) => {
+    var versions = [];
+
+    names.map((name) => {
+      const index = props.packages.findIndex((element) => element.name === name);
+      const packageVersions = props.packages[index].versions;
+      versions.push(packageVersions);
+    })
+
+    return versions;
+  }
+
   const renderTags = (value) => {
+    const packageVersions = findPackageVersionsFromName(value);
+
     return value.map((option, index) => (
       <ChipDropdown 
         key={index}
         data={option}
+        versions={packageVersions[index]}
       />
     ))
   }

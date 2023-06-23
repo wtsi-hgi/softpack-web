@@ -8,6 +8,8 @@ function ChipDropdown(props) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  console.log('chip props', props);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setOpen(!open);
@@ -26,7 +28,7 @@ function ChipDropdown(props) {
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         onDelete={(e) => console.log('delete attempt')}
-        sx={{m:'0 3px 0 3px'}}
+        sx={{m:'3px'}}
       />
       <Menu
         anchorEl={anchorEl}
@@ -40,25 +42,21 @@ function ChipDropdown(props) {
           vertical: 'top',
           horizontal: 'right',
         }}
-      >        
-        <MenuItem
-          component="a"
-          href="https://example.com/link2"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClose}
-        >
-          Dropdown Link 2
-        </MenuItem>
-        <MenuItem
-          component="a"
-          href="https://example.com/link3"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClose}
-        >
-          Dropdown Link 3
-        </MenuItem>
+      > 
+        {props.versions.map((version, index) => {
+          return (
+            <MenuItem
+              key={index}
+              component="a"
+              href="https://example.com/link"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleClose}
+            >
+              {version}
+            </MenuItem>
+          )
+        })}       
       </Menu>
     </div>
   );
