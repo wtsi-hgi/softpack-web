@@ -1,5 +1,6 @@
-import { Box, Chip, Divider, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Chip, Divider, Drawer, Link, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import EnvironmentDrawer from "./EnvironmentDrawer";
 
 interface Environment {
   description: string;
@@ -19,6 +20,15 @@ interface Package {
 function EnvSelect(data) {
   const [value, setValue] = useState(null);
   const [environments, setEnvironments] = useState<Environment[]>([]);
+  const [selectedEnvName, setSelectedEnvName] = useState(null);
+
+  const handleLinkClick = (linkId) => {
+    setSelectedEnvName(linkId);
+  };
+
+  const handleDrawerClose = () => {
+    setSelectedEnvName(null);
+  };
 
   const buildColours = [
     'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)', 
@@ -28,6 +38,31 @@ function EnvSelect(data) {
     'Successful', 'Successful', 'Failed', 
     'Building...', 'Failed'];
 
+  function convertToBreadcrumbs(path) {
+    const parts = path.split('/').filter((part) => part.trim() !== '');
+    console.log(parts);
+  
+    return parts.map((part, index) => {
+      const isLastPart = index === parts.length - 1;
+  
+      return (
+        <Link key={index} color="inherit" href="#" onClick={(e) => (console.log(e))}>
+          {part}
+        </Link>
+      );
+    });
+  }
+
+  const handleEnvClick = (envName) => {
+    console.log('hello', envName);
+
+    return (
+      <Drawer anchor="right" open={true}>
+        Hello {envName}!
+      </Drawer>
+    );
+  }
+  
   useEffect(() => {
     const random = data.environments
     setEnvironments(random);
@@ -62,9 +97,18 @@ function EnvSelect(data) {
             <Box sx={{
               display:'flex', 
               alignItems:'baseline'}}>
-              <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
+              <Link onClick={(e) => handleLinkClick(e.target.textContent)}>
+                <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
+              </Link>
+              <Drawer anchor="right" open={selectedEnvName !== null}>
+                Hello {selectedEnvName}!
+              </Drawer>
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
-              <Typography variant='h4'>{env.path}</Typography>
+              <Typography variant='h4'>
+                <Breadcrumbs separator="›" aria-label="breadcrumb">
+                  {convertToBreadcrumbs(env.path)}
+                </Breadcrumbs>
+              </Typography>
             </Box>
             <Typography sx={{padding:'9px 0 9px 20.7px'}}>{env.description}</Typography>
             <Box sx={{paddingLeft:'20.7px'}}>
@@ -74,7 +118,12 @@ function EnvSelect(data) {
                     <Tooltip title="Version here" placement="top">
                       <Chip 
                         label={package_.name} 
-                        sx={{m:'4px', color:'#5569ff', border:'1px solid rgba(85, 105, 255, 0.7)', backgroundColor:'transparent'}} 
+                        sx={{
+                          m:'4px', 
+                          color:'#5569ff', 
+                          border:'1px solid rgba(85, 105, 255, 0.7)', 
+                          backgroundColor:'transparent'
+                        }} 
                       />
                     </Tooltip>
                   </Box>
