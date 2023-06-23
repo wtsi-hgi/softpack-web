@@ -20,6 +20,14 @@ function EnvSelect(data) {
   const [value, setValue] = useState(null);
   const [environments, setEnvironments] = useState<Environment[]>([]);
 
+  const buildColours = [
+    'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)', 
+    'rgb(51, 194, 255)', 'rgb(255, 25, 67)'];
+
+  const buildMessages = [
+    'Successful', 'Successful', 'Failed', 
+    'Building...', 'Failed'];
+
   useEffect(() => {
     const random = data.environments
     setEnvironments(random);
@@ -27,7 +35,7 @@ function EnvSelect(data) {
   
   return (
     <Box>     
-      {environments.map((env) => {
+      {environments.map((env, i) => {
         return (
           <Box key={env.id} 
             sx={{
@@ -37,7 +45,7 @@ function EnvSelect(data) {
               margin:'0 0 18px 0', 
               position:'relative'
             }}>
-            <Tooltip title="Successful" placement="top">
+            <Tooltip title={buildMessages[i]} placement="top">
               <Box
                 sx={{
                   content: "''",
@@ -46,7 +54,7 @@ function EnvSelect(data) {
                   left: 0,
                   width: '10px',
                   height: '100%',
-                  backgroundColor: 'rgb(87, 202, 34)',
+                  backgroundColor: buildColours[i],
                   borderRadius:'10px'
                 }}
               />
