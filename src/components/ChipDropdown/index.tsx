@@ -8,8 +8,6 @@ function ChipDropdown(props) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log('chip props', props);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setOpen(!open);

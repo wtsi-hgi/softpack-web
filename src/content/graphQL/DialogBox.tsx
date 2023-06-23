@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Typography } from "@mui/material";
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -25,7 +25,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Hold on!
+        <Typography variant="h4">Hold on!</Typography>
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
@@ -34,7 +34,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Create my own environment</Button>
-        <Button onClick={handleClose} autoFocus>
+        <Button onClick={handleClose} autoFocus sx={{backgroundColor:"#5569ff", color:"white"}}>
           Use already existing environment
         </Button>
       </DialogActions>
