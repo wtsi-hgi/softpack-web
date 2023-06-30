@@ -1,6 +1,7 @@
-import { Box, Breadcrumbs, Chip, Divider, Drawer, Link, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Chip, Divider, Drawer, Link, Rating, Stack, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import EnvironmentDrawer from "./EnvironmentDrawer";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface Environment {
   description: string;
@@ -18,7 +19,6 @@ interface Package {
 }
 
 function EnvSelect(data) {
-  const [value, setValue] = useState(null);
   const [environments, setEnvironments] = useState<Environment[]>([]);
   const [selectedEnvName, setSelectedEnvName] = useState(null);
 
@@ -51,16 +51,6 @@ function EnvSelect(data) {
         </Link>
       );
     });
-  }
-
-  const handleEnvClick = (envName) => {
-    console.log('hello', envName);
-
-    return (
-      <Drawer anchor="right" open={true}>
-        Hello {envName}!
-      </Drawer>
-    );
   }
   
   useEffect(() => {
@@ -100,8 +90,43 @@ function EnvSelect(data) {
               <Link onClick={(e) => handleLinkClick(e.target.textContent)}>
                 <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
               </Link>
-              <Drawer anchor="right" open={selectedEnvName !== null}>
-                Hello {selectedEnvName}!
+              <Drawer anchor="right" open={selectedEnvName !== null} onClose={handleDrawerClose}>
+                <Button
+                  sx={{backgroundColor:'#5569ff'}}>
+                    <Box
+                      display={'flex'}>
+                      <Typography color={'white'}>View User Profile <ArrowForwardIcon /></Typography>
+                    </Box>
+                </Button>
+                <Box
+                  role='presentation'
+                  width={400}
+                  p={4}
+                  display='flex'
+                  justifyContent={'center'}
+                  flexDirection={'column'}
+                  alignItems={'center'}
+                >
+                  <Typography variant="h3">{selectedEnvName}</Typography>
+                  <Typography variant="subtitle2">{selectedEnvName}</Typography>
+                </Box>
+                <Divider />
+                <Box
+                  padding={'18px'}
+                >
+                  <Typography variant={'h4'}>Overall Rating</Typography>
+                  <Typography variant={'h2'}>4.9</Typography>
+                  <Stack>
+                    <Rating name="read-only" value={4.5} precision={0.5} readOnly />
+                  </Stack>
+                </Box>
+                <Box
+                  padding={'18px'}
+                >
+                  <Typography variant={'h4'}>Total Installs</Typography>
+                  <Typography variant={'h2'}>275</Typography>
+                </Box>
+                <Divider />
               </Drawer>
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
               <Typography variant='h4'>
