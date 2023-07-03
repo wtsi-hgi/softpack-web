@@ -1,6 +1,6 @@
 import { Box, Breadcrumbs, Button, Chip, Divider, Drawer, Link, Rating, Stack, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import EnvironmentDrawer from "./EnvironmentDrawer";
+import EnvironmentDrawer from "./Drawer";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface Environment {
@@ -88,10 +88,16 @@ function EnvSelect(data) {
               display:'flex', 
               alignItems:'baseline'
             }}>
-              <Link onClick={(e) => handleLinkClick(e.target.textContent)}>
+              <Link onClick={(e) => {
+                console.log(env)
+                return (
+                  <Typography>Hello from Link</Typography>
+                )
+                handleLinkClick(e.target.textContent)
+              }}>
                 <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
               </Link>
-              <Drawer anchor="right" open={selectedEnvName !== null} onClose={handleDrawerClose}>
+              {/*<Drawer anchor="right" open={selectedEnvName !== null} onClose={handleDrawerClose}>
                 <Box padding={'27px'}>
                   <Box
                     display={'flex'}
@@ -122,6 +128,19 @@ function EnvSelect(data) {
                   <Box
                     padding={'18px'}
                   >
+                    <Typography variant={'h4'}>Description</Typography>
+                    <Typography variant={'h2'}>An environment</Typography>
+                  </Box>
+                  <Box
+                    padding={'18px'}
+                  >
+                    <Typography variant={'h4'}>Packages</Typography>
+                    <Typography variant={'h2'}>Pandas</Typography>
+                  </Box>
+                  <Divider />
+                  <Box
+                    padding={'18px'}
+                  >
                     <Typography variant={'h4'}>Overall Rating</Typography>
                     <Typography variant={'h2'}>4.5</Typography>
                     <Stack>
@@ -136,7 +155,7 @@ function EnvSelect(data) {
                   </Box>
                   <Divider />
                 </Box>
-              </Drawer>
+              </Drawer>*/}
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
               <Typography variant='h4'>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
