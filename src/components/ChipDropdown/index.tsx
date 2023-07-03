@@ -7,13 +7,25 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 function ChipDropdown(props) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setOpen(!open);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, index) => {
+    // Check if index is 0 (as this refers to the latest version of the 
+    // package) to decide whether or not to update label name; no need to 
+    // update if user has selected latest version, as all packages are 
+    // implicitly their latest version.
+
+    if (index == 0) {
+      setSelected(null);
+    } else {
+      setSelected(event.target.textContent);
+    }
+
     setAnchorEl(null);
     setOpen(!open);
   };
@@ -21,7 +33,7 @@ function ChipDropdown(props) {
   return (
     <div>
       <Chip
-        label={props.data}
+        label={selected ? props.data + ' (' + selected + ')' : props.data}
         onClick={handleClick}
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
@@ -46,10 +58,9 @@ function ChipDropdown(props) {
             <MenuItem
               key={index}
               component="a"
-              href="https://example.com/link"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={handleClose}
+              onClick={(e) => handleClose(e, index)}
             >
               {version}
             </MenuItem>
