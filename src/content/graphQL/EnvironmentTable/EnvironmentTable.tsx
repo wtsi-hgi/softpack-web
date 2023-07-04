@@ -20,14 +20,24 @@ interface Package {
 
 function EnvSelect(data) {
   const [environments, setEnvironments] = useState<Environment[]>([]);
-  const [selectedEnvName, setSelectedEnvName] = useState(null);
+  const [drawerEnvName, setDrawerEnvName] = useState(null);
+  const [drawerEnvDesc, setDrawerEnvDesc] = useState(null);
+  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleLinkClick = (linkId) => {
-    setSelectedEnvName(linkId);
+  const handleOpenDrawer = (name, description, packages) => {
+    setDrawerEnvName(name);
+    setDrawerEnvDesc(description);
+    setDrawerEnvPckgs(packages);
+    setIsDrawerOpen(true);
+  }
+
+  const handleLinkClick = () => {
+    setIsDrawerOpen(true);
   };
 
   const handleDrawerClose = () => {
-    setSelectedEnvName(null);
+    setIsDrawerOpen(null);
   };
 
   const buildColours = [
@@ -40,7 +50,6 @@ function EnvSelect(data) {
 
   function convertToBreadcrumbs(path) {
     const parts = path.split('/').filter((part) => part.trim() !== '');
-    console.log(parts);
   
     return parts.map((part, index) => {
       const isLastPart = index === parts.length - 1;
@@ -88,74 +97,23 @@ function EnvSelect(data) {
               display:'flex', 
               alignItems:'baseline'
             }}>
-              <Link onClick={(e) => {
-                console.log(env)
-                return (
-                  <Typography>Hello from Link</Typography>
-                )
-                handleLinkClick(e.target.textContent)
-              }}>
-                <Typography variant='h3' sx={{paddingLeft:'20.7px'}}>{env.name}</Typography>
-              </Link>
-              {/*<Drawer anchor="right" open={selectedEnvName !== null} onClose={handleDrawerClose}>
-                <Box padding={'27px'}>
-                  <Box
-                    display={'flex'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                  >
-                    <Button
-                      fullWidth
-                      sx={{backgroundColor:'#5569ff'}}
-                    >
-                      <Typography color={'white'} variant='h4'>View User Profile</Typography>
-                      <ArrowForwardIcon style={{color:'white'}} />
-                    </Button>
-                  </Box>
-                  <Box
-                    role='presentation'
-                    width={400}
-                    p={2}
-                    display={'flex'}
-                    justifyContent={'center'}
-                    flexDirection={'column'}
-                    alignItems={'center'}
-                  >
-                    <Typography variant="h3">{selectedEnvName}</Typography>
-                    <Typography variant="subtitle2">km34</Typography>
-                  </Box>
-                  <Divider />
-                  <Box
-                    padding={'18px'}
-                  >
-                    <Typography variant={'h4'}>Description</Typography>
-                    <Typography variant={'h2'}>An environment</Typography>
-                  </Box>
-                  <Box
-                    padding={'18px'}
-                  >
-                    <Typography variant={'h4'}>Packages</Typography>
-                    <Typography variant={'h2'}>Pandas</Typography>
-                  </Box>
-                  <Divider />
-                  <Box
-                    padding={'18px'}
-                  >
-                    <Typography variant={'h4'}>Overall Rating</Typography>
-                    <Typography variant={'h2'}>4.5</Typography>
-                    <Stack>
-                      <Rating name="read-only" value={4.5} precision={0.5} readOnly />
-                    </Stack>
-                  </Box>
-                  <Box
-                    padding={'18px'}
-                  >
-                    <Typography variant={'h4'}>Total Installs</Typography>
-                    <Typography variant={'h2'}>275</Typography>
-                  </Box>
-                  <Divider />
-                </Box>
-              </Drawer>*/}
+              <Typography 
+                component={Link} 
+                variant='h3' 
+                onClick={(e) => {
+                  handleOpenDrawer(env.name, env.description, env.packages)}
+                } 
+                sx={{paddingLeft:'20.7px'}}>{env.name}
+              </Typography>
+              
+              {isDrawerOpen && <EnvironmentDrawer 
+                name={drawerEnvName}
+                description={drawerEnvDesc}
+                packages={drawerEnvPckgs}
+                isOpen={isDrawerOpen} 
+                onClose={handleDrawerClose} 
+              />}
+              
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
               <Typography variant='h4'>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
