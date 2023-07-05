@@ -21,12 +21,14 @@ interface Package {
 function EnvSelect(data) {
   const [environments, setEnvironments] = useState<Environment[]>([]);
   const [drawerEnvName, setDrawerEnvName] = useState(null);
+  const [drawerPathName, setDrawerPathName] = useState(null);
   const [drawerEnvDesc, setDrawerEnvDesc] = useState(null);
   const [drawerEnvPckgs, setDrawerEnvPckgs] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleOpenDrawer = (name, description, packages) => {
+  const handleOpenDrawer = (name, path, description, packages) => {
     setDrawerEnvName(name);
+    setDrawerPathName(path);
     setDrawerEnvDesc(description);
     setDrawerEnvPckgs(packages);
     setIsDrawerOpen(true);
@@ -101,13 +103,15 @@ function EnvSelect(data) {
                 component={Link} 
                 variant='h3' 
                 onClick={(e) => {
-                  handleOpenDrawer(env.name, env.description, env.packages)}
+                  console.log(env)
+                  handleOpenDrawer(env.name, env.path, env.description, env.packages)}
                 } 
                 sx={{paddingLeft:'20.7px'}}>{env.name}
               </Typography>
               
               {isDrawerOpen && <EnvironmentDrawer 
                 name={drawerEnvName}
+                path={drawerPathName}
                 description={drawerEnvDesc}
                 packages={drawerEnvPckgs}
                 isOpen={isDrawerOpen} 

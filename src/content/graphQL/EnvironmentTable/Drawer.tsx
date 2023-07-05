@@ -1,10 +1,23 @@
-import { Box, Button, Chip, Divider, Drawer, Rating, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Chip, Divider, Drawer, Link, Rating, Stack, Tooltip, Typography } from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useEffect, useState } from "react";
 
-function EnvironmentDrawer({ name, description, packages, isOpen, onClose }) {
-  console.log('packages', packages);
- 
+function EnvironmentDrawer({ name, path, description, packages, isOpen, onClose }) {
+
+  function convertToBreadcrumbs(path) {
+    const parts = path.split('/').filter((part) => part.trim() !== '');
+  
+    return parts.map((part, index) => {
+      const isLastPart = index === parts.length - 1;
+  
+      return (
+        <Link key={index} color="inherit" href="#" onClick={(e) => (console.log(e))}>
+          {part}
+        </Link>
+      );
+    });
+  }
+
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
       <Box padding={'27px'}>
@@ -18,7 +31,11 @@ function EnvironmentDrawer({ name, description, packages, isOpen, onClose }) {
           alignItems={'center'}
         >
           <Typography variant="h3">{name}</Typography>
-          <Typography variant="subtitle2">km34</Typography>
+          <Typography variant='h4'>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              {convertToBreadcrumbs(path)}
+            </Breadcrumbs>
+          </Typography>
         </Box>
         <Divider />
         <Box
