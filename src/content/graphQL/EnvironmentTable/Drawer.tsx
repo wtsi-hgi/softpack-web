@@ -9,22 +9,9 @@ function EnvironmentDrawer({ name, description, packages, isOpen, onClose }) {
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
       <Box padding={'27px'}>
         <Box
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-        >
-          <Button
-            fullWidth
-            sx={{backgroundColor:'#5569ff'}}
-          >
-            <Typography color={'white'} variant='h4'>View User Profile</Typography>
-            <ArrowForwardIcon style={{color:'white'}} />
-          </Button>
-        </Box>
-        <Box
           role='presentation'
           width={400}
-          p={2}
+          padding={'0 18px 18px 18px'}
           display={'flex'}
           justifyContent={'center'}
           flexDirection={'column'}
@@ -43,7 +30,8 @@ function EnvironmentDrawer({ name, description, packages, isOpen, onClose }) {
         <Box
           padding={'18px'}
         >
-          <Typography variant={'h4'} style={{paddingBottom:'15px'}}>Packages</Typography>
+        <Divider />
+          <Typography paddingTop={2} variant={'h4'} style={{paddingBottom:'15px'}}>Packages</Typography>
           {packages.map((package_) => {
             return (
               <Box key={package_.id} sx={{display:"inline-flex"}}>
@@ -62,23 +50,6 @@ function EnvironmentDrawer({ name, description, packages, isOpen, onClose }) {
             );
           })}
         </Box>
-        <Divider />
-        <Box
-          padding={'18px'}
-        >
-          <Typography variant={'h4'}>Overall Rating</Typography>
-          <Typography variant={'h2'}>4.5</Typography>
-          <Stack>
-            <Rating name="read-only" value={4.5} precision={0.5} readOnly />
-          </Stack>
-        </Box>
-        <Box
-          padding={'18px'}
-        >
-          <Typography variant={'h4'}>Total Installs</Typography>
-          <Typography variant={'h2'}>275</Typography>
-        </Box>
-        <Divider />
       </Box>
     </Drawer>
   );
