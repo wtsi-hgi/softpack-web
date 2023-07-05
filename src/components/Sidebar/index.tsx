@@ -30,7 +30,7 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItemButton>
-        <ListItemButton component={NavLink} to={'/'}>
+        <ListItemButton component={NavLink} to={'/environments'}>
           <ListItemIcon>
             <WidgetsIcon />
           </ListItemIcon>
