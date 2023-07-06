@@ -1,5 +1,7 @@
+import EnvironmentList from "../../components/EnvironmentList";
+
 const Environments = () => {
-  return <h1>Environments</h1>;
+  return <EnvironmentList/>
 };
 
 export default Environments;
