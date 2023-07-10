@@ -1,7 +1,7 @@
 import { Card, Container, Grid, Typography} from "@mui/material";
 import { gql, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
-import data from './data.json'
+//import data from './data.json'
 
 const ALL_ENVIRONMENTS = gql`
   query {
@@ -20,9 +20,9 @@ const ALL_ENVIRONMENTS = gql`
 `
 
 const EnvironmentList = () => {
-  //const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
+  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
  
-  {/*if (loading) {
+  if (loading) {
     return <div>loading...</div>
   }
 
@@ -32,7 +32,7 @@ const EnvironmentList = () => {
         {error.message}
       </div>
     )
-  }*/}
+  }
 
   console.log(data);
   
@@ -47,7 +47,7 @@ const EnvironmentList = () => {
       >
         <Grid item xs={12}>
           <Card>
-            <EnvironmentTable environments={data} />
+            <EnvironmentTable environments={data.environments} />
           </Card>
         </Grid>
       </Grid>

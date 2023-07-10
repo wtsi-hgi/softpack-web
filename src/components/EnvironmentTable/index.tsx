@@ -59,10 +59,8 @@ function EnvironmentTable(data: any) {
   }
   
   useEffect(() => {
-    console.log('data', data)
-    const test = data.environments.data.environments
-    console.log('environments', test)
-    setEnvironments(test);
+    const environments = data.environments
+    setEnvironments(environments);
   }, [])
   
   return (
