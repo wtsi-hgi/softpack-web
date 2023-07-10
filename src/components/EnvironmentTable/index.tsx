@@ -1,5 +1,6 @@
-import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Chip, Drawer, Link, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import EnvironmentDrawer from "../Drawer";
 //import EnvironmentDrawer from "../Drawer";
 
 interface Environment {
@@ -103,14 +104,16 @@ function EnvironmentTable(data: any) {
                 sx={{paddingLeft:'20.7px'}}>{env.name}
               </Typography>
               
-              {/*isDrawerOpen && <EnvironmentDrawer 
+              {isDrawerOpen && <EnvironmentDrawer 
                 name={drawerEnvName}
                 path={drawerPathName}
                 description={drawerEnvDesc}
-                packages={drawerEnvPckgs}
+                packages={['drawerEnvPckgs']}
                 isOpen={isDrawerOpen} 
                 onClose={handleDrawerClose} 
-              />*/}
+              />}
+
+              {/*isDrawerOpen && <Drawer open={true} anchor="right">Hello</Drawer>*/}
               
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
               <Typography variant='h4'>
