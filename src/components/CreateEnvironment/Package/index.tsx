@@ -1,15 +1,19 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import DropdownChip from "../DropdownChip";
+import DropdownChip from "../../DropdownChip";
 
-function Packages(props: any) {
+// Displays an autocomplete box, where the option(s) selected are MUI chips,
+// each with their own dropdown to display package versions.
+function Package(props: any) {
   const [packages, setPackages] = useState([]);
 
+  // Parse package names from data.
   useEffect(() => {
     const packages = props.packages.map((item: any) => item.name);
     setPackages(packages)
   })
 
+  // findPackageVersionsFromName finds all available versions of a package.
   const findPackageVersionsFromName = (names: string[]) => {
     var versions: string[] = [];
 
@@ -22,6 +26,8 @@ function Packages(props: any) {
     return versions;
   }
 
+  // renderTags displays each selected autocomplete option as an MUI chip which
+  // contains a dropdown, hence the custom name, DropdownChip.
   const renderTags = (value: any) => {
     const packageVersions = findPackageVersionsFromName(value);
 
@@ -53,4 +59,4 @@ function Packages(props: any) {
   );
 }
 
-export default Packages;
+export default Package;

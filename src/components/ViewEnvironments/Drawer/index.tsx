@@ -1,5 +1,16 @@
-import { Box, Breadcrumbs, Chip, Divider, Drawer, Link, Tooltip, Typography } from "@mui/material";
+import { 
+  Box, 
+  Breadcrumbs, 
+  Chip, 
+  Divider, 
+  Drawer, 
+  Link, 
+  Tooltip, 
+  Typography 
+} from "@mui/material";
 
+// EnvironmentDrawer is a right-hand side drawer that displays information about
+// the selected environment.
 function EnvironmentDrawer(props: any) {
 
   // convertToBreadcrumbs takes a path string as input, and converts each root

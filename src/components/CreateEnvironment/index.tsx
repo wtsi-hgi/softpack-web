@@ -33,10 +33,9 @@ const ALL_PACKAGES = gql`
   }
 `
 
+// CreateEnvironment displays the 'create environment' page.
 function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
-
-  console.log(data);
 
   if (loading) {
     return <div>loading...</div>
