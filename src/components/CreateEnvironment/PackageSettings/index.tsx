@@ -48,8 +48,7 @@ function PackageSettings(props:any) {
                 </Grid>
                 <Grid item xs={12} sm={8} md={7}>
                   <Box pr={3} pb={4}>
-                    Hello
-                    {/*<Packages packages={program.packages}/>*/}
+                    <Packages packages={program.packages}/>
                   </Box>
                 </Grid>
               </Grid>
