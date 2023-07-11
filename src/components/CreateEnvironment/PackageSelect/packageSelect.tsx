@@ -16,13 +16,13 @@ interface Package {
   version: string;
 }
 
-function EnvSelect(data: any) {
+function PackageSelect(data: any) {
   const [value, setValue] = useState(null);
   const [environments, setEnvironments] = useState<Environment[]>([]);
 
   useEffect(() => {
-    const random = [data.data]
-    setEnvironments(random);
+    const environments = [data.data]
+    setEnvironments(environments);
   }, [])
   
   return (
@@ -55,4 +55,4 @@ function EnvSelect(data: any) {
   );
 }
 
-export default EnvSelect;
+export default PackageSelect;
