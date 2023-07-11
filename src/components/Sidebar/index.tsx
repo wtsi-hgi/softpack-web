@@ -6,6 +6,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import CreateIcon from '@mui/icons-material/Create';
 import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from 'react-router-dom';
 import WidgetsIcon from '@mui/icons-material/Widgets';
@@ -35,6 +36,12 @@ const Sidebar = () => {
             <WidgetsIcon />
           </ListItemIcon>
           <ListItemText primary="Environments" />
+        </ListItemButton>
+        <ListItemButton component={NavLink} to={'/create'}>
+          <ListItemIcon>
+            <CreateIcon />
+          </ListItemIcon>
+          <ListItemText primary="Create Environment" />
         </ListItemButton>
         <Divider />
         <ListItemButton component={NavLink} to={'settings'}>
