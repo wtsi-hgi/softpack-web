@@ -1,13 +1,9 @@
 import { Box, Breadcrumbs, Chip, Divider, Drawer, Link, Tooltip, Typography } from "@mui/material";
 
-interface Package {
-  id: string;
-  name: string;
-  version: string;
-}
-
 function EnvironmentDrawer(props: any) {
 
+  // convertToBreadcrumbs takes a path string as input, and converts each root
+  // into its own Breadcrumb element.
   function convertToBreadcrumbs(path: string) {
     const parts = path.split('/').filter((part) => part.trim() !== '');
   
@@ -51,13 +47,12 @@ function EnvironmentDrawer(props: any) {
         >
         <Divider />
           <Typography paddingTop={2} variant={'h4'} style={{paddingBottom:'15px'}}>Packages</Typography>
-          <Typography>{props.packages}</Typography>
-          {props.packages.map((package_: any) => {
+          {props.packages.map((name: string, i: any) => {
             return (
-              <Box key={package_.id} sx={{display:"inline-flex"}}>
+              <Box key={i} sx={{display:"inline-flex"}}>
                 <Tooltip title="Version here" placement="top">
                   <Chip 
-                    label={package_.name} 
+                    label={name} 
                     sx={{
                       m:'4px', 
                       color:'#5569ff', 
