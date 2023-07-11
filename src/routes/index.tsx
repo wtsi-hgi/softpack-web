@@ -25,6 +25,10 @@ export const routes = [
         path: 'settings',
         element: <Settings />,
       },
+      {
+        path: '*',
+        element: <Home />,
+      },
     ],
   },
 ];
