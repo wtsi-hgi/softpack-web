@@ -1,4 +1,4 @@
-import EnvironmentList from "../../components/EnvironmentList";
+import EnvironmentList from "../../components/ViewEnvironments/EnvironmentList";
 
 const Environments = () => {
   return <EnvironmentList/>
