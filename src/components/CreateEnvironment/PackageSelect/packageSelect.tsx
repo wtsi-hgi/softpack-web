@@ -17,7 +17,6 @@ interface Package {
 }
 
 function PackageSelect(data: any) {
-  const [value, setValue] = useState(null);
   const [environments, setEnvironments] = useState<Environment[]>([]);
 
   useEffect(() => {
