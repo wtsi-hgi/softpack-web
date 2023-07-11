@@ -1,9 +1,24 @@
-import { Card, Box, Typography, Divider, CardContent, Grid, TextField, InputAdornment, Tooltip, FormControl, Select, MenuItem } from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useState } from "react";
+import { 
+  Card, 
+  Box, 
+  Typography, 
+  Divider, 
+  CardContent, 
+  Grid, 
+  TextField, 
+  InputAdornment, 
+  Tooltip, 
+  FormControl, 
+  Select, 
+  MenuItem 
+} from "@mui/material";
 
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
+// EnvironmentSettings is the card responsible for the environment settings
+// available to a user when creating a new environment. E.g. Name, Description,
+// etc.
 function EnvironmentSettings() {
-  const [destination, setDestination] = useState();
 
   return (
     <Card>
@@ -72,7 +87,7 @@ function EnvironmentSettings() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={destination}
+                  value={'destination'}
                 >
                   <MenuItem value={10}>users/kj789</MenuItem>
                   <MenuItem value={20}>hgi/projects</MenuItem>

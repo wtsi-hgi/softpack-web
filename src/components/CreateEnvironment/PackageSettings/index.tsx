@@ -1,12 +1,11 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
-  Button, InputAdornment, TextField, Tooltip } from "@mui/material";
-{/*import SimpleDialog from "../DialogBox";
-import Packages from "./packages";*/}
+  Button } from "@mui/material";
+import SimpleDialog from "../Dialog";
+import Packages from "../packages";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-function PackageSettings(props: any) {
+function PackageSettings(props:any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
 
@@ -20,9 +19,7 @@ function PackageSettings(props: any) {
   };
 
   return (
-    <Box>Hello</Box>
-    );
-    {/*<Card>
+    <Card>
       <Box
         p={3}
         display="flex"
@@ -41,7 +38,7 @@ function PackageSettings(props: any) {
       <Divider />
       <CardContent sx={{ p: 4 }}>
         <Typography variant="subtitle2">
-          {props.data.map((program) => {
+          {props.data.map((program: any) => {
             return (
               <Grid key={program.id} container spacing={1}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
@@ -51,7 +48,8 @@ function PackageSettings(props: any) {
                 </Grid>
                 <Grid item xs={12} sm={8} md={7}>
                   <Box pr={3} pb={4}>
-                    <Packages packages={program.packages}/>
+                    Hello
+                    {/*<Packages packages={program.packages}/>*/}
                   </Box>
                 </Grid>
               </Grid>
@@ -75,10 +73,10 @@ function PackageSettings(props: any) {
           selectedValue={selectedValue}
           open={open}
           onClose={handleClose}
-        />   
+        />
       </CardContent>
-        </Card>*/}
-  
+    </Card>
+  );
 }
 
 export default PackageSettings;

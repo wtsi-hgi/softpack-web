@@ -15,21 +15,19 @@ import {
 } from '@mui/material';
 
 import { gql, useQuery } from '@apollo/client';
-import EnvironmentSettings from './envSettings';
+import EnvironmentSettings from './EnvironmentSettings';
+import AccordionRow from './AccordionRow';
 import PackageSettings from './PackageSettings';
-import AccordionRow from './accordionRow';
 
 const ALL_PACKAGES = gql`
   query {
-    environments {
-      description
+    packageCollections {
       id
       name
-      path
       packages {
         id
         name
-        version
+        versions
       }
     }
   }
@@ -37,6 +35,8 @@ const ALL_PACKAGES = gql`
 
 function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
+
+  console.log(data);
 
   if (loading) {
     return <div>loading...</div>
@@ -63,9 +63,9 @@ function CreateEnvironment() {
       <Grid item xs={12}>
         <EnvironmentSettings />
       </Grid>
-      {/*<Grid item xs={12}>
+      <Grid item xs={12}>
         <PackageSettings data={data.packageCollections}/>
-  </Grid>*/}
+      </Grid>
       <Grid item xs={12}>
         <Card>
           <Box
