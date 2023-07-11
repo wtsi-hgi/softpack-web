@@ -1,18 +1,24 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
 import SimpleDialog from "../Dialog";
-import Packages from "../packages";
+import Packages from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 
+// PackageSettings is the card responsible for enabling the user to select the
+// specific packages to build the environment with.
 function PackageSettings(props:any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
 
+  // handleClickOpen handles the behaviour for when the user clicks the 'create'
+  // button.
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  // handleClose handles the behaviour for when the user clicks off the
+  // 'SimpleDialog' object.
   const handleClose = (value: string) => {
     setOpen(false);
     setSelectedValue(value);
@@ -66,7 +72,11 @@ function PackageSettings(props:any) {
           variant='contained' 
           startIcon={<AddIcon />} 
           onClick={handleClickOpen}
-          sx={{ float:'right', width:'10%', marginBottom: '2%' }}>Create
+          sx={{ 
+            float:'right', 
+            width:'10%', 
+            marginBottom: '2%' 
+          }}>Create
         </Button>
         <SimpleDialog
           selectedValue={selectedValue}

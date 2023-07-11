@@ -5,7 +5,9 @@ export interface SimpleDialogProps {
     selectedValue: string;
     onClose: (value: string) => void;
   }
-  
+
+// SimpleDialog is a dialog that informs the user they've entered the details of
+// an environment which closely matches an already existing environment.
 function SimpleDialog(props: SimpleDialogProps) {
     const { onClose, selectedValue, open } = props;
   

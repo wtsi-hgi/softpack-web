@@ -4,6 +4,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
+// DropdownChip is an MUI chip that comes with a dropdown.
 function DropdownChip(props: any) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
