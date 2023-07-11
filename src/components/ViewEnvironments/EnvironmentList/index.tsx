@@ -1,4 +1,4 @@
-import { Card, Container, Grid, Typography} from "@mui/material";
+import { Card, Container, Grid } from "@mui/material";
 import { gql, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 //import data from './data.json'
