@@ -34,10 +34,9 @@ function EnvironmentDrawer(props: any) {
         >
           <Typography variant="h3">{props.name}</Typography>
           <Typography variant='h4'>
-            Hello
-            {/*<Breadcrumbs separator="›" aria-label="breadcrumb">
-              {convertToBreadcrumbs(path)}
-  </Breadcrumbs>*/}
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              {convertToBreadcrumbs(props.path)}
+            </Breadcrumbs>
           </Typography>
         </Box>
         <Divider />

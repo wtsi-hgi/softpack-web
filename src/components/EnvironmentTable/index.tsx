@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Chip, Drawer, Link, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import EnvironmentDrawer from "../Drawer";
 //import EnvironmentDrawer from "../Drawer";
@@ -23,16 +23,30 @@ function EnvironmentTable(data: any) {
   const [drawerEnvName, setDrawerEnvName] = useState('');
   const [drawerPathName, setDrawerPathName] = useState('');
   const [drawerEnvDesc, setDrawerEnvDesc] = useState('');
-  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState<Package[]>([]);
+  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState(['']);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleOpenDrawer = (
     name: string, path: string, description: string, packages: Package[]) => {
-    setDrawerEnvName(name);
-    setDrawerPathName(path);
-    setDrawerEnvDesc(description);
-    setDrawerEnvPckgs(packages);
-    setIsDrawerOpen(true);
+      const packageNames = returnPackageNames(packages);
+
+      setDrawerEnvName(name);
+      setDrawerPathName(path);
+      setDrawerEnvDesc(description);
+      setDrawerEnvPckgs(packageNames);
+      setIsDrawerOpen(true);
+  }
+
+  // returnPackageNames takes an array of Package objects, and returns an array
+  // of the corresponding name of each Package.
+  const returnPackageNames = (packages: Package[]) => {
+    var packageNames = [];
+
+    for (let i = 0; i < packages.length; i++) {
+      packageNames.push(packages[i].name);
+    }
+
+    return packageNames;
   }
 
   const handleDrawerClose = () => {
@@ -108,12 +122,10 @@ function EnvironmentTable(data: any) {
                 name={drawerEnvName}
                 path={drawerPathName}
                 description={drawerEnvDesc}
-                packages={['drawerEnvPckgs']}
+                packages={drawerEnvPckgs}
                 isOpen={isDrawerOpen} 
                 onClose={handleDrawerClose} 
               />}
-
-              {/*isDrawerOpen && <Drawer open={true} anchor="right">Hello</Drawer>*/}
               
               <Typography variant='h4' sx={{margin:'0 5px 0 5px'}}>-</Typography>
               <Typography variant='h4'>
