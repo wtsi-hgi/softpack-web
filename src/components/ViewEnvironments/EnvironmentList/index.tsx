@@ -37,7 +37,7 @@ const EnvironmentList = () => {
   console.log(data);
   
   return (
-    <Container maxWidth="lg">
+    <Container>
       <Grid
         container
         direction="row"
