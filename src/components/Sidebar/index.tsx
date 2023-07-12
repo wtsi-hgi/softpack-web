@@ -10,6 +10,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from 'react-router-dom';
 import WidgetsIcon from '@mui/icons-material/Widgets';
+import { Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -23,8 +24,14 @@ const Sidebar = () => {
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
       }}
     >
-      <Toolbar />
-      <List component="nav">
+      <Toolbar >
+        <Typography 
+          variant="h2" 
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >SoftPack</Typography>
+      </Toolbar>
+      
+      <List component="nav" sx={{ p: 0 }}>
         <ListItemButton component={NavLink} to={'/'}>
           <ListItemIcon>
             <HomeIcon />
