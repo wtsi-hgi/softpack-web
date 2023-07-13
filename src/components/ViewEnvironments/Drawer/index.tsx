@@ -32,7 +32,7 @@ function EnvironmentDrawer(props: any) {
       <Box padding={'27px'}>
         <Box
           role='presentation'
-          width={400}
+          
           padding={'0 18px 18px 18px'}
           display={'flex'}
           justifyContent={'center'}
@@ -55,6 +55,7 @@ function EnvironmentDrawer(props: any) {
         </Box>
         <Box
           padding={'18px'}
+          width='400px'
         >
         <Divider />
           <Typography paddingTop={2} variant={'h4'} style={{paddingBottom:'15px'}}>Packages</Typography>
