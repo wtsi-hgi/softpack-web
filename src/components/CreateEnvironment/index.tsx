@@ -58,14 +58,19 @@ function CreateEnvironment() {
   ];
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
+    <Grid 
+      container 
+      direction="row"
+      justifyContent="center"
+      alignItems="stretch"
+      spacing={3}>
+      <Grid item xs={11}>
         <EnvironmentSettings />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={11}>
         <PackageSettings data={data.packageCollections}/>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={11}>
         <Card>
           <Box
             p={3}

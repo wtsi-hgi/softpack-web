@@ -184,6 +184,98 @@ const Theme = () => {
           }
         }
       },
+      MuiDivider: {
+        styleOverrides: {
+          root: {
+            background: colors.alpha.black[10],
+            border: 0,
+            height: 1
+          },
+          vertical: {
+            height: 'auto',
+            width: 1,
+  
+            '&.MuiDivider-flexItem.MuiDivider-fullWidth': {
+              height: 'auto'
+            },
+            '&.MuiDivider-absolute.MuiDivider-fullWidth': {
+              height: '100%'
+            }
+          },
+          withChildren: {
+            '&:before, &:after': {
+              border: 0
+            }
+          },
+          wrapper: {
+            background: colors.alpha.white[100],
+            fontWeight: 'bold',
+            height: 24,
+            lineHeight: '24px',
+            marginTop: -12,
+            color: 'inherit',
+            textTransform: 'uppercase'
+          }
+        }
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            padding: 0
+          },
+          elevation0: {
+            boxShadow: 'none'
+          },
+          elevation: {
+            boxShadow: colors.shadows.card
+          },
+          elevation2: {
+            boxShadow: colors.shadows.cardSm
+          },
+          elevation24: {
+            boxShadow: colors.shadows.cardLg
+          },
+          outlined: {
+            boxShadow: colors.shadows.card
+          }
+        }
+      },
+      MuiLink: {
+        defaultProps: {
+          underline: 'hover'
+        }
+      },
+      MuiAutocomplete: {
+        styleOverrides: {
+          tag: {
+            margin: 1
+          },
+          root: {
+            '.MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment':
+              {
+                right: 14
+              }
+          },
+          clearIndicator: {
+            background: colors.error.lighter,
+            color: colors.error.main,
+            marginRight: 8,
+  
+            '&:hover': {
+              background: colors.error.lighter,
+              color: colors.error.dark
+            }
+          },
+          popupIndicator: {
+            color: colors.alpha.black[50],
+  
+            '&:hover': {
+              background: colors.primary.lighter,
+              color: colors.primary.main
+            }
+          }
+        }
+      },
     },
     typography: {
       fontFamily:

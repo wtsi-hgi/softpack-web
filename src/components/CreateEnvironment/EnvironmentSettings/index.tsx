@@ -38,7 +38,7 @@ function EnvironmentSettings() {
           <Grid container spacing={1}>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
               <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                <Typography variant='h5'>Name:</Typography>
+                Name:
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9}>
@@ -49,7 +49,7 @@ function EnvironmentSettings() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"Choose a name for your environment"}>
-                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'25px'}}/>
                       </Tooltip>
                     </InputAdornment>
                   ),
@@ -58,7 +58,7 @@ function EnvironmentSettings() {
             </Grid>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
               <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                <Typography variant='h5'>Description:</Typography>
+                Description:
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9}>
@@ -71,7 +71,7 @@ function EnvironmentSettings() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"What is the purpose of your environment?"}>
-                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'20px'}}/>
+                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'25px'}}/>
                       </Tooltip>
                     </InputAdornment>
                   ),
@@ -79,7 +79,7 @@ function EnvironmentSettings() {
             </Grid>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
               <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
-                <Typography variant='h5'>Folder:</Typography>
+                Folder:
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9}>
