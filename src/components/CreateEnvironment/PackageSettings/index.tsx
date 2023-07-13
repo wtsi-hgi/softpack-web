@@ -61,12 +61,12 @@ function PackageSettings(props:any) {
             );
           })}
         </Typography>
+        <Alert severity='warning' sx={{ margin: '2% 0 2% 0' }}>See below: you 
+          can use an already existing environment that matches your criteria.
+        </Alert>
         <Alert severity='info' sx={{ margin: '2% 0 2% 0' }}>
           Packages come with the latest version by default. If you wish to 
           change to an older version, click the package to select which one.
-        </Alert>
-        <Alert severity='warning' sx={{ margin: '2% 0 2% 0' }}>See below: you 
-          can use an already existing environment that matches your criteria.
         </Alert>
         <Button
           variant='contained' 
