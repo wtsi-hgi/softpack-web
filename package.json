@@ -1,41 +1,42 @@
 {
-  "name": "react-admin-template",
+  "name": "softpack-web-quickstart",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
   "dependencies": {
-    "@apollo/client": "^3.7.17",
-    "@emotion/react": "^11.11.0",
-    "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.1",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.2",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react": "^7.32.2",
-    "prettier": "^2.8.8",
+    "@okta/okta-auth-js": "6.0",
+    "@okta/okta-react": "6.4",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.12.1"
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "5.0.1",
+    "semantic-ui-react": "^2.1.4",
+    "web-vitals": "^2.1.4"
   },
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.59.7",
-    "@typescript-eslint/parser": "^5.59.7",
-    "@vitejs/plugin-react-swc": "^3.0.0",
-    "eslint": "^8.41.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.2"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
