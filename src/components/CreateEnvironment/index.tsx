@@ -33,6 +33,20 @@ const ALL_PACKAGES = gql`
   }
 `
 
+const ENV_QUERY = gql`
+  query {
+    packageCollections {
+      id
+      name
+      packages {
+        id
+        name
+        versions
+      }
+    }
+  }
+`
+
 // CreateEnvironment displays the 'create environment' page.
 function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
@@ -69,6 +83,9 @@ function CreateEnvironment() {
       </Grid>
       <Grid item xs={11}>
         <PackageSettings data={data.packageCollections}/>
+      </Grid>
+      <Grid item xs={11}>
+        <Typography>Hello</Typography>
       </Grid>
       <Grid item xs={11}>
         <Card>
