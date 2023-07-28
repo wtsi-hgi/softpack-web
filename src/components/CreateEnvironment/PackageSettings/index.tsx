@@ -4,12 +4,58 @@ import SimpleDialog from "../Dialog";
 import Packages from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
+import { gql, useQuery } from "@apollo/client";
+
+const CREATE_ENV = gql`
+mutation Create {
+  createEnvironment(
+    env: {
+      description: "description of environment",
+      name: "TEST-ENV-1", 
+      packages: [
+        {id: "123", 
+        name: "py-zlib", 
+        version: "1.2.13"}, 
+        {id: "100", 
+        name: "py-zlib"}, 
+        {id: "3", 
+        name: "py-zlib"}
+      ],
+      path: "groups/hgi"}
+  ) {
+    ... on Environment {
+      id
+      name
+      description
+      packages {
+        id
+        name
+        version
+      }
+    }
+    ... on EnvironmentAlreadyExistsError {
+      __typename
+      name
+      path
+    }
+  }
+}
+`
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props:any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
+
+  console.log('props', props);
+
+  function createEnvTest() {
+    console.log(CREATE_ENV);
+    //return
+    //const { loading, data, error } = useQuery(CREATE_ENV);
+    
+  }
 
   // handleClickOpen handles the behaviour for when the user clicks the 'create'
   // button.
@@ -71,12 +117,13 @@ function PackageSettings(props:any) {
         <Button
           variant='contained' 
           startIcon={<AddIcon />} 
-          onClick={handleClickOpen}
+          onClick={createEnvTest}
           sx={{ 
             float:'right', 
             width:'10%', 
             marginBottom: '2%' 
-          }}>Create
+          }}
+        >Create
         </Button>
         <SimpleDialog
           selectedValue={selectedValue}
