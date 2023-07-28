@@ -18,22 +18,9 @@ import { gql, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import AccordionRow from './AccordionRow';
 import PackageSettings from './PackageSettings';
+import { useState } from 'react';
 
 const ALL_PACKAGES = gql`
-  query {
-    packageCollections {
-      id
-      name
-      packages {
-        id
-        name
-        versions
-      }
-    }
-  }
-`
-
-const ENV_QUERY = gql`
   query {
     packageCollections {
       id
@@ -50,6 +37,15 @@ const ENV_QUERY = gql`
 // CreateEnvironment displays the 'create environment' page.
 function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
+
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [packages, setPackages] = useState('');
+  const [path, setPath] = useState('');
+
+  console.log('setname', name);
+  console.log('setdescription', description);
+  console.log('setpath', path);
 
   if (loading) {
     return <div>loading...</div>
@@ -79,13 +75,17 @@ function CreateEnvironment() {
       alignItems="stretch"
       spacing={3}>
       <Grid item xs={11}>
-        <EnvironmentSettings />
+        <EnvironmentSettings 
+          setName={setName}
+          setDescription={setDescription}
+          setPath={setPath}
+        />
       </Grid>
       <Grid item xs={11}>
-        <PackageSettings data={data.packageCollections}/>
-      </Grid>
-      <Grid item xs={11}>
-        <Typography>Hello</Typography>
+        <PackageSettings 
+          data={data.packageCollections}
+          setPackages={setPackages}
+        />
       </Grid>
       <Grid item xs={11}>
         <Card>

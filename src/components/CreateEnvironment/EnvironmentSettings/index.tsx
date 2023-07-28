@@ -14,11 +14,13 @@ import {
 } from "@mui/material";
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useState } from "react";
 
 // EnvironmentSettings is the card responsible for the environment settings
 // available to a user when creating a new environment. E.g. Name, Description,
 // etc.
-function EnvironmentSettings() {
+function EnvironmentSettings(props: any) {
+  const [path, setPath] = useState('')
 
   return (
     <Card>
@@ -45,11 +47,18 @@ function EnvironmentSettings() {
               <TextField 
                 id='name-field' 
                 variant='standard' 
+                onInput={(e) => props.setName((e.target as HTMLInputElement).value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"Choose a name for your environment"}>
-                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'25px'}}/>
+                        <HelpOutlineIcon 
+                          sx={{
+                            color:'rgba(34, 51, 84, 0.7)', 
+                            padding:'0 0 0 8px', 
+                            fontSize:'25px'
+                          }}
+                        />
                       </Tooltip>
                     </InputAdornment>
                   ),
@@ -64,14 +73,21 @@ function EnvironmentSettings() {
             <Grid item xs={12} sm={8} md={9}>
               <TextField 
                 id='description-field' 
-                multiline rows={4} 
+                multiline 
+                rows={4} 
                 sx={{ width: '75%' }}
+                onInput={(e) => props.setDescription((e.target as HTMLInputElement).value)}
                 variant='standard'
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"What is the purpose of your environment?"}>
-                        <HelpOutlineIcon sx={{color:'rgba(34, 51, 84, 0.7)', padding:'0 0 0 8px', fontSize:'25px'}}/>
+                        <HelpOutlineIcon 
+                          sx={{color:'rgba(34, 51, 84, 0.7)', 
+                          padding:'0 0 0 8px', 
+                          fontSize:'25px'
+                          }}
+                        />
                       </Tooltip>
                     </InputAdornment>
                   ),
@@ -87,11 +103,15 @@ function EnvironmentSettings() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={'destination'}
+                  value={path}
+                  onChange={(e) => {
+                    props.setPath('/hgi/teams/hgi/km34'); // set by default, for now
+                    setPath(e.target.value);
+                  }}
                 >
-                  <MenuItem value={10}>users/kj789</MenuItem>
-                  <MenuItem value={20}>hgi/projects</MenuItem>
-                  <MenuItem value={30}>humgen/projects</MenuItem>
+                  <MenuItem value={1}>users/kj789</MenuItem>
+                  <MenuItem value={2}>hgi/projects</MenuItem>
+                  <MenuItem value={3}>humgen/projects</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
