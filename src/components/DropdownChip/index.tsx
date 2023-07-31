@@ -8,7 +8,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 function DropdownChip(props: any) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selected, setSelected] = useState(null);
+  const [version, setVersion] = useState(null);
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -22,9 +22,9 @@ function DropdownChip(props: any) {
     // implicitly their latest version.
 
     if (index == 0) {
-      setSelected(null);
+      setVersion(null);
     } else {
-      setSelected(event.target.textContent);
+      setVersion(event.target.textContent);
     }
 
     setAnchorEl(null);
@@ -34,7 +34,7 @@ function DropdownChip(props: any) {
   return (
     <div>
       <Chip
-        label={selected ? props.data + ' (' + selected + ')' : props.data}
+        label={version ? props.data + ' (' + version + ')' : props.data}
         onClick={handleClick}
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}

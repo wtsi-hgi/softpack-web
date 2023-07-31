@@ -4,24 +4,16 @@ import SimpleDialog from "../Dialog";
 import Package from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 const CREATE_ENV = gql`
-mutation Create {
+mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
   createEnvironment(
     env: {
-      description: "description of environment",
-      name: "TEST-ENV-1", 
-      packages: [
-        {id: "123", 
-        name: "py-zlib", 
-        version: "1.2.13"}, 
-        {id: "100", 
-        name: "py-zlib"}, 
-        {id: "3", 
-        name: "py-zlib"}
-      ],
-      path: "groups/hgi"}
+      description: $description,
+      name: $name, 
+      packages: $packages,
+      path: $path}
   ) {
     ... on Environment {
       id
@@ -30,7 +22,6 @@ mutation Create {
       packages {
         id
         name
-        version
       }
     }
     ... on EnvironmentAlreadyExistsError {
@@ -42,18 +33,38 @@ mutation Create {
 }
 `
 
+interface Package {
+  name: string;
+  id: string;
+}
+
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props:any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
+  
+  const [packages, setPackages] = useState('');
+  const [ createEnvironment ] = useMutation(CREATE_ENV, {
+    onError: (error) => {
+      const messages = error.graphQLErrors[0].message;
+      console.log('ERROR: ', messages);
+    }
+  });
 
-  console.log('props', props);
+  const createEnvTest = (event: any) => {
+    event.preventDefault()
 
-  function createEnvTest() {
-    console.log(CREATE_ENV);
-    //return
-    //const { loading, data, error } = useQuery(CREATE_ENV);
+    console.log('creating an env with the following name, desc, path and packages', props.buildName, props.buildDesc, props.buildPath, packages);
+    const name = props.buildName;
+    const description = props.buildDesc;
+    const path = props.buildPath;
+
+    const buildPackages: Package[] = [{name: 'py-abcpy', id: '56c4909e9c35490e8b2a58e9895159fc'}];
+    const package_ = buildPackages[0]
+    
+    console.log('going to try building a test environment...');
+    createEnvironment({ variables: { name, description, path, package_ } })
   }
 
   // handleClickOpen handles the behaviour for when the user clicks the 'create'
@@ -89,6 +100,7 @@ function PackageSettings(props:any) {
       <Divider />
       <CardContent sx={{p: 4}}>
         <Typography variant="subtitle2">
+          {console.log(props.data)}
           {props.data.map((program: any) => {
             return (
               <Grid key={program.id} container spacing={1}>
@@ -101,7 +113,7 @@ function PackageSettings(props:any) {
                   <Box pr={3} pb={4}>
                     <Package 
                       packages={program.packages} 
-                      setPackages={props.setPackages} 
+                      setPackages={setPackages} 
                     />
                   </Box>
                 </Grid>

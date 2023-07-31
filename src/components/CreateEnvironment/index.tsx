@@ -40,7 +40,6 @@ function CreateEnvironment() {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [packages, setPackages] = useState('');
   const [path, setPath] = useState('');
 
   const matchingEnvs = [
@@ -54,7 +53,6 @@ function CreateEnvironment() {
   console.log('setname', name);
   console.log('setdescription', description);
   console.log('setpath', path);
-  console.log('setpackages', packages);
 
   if (loading) {
     return <div>loading...</div>
@@ -85,7 +83,9 @@ function CreateEnvironment() {
       <Grid item xs={11}>
         <PackageSettings 
           data={data.packageCollections}
-          setPackages={setPackages}
+          buildName={name}
+          buildDesc={description}
+          buildPath={path}
         />
       </Grid>
       <Grid item xs={11}>
