@@ -105,7 +105,7 @@ function EnvironmentSettings(props: any) {
                   id="demo-simple-select"
                   value={path}
                   onChange={(e) => {
-                    props.setPath('/hgi/teams/hgi/km34'); // set by default, for now
+                    props.setPath('groups/hgi/'); // set by default, for now
                     setPath(e.target.value);
                   }}
                 >

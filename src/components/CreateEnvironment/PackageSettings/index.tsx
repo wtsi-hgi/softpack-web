@@ -52,19 +52,25 @@ function PackageSettings(props:any) {
     }
   });
 
+  // createEnvTest is a temporary function that builds an environment. It
+  // simulates what is going to happen in the final product: where the user
+  // enters an env name, desc, path and packages.
   const createEnvTest = (event: any) => {
     event.preventDefault()
 
-    console.log('creating an env with the following name, desc, path and packages', props.buildName, props.buildDesc, props.buildPath, packages);
+    console.log('creating an env with the following name, desc and path', props.buildName, props.buildDesc, props.buildPath);
     const name = props.buildName;
     const description = props.buildDesc;
     const path = props.buildPath;
 
-    const buildPackages: Package[] = [{name: 'py-abcpy', id: '56c4909e9c35490e8b2a58e9895159fc'}];
-    const package_ = buildPackages[0]
+    const packages: Package[] = [
+      {name: 'py-3to2', id: 'dbe97d7ca05c42cbb295579177d081e8'},
+      {name: 'py-abcpy', id: '56c4909e9c35490e8b2a58e9895159fc'}]
+    
+    console.log(packages)
     
     console.log('going to try building a test environment...');
-    createEnvironment({ variables: { name, description, path, package_ } })
+    createEnvironment({ variables: { name, description, path, packages } })
   }
 
   // handleClickOpen handles the behaviour for when the user clicks the 'create'
