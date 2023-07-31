@@ -54,6 +54,7 @@ function Package(props: any) {
             />
           );
         }}
+        onChange={(_, value) => props.setPackages(value)}
       />
     </Box>
   );

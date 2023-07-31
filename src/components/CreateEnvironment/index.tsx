@@ -43,9 +43,18 @@ function CreateEnvironment() {
   const [packages, setPackages] = useState('');
   const [path, setPath] = useState('');
 
+  const matchingEnvs = [
+    {'Environment':'tremendous-mandril',
+     'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
+  
+    {'Environment':'ubiquitous-clam',
+    'Description':'Pellentesque feugiat accumsan consectetur. Nulla vitae portitor purus.'},
+  ];
+
   console.log('setname', name);
   console.log('setdescription', description);
   console.log('setpath', path);
+  console.log('setpackages', packages);
 
   if (loading) {
     return <div>loading...</div>
@@ -58,14 +67,6 @@ function CreateEnvironment() {
       </div>
     )
   }
-
-  const matchingEnvs = [
-    {'Environment':'tremendous-mandril',
-     'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
-  
-    {'Environment':'ubiquitous-clam',
-    'Description':'Pellentesque feugiat accumsan consectetur. Nulla vitae portitor purus.'},
-  ];
 
   return (
     <Grid 
@@ -89,9 +90,7 @@ function CreateEnvironment() {
       </Grid>
       <Grid item xs={11}>
         <Card>
-          <Box
-            p={3}
-          >
+          <Box p={3}>
             <Box>
               <Typography variant="h4" gutterBottom>
                 Environments Matching Your Criteria
@@ -102,7 +101,7 @@ function CreateEnvironment() {
             </Box>
           </Box>
           <Divider />
-          <CardContent sx={{ p: 4 }}>
+          <CardContent sx={{p: 4}}>
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table" size='small'>
                 <TableHead>
@@ -115,7 +114,7 @@ function CreateEnvironment() {
                 <TableBody>
                   {matchingEnvs.map((row, index) => {
                     return (
-                      <AccordionRow key={index} row={row}/>
+                      <AccordionRow key={index} row={row} />
                     )
                   })}
                 </TableBody>
