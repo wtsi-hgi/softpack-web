@@ -1,7 +1,7 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
 import SimpleDialog from "../Dialog";
-import Packages from "../Package";
+import Package from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { gql, useQuery } from "@apollo/client";
@@ -54,7 +54,6 @@ function PackageSettings(props:any) {
     console.log(CREATE_ENV);
     //return
     //const { loading, data, error } = useQuery(CREATE_ENV);
-    
   }
 
   // handleClickOpen handles the behaviour for when the user clicks the 'create'
@@ -88,29 +87,39 @@ function PackageSettings(props:any) {
         </Box>
       </Box>
       <Divider />
-      <CardContent sx={{ p: 4 }}>
+      <CardContent sx={{p: 4}}>
         <Typography variant="subtitle2">
           {props.data.map((program: any) => {
             return (
               <Grid key={program.id} container spacing={1}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                <Grid item xs={12} sm={4} md={3} textAlign={{sm: 'right'}}>
                   <Box pr={3} pb={4}>
                     {program.name} Packages:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={7}>
                   <Box pr={3} pb={4}>
-                    <Packages packages={program.packages}/>
+                    <Package 
+                      packages={program.packages} 
+                      setPackages={props.setPackages} 
+                    />
                   </Box>
                 </Grid>
               </Grid>
             );
           })}
         </Typography>
-        <Alert severity='warning' sx={{ margin: '2% 0 2% 0' }}>See below: you 
-          can use an already existing environment that matches your criteria.
+        <Alert 
+          severity='warning' 
+          sx={{m: '2% 0 2% 0'}}
+        >
+          See below: you can use an already existing environment that matches 
+          your criteria.
         </Alert>
-        <Alert severity='info' sx={{ margin: '2% 0 2% 0' }}>
+        <Alert 
+          severity='info' 
+          sx={{m: '2% 0 2% 0'}}
+        >
           Packages come with the latest version by default. If you wish to 
           change to an older version, click the package to select which one.
         </Alert>
@@ -121,7 +130,7 @@ function PackageSettings(props:any) {
           sx={{ 
             float:'right', 
             width:'10%', 
-            marginBottom: '2%' 
+            mb:'2%' 
           }}
         >Create
         </Button>
