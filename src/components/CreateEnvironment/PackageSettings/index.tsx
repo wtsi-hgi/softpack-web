@@ -1,54 +1,67 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
-  Button } from "@mui/material";
-import SimpleDialog from "../Dialog";
+  Button, 
+  Snackbar} from "@mui/material";
 import Package from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 const CREATE_ENV = gql`
-mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
-  createEnvironment(
-    env: {
-      description: $description,
-      name: $name, 
-      packages: $packages,
-      path: $path}
-  ) {
-    ... on Environment {
-      id
-      name
-      description
-      packages {
+  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
+    createEnvironment(
+      env: {
+        description: $description,
+        name: $name, 
+        packages: $packages,
+        path: $path}
+    ) {
+      ... on Environment {
         id
         name
+        description
+        packages {
+          name
+        }
+      }
+      ... on EnvironmentAlreadyExistsError {
+        __typename
+        name
+        path
       }
     }
-    ... on EnvironmentAlreadyExistsError {
-      __typename
-      name
-      path
-    }
   }
-}
 `
 
 interface Package {
   name: string;
-  id: string;
+  id?: string;
+  version?: string;
 }
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
-function PackageSettings(props:any) {
-  const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
-  
+function PackageSettings(props:any) {  
   const [packages, setPackages] = useState('');
+
+  const [envNameExists, setEnvNameExists] = useState(false);
+  const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(true);
+
   const [ createEnvironment ] = useMutation(CREATE_ENV, {
     onError: (error) => {
       const messages = error.graphQLErrors[0].message;
-      console.log('ERROR: ', messages);
+      console.log('GraphQL ERROR: ', messages);
+    },
+    onCompleted: (event) => {
+      console.log('completion event', event);
+      if (event.createEnvironment.__typename === "EnvironmentAlreadyExistsError") {
+        console.log(event)
+        setEnvNameExists(true);
+      } else {
+        console.log('build successful')
+        setEnvBuildSuccessful(true);
+      }
     }
   });
 
@@ -61,30 +74,17 @@ function PackageSettings(props:any) {
     console.log('creating an env with the following name, desc and path', props.buildName, props.buildDesc, props.buildPath);
     const name = props.buildName;
     const description = props.buildDesc;
-    const path = props.buildPath;
+    const path = 'groups/hgi';
 
     const packages: Package[] = [
-      {name: 'py-3to2', id: 'dbe97d7ca05c42cbb295579177d081e8'},
+      {name: 'py-3to2'},
       {name: 'py-abcpy', id: '56c4909e9c35490e8b2a58e9895159fc'}]
     
-    console.log(packages)
-    
+    console.log('info', name, description, path, packages)
     console.log('going to try building a test environment...');
+
     createEnvironment({ variables: { name, description, path, packages } })
   }
-
-  // handleClickOpen handles the behaviour for when the user clicks the 'create'
-  // button.
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  // handleClose handles the behaviour for when the user clicks off the
-  // 'SimpleDialog' object.
-  const handleClose = (value: string) => {
-    setOpen(false);
-    setSelectedValue(value);
-  };
 
   return (
     <Card>
@@ -106,7 +106,6 @@ function PackageSettings(props:any) {
       <Divider />
       <CardContent sx={{p: 4}}>
         <Typography variant="subtitle2">
-          {console.log(props.data)}
           {props.data.map((program: any) => {
             return (
               <Grid key={program.id} container spacing={1}>
@@ -127,13 +126,13 @@ function PackageSettings(props:any) {
             );
           })}
         </Typography>
-        <Alert 
+        {/*<Alert 
           severity='warning' 
           sx={{m: '2% 0 2% 0'}}
         >
           See below: you can use an already existing environment that matches 
           your criteria.
-        </Alert>
+        </Alert>*/}
         <Alert 
           severity='info' 
           sx={{m: '2% 0 2% 0'}}
@@ -141,6 +140,24 @@ function PackageSettings(props:any) {
           Packages come with the latest version by default. If you wish to 
           change to an older version, click the package to select which one.
         </Alert>
+        {envNameExists && 
+          <Alert
+            severity="error"
+            sx={{m: '2% 0 2% 0'}}
+          >
+            An environment called {props.buildName} already exists! 
+            Please choose a different name.
+          </Alert>
+        }
+        {envBuildSuccessful && 
+          <Alert
+            severity="success"
+            sx={{m: '2% 0 2% 0'}}
+          >
+            The request for your environment, {props.buildName} was 
+            successfully submitted!
+          </Alert>
+        }
         <Button
           variant='contained' 
           startIcon={<AddIcon />} 
@@ -152,11 +169,6 @@ function PackageSettings(props:any) {
           }}
         >Create
         </Button>
-        <SimpleDialog
-          selectedValue={selectedValue}
-          open={open}
-          onClose={handleClose}
-        />
       </CardContent>
     </Card>
   );
