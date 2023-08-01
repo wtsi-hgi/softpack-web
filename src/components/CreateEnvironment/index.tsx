@@ -16,7 +16,7 @@ import {
 
 import { gql, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
-import AccordionRow from './AccordionRow';
+import AccordionRow from './EnvExample';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
 

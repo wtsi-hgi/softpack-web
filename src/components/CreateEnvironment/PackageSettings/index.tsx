@@ -1,36 +1,15 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button, 
-  Snackbar} from "@mui/material";
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle} from "@mui/material";
 import Package from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { gql, useMutation } from "@apollo/client";
-
-const CREATE_ENV = gql`
-  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
-    createEnvironment(
-      env: {
-        description: $description,
-        name: $name, 
-        packages: $packages,
-        path: $path}
-    ) {
-      ... on Environment {
-        id
-        name
-        description
-        packages {
-          name
-        }
-      }
-      ... on EnvironmentAlreadyExistsError {
-        __typename
-        name
-        path
-      }
-    }
-  }
-`
+import { useMutation } from "@apollo/client";
+import { CREATE_ENV } from "../../../queries";
+import ErrorDialog from "../ErrorDialog";
 
 interface Package {
   name: string;
@@ -43,26 +22,32 @@ interface Package {
 function PackageSettings(props:any) {  
   const [packages, setPackages] = useState('');
 
-  const [envNameExists, setEnvNameExists] = useState(false);
+  const [error, setError] = useState(false);
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
-  const [snackbarOpen, setSnackbarOpen] = useState(true);
 
   const [ createEnvironment ] = useMutation(CREATE_ENV, {
-    onError: (error) => {
-      const messages = error.graphQLErrors[0].message;
-      console.log('GraphQL ERROR: ', messages);
-    },
     onCompleted: (event) => {
       console.log('completion event', event);
-      if (event.createEnvironment.__typename === "EnvironmentAlreadyExistsError") {
+
+      if (
+        event.createEnvironment.__typename === "EnvironmentAlreadyExistsError"
+      ) {
         console.log(event)
-        setEnvNameExists(true);
+        setError(true);
       } else {
         console.log('build successful')
         setEnvBuildSuccessful(true);
       }
-    }
+    },
+    // onError looks at GraphQL errors specifically. onCompleted will pick up
+    // any errors which the backend itself raises, like an environment name
+    // already existing.
+    onError: (error) => {
+      const messages = error.graphQLErrors[0].message;
+      console.log('GraphQL ERROR: ', messages);
+      setError(true);
+    },
   });
 
   // createEnvTest is a temporary function that builds an environment. It
@@ -140,22 +125,15 @@ function PackageSettings(props:any) {
           Packages come with the latest version by default. If you wish to 
           change to an older version, click the package to select which one.
         </Alert>
-        {envNameExists && 
-          <Alert
-            severity="error"
-            sx={{m: '2% 0 2% 0'}}
-          >
-            An environment called {props.buildName} already exists! 
-            Please choose a different name.
-          </Alert>
-        }
+
+        {error && <ErrorDialog name={props.buildName} setError={setError} />}
+        
         {envBuildSuccessful && 
           <Alert
             severity="success"
             sx={{m: '2% 0 2% 0'}}
           >
-            The request for your environment, {props.buildName} was 
-            successfully submitted!
+            Your environment, {props.buildName} was successfully scheduled!
           </Alert>
         }
         <Button
