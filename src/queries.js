@@ -16,6 +16,20 @@ export const ALL_ENVIRONMENTS = gql`
   }
 `
 
+export const ALL_PACKAGES = gql`
+  query {
+    packageCollections {
+      id
+      name
+      packages {
+        id
+        name
+        versions
+      }
+    }
+  }
+`
+
 export const CREATE_ENV = gql`
   mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
     createEnvironment(

@@ -1,23 +1,8 @@
 import { Card, Container, Grid } from "@mui/material";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
+import { ALL_ENVIRONMENTS } from "../../../queries";
 //import data from './data.json'
-
-const ALL_ENVIRONMENTS = gql`
-  query {
-    environments {
-      description
-      id
-      name
-      path
-      packages {
-        id
-        name
-        version
-      }
-    }
-  }
-`
 
 const EnvironmentList = () => {
   const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);

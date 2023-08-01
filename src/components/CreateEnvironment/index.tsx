@@ -14,25 +14,12 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import AccordionRow from './EnvExample';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
-
-const ALL_PACKAGES = gql`
-  query {
-    packageCollections {
-      id
-      name
-      packages {
-        id
-        name
-        versions
-      }
-    }
-  }
-`
+import { ALL_PACKAGES } from '../../queries';
 
 // CreateEnvironment displays the 'create environment' page.
 function CreateEnvironment() {
@@ -44,15 +31,11 @@ function CreateEnvironment() {
 
   const matchingEnvs = [
     {'Environment':'tremendous-mandril',
-     'Description':'Mauris laoreet blandit odio, vitae mollis enim feugiat sit amet.'}, 
+     'Description':'Mauris laoreet blandit odio, vitae mollis enim.'}, 
   
     {'Environment':'ubiquitous-clam',
-    'Description':'Pellentesque feugiat accumsan consectetur. Nulla vitae portitor purus.'},
+    'Description':'Pellentesque feugiat accumsan consectetur.'},
   ];
-
-  console.log('setname', name);
-  console.log('setdescription', description);
-  console.log('setpath', path);
 
   if (loading) {
     return <div>loading...</div>
@@ -96,7 +79,8 @@ function CreateEnvironment() {
                 Environments Matching Your Criteria
               </Typography>
               <Typography variant="subtitle2">
-                Save time and space by selecting one of the options below
+                Save time and space by selecting one of the options
+                below
               </Typography>
             </Box>
           </Box>
