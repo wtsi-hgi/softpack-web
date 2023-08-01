@@ -1,9 +1,5 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
-  Button, 
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle} from "@mui/material";
+  Button } from "@mui/material";
 import Package from "../Package";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
@@ -102,7 +98,8 @@ function PackageSettings(props:any) {
                 <Grid item xs={12} sm={8} md={7}>
                   <Box pr={3} pb={4}>
                     <Package 
-                      packages={program.packages} 
+                      data={program.packages} 
+                      packages={packages}
                       setPackages={setPackages} 
                     />
                   </Box>

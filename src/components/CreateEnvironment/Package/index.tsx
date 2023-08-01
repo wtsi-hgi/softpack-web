@@ -9,17 +9,17 @@ function Package(props: any) {
 
   // Parse package names from data.
   useEffect(() => {
-    const packages = props.packages.map((item: any) => item.name);
+    const packages = props.data.map((item: any) => item.name);
     setPackages(packages)
-  })
+  }, [props.data])
 
   // findPackageVersionsFromName finds all available versions of a package.
   const findPackageVersionsFromName = (names: string[]) => {
     var versions: string[] = [];
 
     names.map((name) => {
-      const index = props.packages.findIndex((element: any) => element.name === name);
-      const packageVersions = props.packages[index].versions;
+      const index = props.data.findIndex((element: any) => element.name === name);
+      const packageVersions = props.data[index].versions;
       versions.push(packageVersions);
     })
 
@@ -39,6 +39,14 @@ function Package(props: any) {
       />
     ))
   }
+
+  // updatePackages takes the list of all packages selected on softpackWeb
+  // (python and R, at time of writing) and updates with the selected package:
+  // value.
+  const updatePackages = (value: string[]) => {
+    const allPackages = props.packages.concat(value);
+    props.setPackages(allPackages);
+  }
   
   return (
     <Box> 
@@ -54,7 +62,7 @@ function Package(props: any) {
             />
           );
         }}
-        onChange={(_, value) => props.setPackages(value)}
+        onChange={(_, value) => updatePackages(value)}
       />
     </Box>
   );
