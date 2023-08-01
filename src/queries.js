@@ -25,13 +25,9 @@ export const CREATE_ENV = gql`
         packages: $packages,
         path: $path}
     ) {
-      ... on Environment {
-        id
-        name
-        description
-        packages {
-          name
-        }
+      ... on CreateEnvironmentSuccess {
+        message
+        environment
       }
       ... on EnvironmentAlreadyExistsError {
         __typename
