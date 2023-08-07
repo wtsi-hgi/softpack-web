@@ -31,7 +31,7 @@ export default function PackageSelect(props: any) {
 
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
-  const renderTags = (tags: any) => {
+  const renderTags = (tags: string[]) => {
     const packageVersions = findPackageVersionsFromName(tags);
 
     return activeTags.map((option: any, index: any) => ( 
@@ -53,6 +53,9 @@ export default function PackageSelect(props: any) {
   const updatePackages = (value: string[], action: string) => {
     // difference is equal to the package just selected. Because value by
     // default is all the selected packages.
+    console.log('updatePackages value:', value);
+    setActiveTags(value);
+
     let difference = value.filter(x => lastPackage.indexOf(x) === -1);
     console.log('difference', difference);
     console.log('action', action);
@@ -76,7 +79,7 @@ export default function PackageSelect(props: any) {
         multiple
         options={packages}
         renderTags={(tags) => {
-          setActiveTags(tags)
+          //setActiveTags(tags)
 
           return (
             renderTags(activeTags)
