@@ -41,7 +41,16 @@ export const CREATE_ENV = gql`
     ) {
       ... on CreateEnvironmentSuccess {
         message
-        environment
+        environment {
+          description
+          id
+          path
+          state
+          packages {
+            name
+            version
+          }
+        }
       }
       ... on EnvironmentAlreadyExistsError {
         __typename
