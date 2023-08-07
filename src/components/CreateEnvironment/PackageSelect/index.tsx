@@ -1,18 +1,14 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
-import { useEffect, useState, useContext } from "react";
-import DropdownChip from "../../PackageChip";
-import { PackageContext } from "../PackageContext";
+import { useEffect, useState } from "react";
+import DropdownChip from "../../DropdownChip";
 import _ from 'lodash';
 
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: any) {
-  const packageContext = useContext(PackageContext);
-
   const [packages, setPackages] = useState([]);
+  const [lastPackage, setLastPackage] = useState(['']);
   const [activeTags, setActiveTags] = useState(['']);
-
-  console.log('activeTags', activeTags);
 
   // Parse package names from data.
   useEffect(() => {
@@ -25,9 +21,7 @@ export default function PackageSelect(props: any) {
     var versions: string[] = [];
 
     names.map((name) => {
-      const index = props.data.findIndex(
-        (element: any) => element.name === name
-      );
+      const index = props.data.findIndex((element: any) => element.name === name);
       const packageVersions = props.data[index].versions;
       versions.push(packageVersions);
     })
@@ -35,25 +29,9 @@ export default function PackageSelect(props: any) {
     return versions;
   }
 
-  const onDelete = (data: any) => {
-    console.log('trying to delete', data, 'from', activeTags);
-    const result = activeTags.filter((tag) => tag !== data);
-    console.log('result', result);
-    setActiveTags(result);
-    //setActiveTags((prevActiveTags) => 
-    //  prevActiveTags.filter((tag) => {
-    //    console.log(tag)
-    //    tag !== data
-    //  })
-    //)
-
-    console.log('state now', activeTags);
-  }
-
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
-  const renderTags = (tags: string[]) => {
-    setActiveTags(tags)
+  const renderTags = (tags: any) => {
     const packageVersions = findPackageVersionsFromName(tags);
 
     return activeTags.map((option: any, index: any) => ( 
@@ -62,36 +40,27 @@ export default function PackageSelect(props: any) {
         data={option}
         versions={packageVersions[index]}
         tags={tags}
-        activeTags={activeTags}
         setActiveTags={setActiveTags}
-        onDelete={onDelete}
       />
     ))
   }
 
+  console.log('active tags', activeTags);
+
   // updatePackages takes the list of all packages selected on softpackWeb
   // (python and R, at time of writing) and updates with the selected package:
   // value.
-  const updatePackages = (event: any, value: string[], action: string) => {
-    const package_ = event.target.textContent;
-    console.log('value', value, action);
-
-    if (action === "selectOption") {
-      addPackage(package_);
-    }
-
-    // This line needs redressing: it's upholding the functionality of
-    // findPackageVersionsFromName, which is unsustainable.
-    console.log('doing stuff');
-    setActiveTags(value);
-  }
-
-  const addPackage = (package_: string[]) => {
-    const result = packageContext.testPackages.concat(package_);
-    console.log('result', result);
-    packageContext.setTestPackages(result);
+  const updatePackages = (value: string[], action: string) => {
+    // difference is equal to the package just selected. Because value by
+    // default is all the selected packages.
+    let difference = value.filter(x => lastPackage.indexOf(x) === -1);
+    console.log('difference', difference);
+    console.log('action', action);
     
-    console.log(packageContext.testPackages)
+    const allPackages = props.packages.concat(difference);    
+    props.setPackages(allPackages);
+    setLastPackage(value);
+    console.log('allPackages', allPackages);
   }
 
   // checkActiveTagsValue determines whether the value of activeTags is its
@@ -107,10 +76,10 @@ export default function PackageSelect(props: any) {
         multiple
         options={packages}
         renderTags={(tags) => {
-          
-          console.log('what is tag value', tags)
+          setActiveTags(tags)
+
           return (
-            renderTags(tags)
+            renderTags(activeTags)
           )
         }}
         renderInput={(params) => {
@@ -122,7 +91,7 @@ export default function PackageSelect(props: any) {
             />
           );
         }}
-        //onChange={(event, value, action) => updatePackages(event, value, action)}
+        onChange={(_, value, action) => updatePackages(value, action)}
       />
     </Box>
   );
