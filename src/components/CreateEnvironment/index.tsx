@@ -20,6 +20,7 @@ import AccordionRow from './EnvExample';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
 import { ALL_PACKAGES } from '../../queries';
+import MatchingEnvs from './MatchingEnvs';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -28,14 +29,6 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
-
-  const matchingEnvs = [
-    {'Environment':'tremendous-mandril',
-     'Description':'Mauris laoreet blandit odio, vitae mollis enim.'}, 
-  
-    {'Environment':'ubiquitous-clam',
-    'Description':'Pellentesque feugiat accumsan consectetur.'},
-  ];
 
   if (loading) {
     return <div>loading...</div>
@@ -75,40 +68,7 @@ export default function CreateEnvironment() {
         />
       </Grid>
       <Grid item xs={11}>
-        <Card>
-          <Box p={3}>
-            <Box>
-              <Typography variant="h4" gutterBottom>
-                Environments Matching Your Criteria
-              </Typography>
-              <Typography variant="subtitle2">
-                Save time and space by selecting one of the options
-                below
-              </Typography>
-            </Box>
-          </Box>
-          <Divider />
-          <CardContent sx={{p: 4}}>
-            <TableContainer component={Paper}>
-              <Table aria-label="collapsible table" size='small'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell />
-                    <TableCell>Environment</TableCell>
-                    <TableCell align="left">Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {matchingEnvs.map((row, index) => {
-                    return (
-                      <AccordionRow key={index} row={row} />
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Card>
+        <MatchingEnvs />
       </Grid>
     </Grid>
   );

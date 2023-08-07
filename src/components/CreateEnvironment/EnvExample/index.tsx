@@ -4,7 +4,7 @@ import { useState, Fragment } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-// AccordionRow is an accordion that displays environments.
+// EnvExample is an accordion that displays environments.
 function EnvExample(row: any) {
   const [open, setOpen] = useState(false);
 

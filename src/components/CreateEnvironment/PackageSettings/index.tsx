@@ -1,11 +1,11 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
-import Package from "../PackageSelect";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation } from "@apollo/client";
 import { CREATE_ENV } from "../../../queries";
 import ErrorDialog from "../ErrorDialog";
+import PackageSelect from "../PackageSelect";
 
 interface Package {
   name: string;
@@ -96,7 +96,7 @@ function PackageSettings(props:any) {
                 </Grid>
                 <Grid item xs={12} sm={8} md={7}>
                   <Box pr={3} pb={4}>
-                    <Package 
+                    <PackageSelect 
                       data={program.packages} 
                       packages={packages}
                       setPackages={setPackages} 
