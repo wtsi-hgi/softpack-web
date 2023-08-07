@@ -1,26 +1,12 @@
-import {
-  Grid,
-  Typography,
-  CardContent,
-  Card,
-  Box,
-  Divider,
-  TableContainer,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-
+import { Grid } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
-import AccordionRow from './EnvExample';
 import PackageSettings from './PackageSettings';
-import { useState } from 'react';
+import { useState, useContext, createContext } from 'react';
 import { ALL_PACKAGES } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
+import Test from './Test';
+import { PackageContext } from './PackageContext';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -29,6 +15,7 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
+  const [packages, setPackages] = useState<string[] | null>(['']);
 
   if (loading) {
     return <div>loading...</div>
@@ -48,13 +35,19 @@ export default function CreateEnvironment() {
       direction="row"
       justifyContent="center"
       alignItems="stretch"
-      spacing={3}>
+      spacing={3}
+    >
       <Grid item xs={11}>
         <EnvironmentSettings 
           setName={setName}
           setDescription={setDescription}
           setPath={setPath}
         />
+      </Grid>
+      <Grid item xs={11}>
+        <PackageContext.Provider value={{packages, setPackages}}>
+          <Test />
+        </PackageContext.Provider>
       </Grid>
       <Grid item xs={11}>
         <PackageSettings 
