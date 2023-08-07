@@ -39,11 +39,11 @@ function EnvironmentSettings(props: any) {
         <Typography variant="subtitle2">
           <Grid container spacing={1}>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
                 Name:
               </Box>
             </Grid>
-            <Grid item xs={12} sm={8} md={9}>
+            <Grid item xs={12} sm={8} md={9} pb={3}>
               <TextField 
                 id='name-field' 
                 variant='standard' 
@@ -66,11 +66,11 @@ function EnvironmentSettings(props: any) {
               </TextField>
             </Grid>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
                 Description:
               </Box>
             </Grid>
-            <Grid item xs={12} sm={8} md={9}>
+            <Grid item xs={12} sm={8} md={9} pb={3}>
               <TextField 
                 id='description-field' 
                 multiline 
@@ -81,7 +81,7 @@ function EnvironmentSettings(props: any) {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <Tooltip title={"What is the purpose of your environment?"}>
+                      <Tooltip title={"Describe the purpose of your environment"}>
                         <HelpOutlineIcon 
                           sx={{color:'rgba(34, 51, 84, 0.7)', 
                           padding:'0 0 0 8px', 
@@ -94,11 +94,11 @@ function EnvironmentSettings(props: any) {
                 }}></TextField>
             </Grid>
             <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={2} display='flex' justifyContent='flex-end'>
+              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
                 Folder:
               </Box>
             </Grid>
-            <Grid item xs={12} sm={8} md={9}>
+            <Grid item xs={12} sm={8} md={9} pb={3}>
               <FormControl>
                 <Select
                   labelId="demo-simple-select-label"

@@ -10,6 +10,15 @@ function DropdownChip(props: any) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [version, setVersion] = useState(null);
 
+  const handleDelete = (tagToDelete: any) => {
+    console.log('delete attempt on', tagToDelete);
+    const activeTags = props.tags.filter(
+      (package_: string) => package_ !== tagToDelete);
+    
+    console.log('setting tags to', activeTags);
+    props.setActiveTags(activeTags)
+  }
+  
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
     setOpen(!open);
@@ -38,7 +47,7 @@ function DropdownChip(props: any) {
         onClick={handleClick}
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        onDelete={() => console.log('delete attempt')}
+        onDelete={() => handleDelete(props.data)}
         sx={{m:'3px'}}
       />
       <Menu

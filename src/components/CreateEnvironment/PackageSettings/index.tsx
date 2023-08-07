@@ -1,7 +1,7 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
-import Package from "../Package";
-import { useState } from "react";
+import Package from "../PackageSelect";
+import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation } from "@apollo/client";
 import { CREATE_ENV } from "../../../queries";
@@ -21,19 +21,18 @@ function PackageSettings(props:any) {
   const [error, setError] = useState(false);
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
-
   const [ createEnvironment ] = useMutation(CREATE_ENV, {
     onCompleted: (event) => {
       console.log('completion event', event);
 
       if (
-        event.createEnvironment.__typename === "EnvironmentAlreadyExistsError"
+        event.createEnvironment.__typename === "CreateEnvironmentSuccess"
       ) {
-        console.log(event)
-        setError(true);
-      } else {
         console.log('build successful')
         setEnvBuildSuccessful(true);
+      } else {
+        console.log(event)
+        setError(true);
       }
     },
     // onError looks at GraphQL errors specifically. onCompleted will pick up
@@ -91,7 +90,7 @@ function PackageSettings(props:any) {
             return (
               <Grid key={program.id} container spacing={1}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{sm: 'right'}}>
-                  <Box pr={3} pb={4}>
+                  <Box pr={3} pt={2}>
                     {program.name} Packages:
                   </Box>
                 </Grid>
@@ -123,7 +122,7 @@ function PackageSettings(props:any) {
           change to an older version, click the package to select which one.
         </Alert>
 
-        {error && <ErrorDialog name={props.buildName} setError={setError} />}
+        {error && <ErrorDialog name={props.name} setError={setError} />}
         
         {envBuildSuccessful && 
           <Alert

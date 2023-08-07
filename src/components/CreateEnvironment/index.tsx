@@ -22,7 +22,7 @@ import { useState } from 'react';
 import { ALL_PACKAGES } from '../../queries';
 
 // CreateEnvironment displays the 'create environment' page.
-function CreateEnvironment() {
+export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
 
   const [name, setName] = useState('');
@@ -66,6 +66,9 @@ function CreateEnvironment() {
       <Grid item xs={11}>
         <PackageSettings 
           data={data.packageCollections}
+          setName={setName}
+          setDescription={setDescription}
+          setPath={setPath}
           buildName={name}
           buildDesc={description}
           buildPath={path}
@@ -110,5 +113,3 @@ function CreateEnvironment() {
     </Grid>
   );
 }
-
-export default CreateEnvironment;
