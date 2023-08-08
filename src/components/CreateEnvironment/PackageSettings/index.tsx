@@ -8,7 +8,7 @@ import { PackageContext } from "../PackageContext";
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props:any) {  
-  const [packages, setPackages] = useState('');
+  const [packages, setPackages] = useState([]);
 
   const packageContext = useContext(PackageContext);
 

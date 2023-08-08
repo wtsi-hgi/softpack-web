@@ -17,11 +17,12 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
-  const [testPackages, setTestPackages] = useState<string[] | null>(['']);
+  const [testPackages, setTestPackages] = useState(['']);
 
   const runEnvironmentBuild = () => {
     console.log('hello from runEnvironmentBuild');
-    //createEnvironment({ variables: { name, description, path, packages } })
+    console.log("here's all the packages", testPackages, typeof(testPackages));
+    createEnvironmentQuery({ variables: { name, description, path, testPackages } })
   }
 
   const [ createEnvironmentQuery ] = useMutation(CREATE_ENV, {
@@ -82,7 +83,7 @@ export default function CreateEnvironment() {
          component in context, because the thing in context (selected 
          packages) and the props are different; they operate across different 
          components and at different levels, therefore, they warrant different
-         methods of passing. */}
+         methods of passing, in my opinion. */}
         <PackageContext.Provider value={{testPackages, setTestPackages}}>
           <PackageSettings 
             data={data.packageCollections}
