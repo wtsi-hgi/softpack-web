@@ -1,9 +1,16 @@
-import { createContext } from 'react';
+import { Dispatch, SetStateAction, createContext } from 'react';
 
 interface PackageContextValue {
-    testPackages: string[] | null;
-    setTestPackages: React.Dispatch<React.SetStateAction<string[] | null>>;
+  testPackages: string[];
+  setTestPackages: Dispatch<SetStateAction<string[]>>;
 }
 
-export const PackageContext = createContext<PackageContextValue | undefined>(undefined);
+const defaultPackage: PackageContextValue = {
+  testPackages: [''],
+  setTestPackages: function (value: SetStateAction<string[]>): void {
+    throw new Error('Function not implemented.');
+  }
+}
+
+export const PackageContext = createContext<PackageContextValue>(defaultPackage);
 //export const PackageContext = createContext(['']);

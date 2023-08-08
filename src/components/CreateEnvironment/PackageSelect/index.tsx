@@ -7,11 +7,10 @@ import _ from 'lodash';
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: any) {
-  const [packages, setPackages] = useState([]);
-  const [lastPackage, setLastPackage] = useState(['']);
-  const [activeTags, setActiveTags] = useState(['']);
-
   const packageContext = useContext(PackageContext);
+
+  const [packages, setPackages] = useState([]);
+  const [activeTags, setActiveTags] = useState(['']);
 
   // Parse package names from data.
   useEffect(() => {
@@ -24,7 +23,9 @@ export default function PackageSelect(props: any) {
     var versions: string[] = [];
 
     names.map((name) => {
-      const index = props.data.findIndex((element: any) => element.name === name);
+      const index = props.data.findIndex(
+        (element: any) => element.name === name
+      );
       const packageVersions = props.data[index].versions;
       versions.push(packageVersions);
     })
@@ -51,21 +52,21 @@ export default function PackageSelect(props: any) {
   // updatePackages takes the list of all packages selected on softpackWeb
   // (python and R, at time of writing) and updates with the selected package:
   // value.
-  const updatePackages = (value: string[], action: string) => {
-    console.log('context from PackageSelect', packageContext?.testPackages);
-    // difference is equal to the package just selected.
-    console.log('updatePackages value:', value);
-    setActiveTags(value);
+  const updatePackages = (event: any, value: string[], action: string) => {
+    const package_ = event.target.textContent;
 
-    let difference = value.filter(x => lastPackage.indexOf(x) === -1);
-    console.log('difference', difference);
-    console.log('action', action);
-    
-    const allPackages = props.packages.concat(difference);    
-    props.setPackages(allPackages);
-    packageContext?.setTestPackages(allPackages)
-    setLastPackage(value);
-    console.log('allPackages', allPackages);
+    if (action === "selectOption") {
+      addPackage(package_);
+    }
+
+    // This line needs redressing: it's upholding the functionality of
+    // findPackageVersionsFromName, which is unsustainable.
+    setActiveTags(value); 
+  }
+
+  const addPackage = (package_: string[]) => {
+    const result = packageContext.testPackages.concat(package_);
+    packageContext?.setTestPackages(result);
   }
 
   // checkActiveTagsValue determines whether the value of activeTags is its
@@ -96,7 +97,7 @@ export default function PackageSelect(props: any) {
             />
           );
         }}
-        onChange={(_, value, action) => updatePackages(value, action)}
+        onChange={(event, value, action) => updatePackages(event, value, action)}
       />
     </Box>
   );
