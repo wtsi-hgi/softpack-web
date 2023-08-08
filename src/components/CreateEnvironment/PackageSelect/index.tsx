@@ -1,6 +1,7 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
-import DropdownChip from "../../DropdownChip";
+import { useEffect, useState, useContext } from "react";
+import DropdownChip from "../../PackageChip";
+import { PackageContext } from "../PackageContext";
 import _ from 'lodash';
 
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
@@ -9,6 +10,8 @@ export default function PackageSelect(props: any) {
   const [packages, setPackages] = useState([]);
   const [lastPackage, setLastPackage] = useState(['']);
   const [activeTags, setActiveTags] = useState(['']);
+
+  const packageContext = useContext(PackageContext);
 
   // Parse package names from data.
   useEffect(() => {
@@ -45,14 +48,12 @@ export default function PackageSelect(props: any) {
     ))
   }
 
-  console.log('active tags', activeTags);
-
   // updatePackages takes the list of all packages selected on softpackWeb
   // (python and R, at time of writing) and updates with the selected package:
   // value.
   const updatePackages = (value: string[], action: string) => {
-    // difference is equal to the package just selected. Because value by
-    // default is all the selected packages.
+    console.log('context from PackageSelect', packageContext?.testPackages);
+    // difference is equal to the package just selected.
     console.log('updatePackages value:', value);
     setActiveTags(value);
 
@@ -62,6 +63,7 @@ export default function PackageSelect(props: any) {
     
     const allPackages = props.packages.concat(difference);    
     props.setPackages(allPackages);
+    packageContext?.setTestPackages(allPackages)
     setLastPackage(value);
     console.log('allPackages', allPackages);
   }
