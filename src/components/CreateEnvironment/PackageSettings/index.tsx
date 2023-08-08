@@ -1,69 +1,24 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { useMutation } from "@apollo/client";
-import { CREATE_ENV } from "../../../queries";
-import ErrorDialog from "../ErrorDialog";
 import PackageSelect from "../PackageSelect";
-
-interface Package {
-  name: string;
-  id?: string;
-  version?: string;
-}
+import { PackageContext } from "../PackageContext";
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props:any) {  
   const [packages, setPackages] = useState('');
 
-  const [error, setError] = useState(false);
-  const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
+  const packageContext = useContext(PackageContext);
 
-  const [ createEnvironment ] = useMutation(CREATE_ENV, {
-    onCompleted: (event) => {
-      console.log('completion event', event);
+  useEffect(() => {
+    console.log('hello from PackageSettings', packageContext?.testPackages);
+  }, [])
 
-      if (
-        event.createEnvironment.__typename === "CreateEnvironmentSuccess"
-      ) {
-        console.log('build successful')
-        setEnvBuildSuccessful(true);
-      } else {
-        console.log(event)
-        setError(true);
-      }
-    },
-    // onError looks at GraphQL errors specifically. onCompleted will pick up
-    // any errors which the backend itself raises, like an environment name
-    // already existing.
-    onError: (error) => {
-      const messages = error.graphQLErrors[0].message;
-      console.log('GraphQL ERROR: ', messages);
-      setError(true);
-    },
-  });
-
-  // createEnvTest is a temporary function that builds an environment. It
-  // simulates what is going to happen in the final product: where the user
-  // enters an env name, desc, path and packages.
-  const createEnvTest = (event: any) => {
-    event.preventDefault()
-
-    console.log('creating an env with the following name, desc and path', props.buildName, props.buildDesc, props.buildPath);
-    const name = props.buildName;
-    const description = props.buildDesc;
-    const path = 'groups/hgi';
-
-    const packages: Package[] = [
-      {name: 'py-3to2'},
-      {name: 'py-abcpy', id: '56c4909e9c35490e8b2a58e9895159fc'}]
-    
-    console.log('info', name, description, path, packages)
-    console.log('going to try building a test environment...');
-
-    createEnvironment({ variables: { name, description, path, packages } })
+  const runEnvironmentBuild = () => {
+    console.log('executing environment build from PackageSettings.tsx...');
+    props.runEnvironmentBuild()
   }
 
   return (
@@ -121,21 +76,19 @@ function PackageSettings(props:any) {
           Packages come with the latest version by default. If you wish to 
           change to an older version, click the package to select which one.
         </Alert>
-
-        {error && <ErrorDialog name={props.name} setError={setError} />}
         
-        {envBuildSuccessful && 
+        {props.envBuildSuccessful && 
           <Alert
             severity="success"
             sx={{m: '2% 0 2% 0'}}
           >
-            Your environment, {props.buildName} was successfully scheduled!
+            Your environment was successfully scheduled!
           </Alert>
         }
         <Button
           variant='contained' 
           startIcon={<AddIcon />} 
-          onClick={createEnvTest}
+          onClick={runEnvironmentBuild}
           sx={{ 
             float:'right', 
             width:'10%', 

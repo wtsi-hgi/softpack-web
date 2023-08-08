@@ -6,17 +6,17 @@ export default function Test() {
   const packages = useContext(PackageContext);
 
   const single = ['py-abc'];
-  packages?.setPackages(single)
+  //packages?.setTestPackages(single)
+  //packages?.setTestPackages(['single', 'double'])
 
   return (
     <Box>
       <Box>Hello from test</Box>
-      {packages?.packages?.map((package_) => {
+      {packages?.testPackages?.map((package_) => {
         return (
           <Box>This is package {package_}</Box>
         );
       })}
-      
     </Box>
   )
 }
