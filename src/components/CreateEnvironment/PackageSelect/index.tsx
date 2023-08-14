@@ -12,6 +12,8 @@ export default function PackageSelect(props: any) {
   const [packages, setPackages] = useState([]);
   const [activeTags, setActiveTags] = useState(['']);
 
+  console.log('activeTags', activeTags);
+
   // Parse package names from data.
   useEffect(() => {
     const packages = props.data.map((item: any) => item.name);
@@ -33,9 +35,25 @@ export default function PackageSelect(props: any) {
     return versions;
   }
 
+  const onDelete = (data: any) => {
+    console.log('trying to delete', data, 'from', activeTags);
+    const result = activeTags.filter((tag) => tag !== data);
+    console.log('result', result);
+    setActiveTags(result);
+    //setActiveTags((prevActiveTags) => 
+    //  prevActiveTags.filter((tag) => {
+    //    console.log(tag)
+    //    tag !== data
+    //  })
+    //)
+
+    console.log('state now', activeTags);
+  }
+
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
   const renderTags = (tags: string[]) => {
+    setActiveTags(tags)
     const packageVersions = findPackageVersionsFromName(tags);
 
     return activeTags.map((option: any, index: any) => ( 
@@ -44,7 +62,9 @@ export default function PackageSelect(props: any) {
         data={option}
         versions={packageVersions[index]}
         tags={tags}
+        activeTags={activeTags}
         setActiveTags={setActiveTags}
+        onDelete={onDelete}
       />
     ))
   }
@@ -54,6 +74,7 @@ export default function PackageSelect(props: any) {
   // value.
   const updatePackages = (event: any, value: string[], action: string) => {
     const package_ = event.target.textContent;
+    console.log('value', value, action);
 
     if (action === "selectOption") {
       addPackage(package_);
@@ -61,12 +82,16 @@ export default function PackageSelect(props: any) {
 
     // This line needs redressing: it's upholding the functionality of
     // findPackageVersionsFromName, which is unsustainable.
-    setActiveTags(value); 
+    console.log('doing stuff');
+    setActiveTags(value);
   }
 
   const addPackage = (package_: string[]) => {
     const result = packageContext.testPackages.concat(package_);
-    packageContext?.setTestPackages(result);
+    console.log('result', result);
+    packageContext.setTestPackages(result);
+    
+    console.log(packageContext.testPackages)
   }
 
   // checkActiveTagsValue determines whether the value of activeTags is its
@@ -82,10 +107,10 @@ export default function PackageSelect(props: any) {
         multiple
         options={packages}
         renderTags={(tags) => {
-          //setActiveTags(tags)
-
+          
+          console.log('what is tag value', tags)
           return (
-            renderTags(activeTags)
+            renderTags(tags)
           )
         }}
         renderInput={(params) => {
@@ -97,7 +122,7 @@ export default function PackageSelect(props: any) {
             />
           );
         }}
-        onChange={(event, value, action) => updatePackages(event, value, action)}
+        //onChange={(event, value, action) => updatePackages(event, value, action)}
       />
     </Box>
   );
