@@ -14,6 +14,7 @@ import { Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
+// Sidebar is the sidebar of the program.
 const Sidebar = () => {
   return (
     <Drawer

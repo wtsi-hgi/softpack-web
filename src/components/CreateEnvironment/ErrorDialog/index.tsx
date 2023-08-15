@@ -1,6 +1,8 @@
 import { Dialog, DialogTitle, Typography, DialogContent, DialogContentText } from "@mui/material";
 import { useState } from "react";
 
+// ErrorDialog informs the user that the environment they are trying to create
+// already exists.
 const ErrorDialog = (props:any) => {
   const [dialogBoxOpen, setDialogBoxOpen] = useState(true);
 

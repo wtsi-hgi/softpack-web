@@ -5,6 +5,7 @@ import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
 import { useState } from "react";
 
+// EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useQuery(ALL_ENVIRONMENTS),
     [filter, setFilter] = useState<string>("")
