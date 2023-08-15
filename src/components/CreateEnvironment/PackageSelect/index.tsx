@@ -1,6 +1,6 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import DropdownChip from "../../DropdownChip";
+import DropdownChip from "../../PackageChip";
 import _ from 'lodash';
 
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
