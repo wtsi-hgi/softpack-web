@@ -1,7 +1,9 @@
 import { Card, Box, Typography, Divider, CardContent, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
 import EnvExample from "../EnvExample";
 
-
+// matchingEnvs is a hardcoded table that shows an illustration of what the
+// program should look like, as it informs users in real-time that they
+// environment they are trying to create already exists.
 export default function matchingEnvs() {
   
   const envs = [

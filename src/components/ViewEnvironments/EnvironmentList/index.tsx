@@ -4,6 +4,7 @@ import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
 import data from './data.json'
 
+// EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   {/*const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
  

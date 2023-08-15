@@ -5,7 +5,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { PackageContext } from "../CreateEnvironment/PackageContext";
 
-// DropdownChip is an MUI chip that comes with a dropdown.
+// DropdownChip is an MUI chip that comes with a dropdown. It is used to display
+// a package, and when clicked, displays the versions the package can come in.
 function DropdownChip(props: any) {
   const packageContext = useContext(PackageContext);
   

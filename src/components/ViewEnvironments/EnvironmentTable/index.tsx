@@ -1,7 +1,6 @@
 import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import EnvironmentDrawer from "../Drawer";
-//import EnvironmentDrawer from "../Drawer";
 
 interface Environment {
   description: string;
@@ -18,6 +17,7 @@ interface Package {
   version: string;
 }
 
+// EnvironmenTable displays the environments available.
 function EnvironmentTable(data: any) {
   const [environments, setEnvironments] = useState<Environment[]>([]);
   const [drawerEnvName, setDrawerEnvName] = useState('');
@@ -61,6 +61,8 @@ function EnvironmentTable(data: any) {
     'Successful', 'Successful', 'Failed', 
     'Building...', 'Failed'];
 
+  // convertToBreadcrumbs takes a path string as input, and converts it into JSX
+  // which can be rendered as breadcrumbs.
   function convertToBreadcrumbs(path: string) {
     const parts = path.split('/').filter((part) => part.trim() !== '');
   
@@ -91,6 +93,8 @@ function EnvironmentTable(data: any) {
               position:'relative'
             }}>
             <Tooltip title={buildMessages[i]} placement="top">
+              {/* This is displaying some hardcoded colours to indicate the 
+                  pretend 'status' of the environment build. */}
               <Box
                 sx={{
                   content: "''",
