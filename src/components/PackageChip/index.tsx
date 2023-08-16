@@ -1,20 +1,22 @@
 import { Chip, Menu, MenuItem } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
+//import { useContext } from "react";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import { PackageContext } from "../CreateEnvironment/PackageContext";
+//import { PackageContext } from "../CreateEnvironment/PackageContext";
 
 // DropdownChip is an MUI chip that comes with a dropdown. It is used to display
 // a package, and when clicked, displays the versions the package can come in.
 function DropdownChip(props: any) {
-  const packageContext = useContext(PackageContext);
+  //const packageContext = useContext(PackageContext);
   
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [version, setVersion] = useState(null);
 
-  const handleDelete = (tagToDelete: any) => {
+  // handleDelete is currently being worked upon 16/08/23
+  {/*const handleDelete = (tagToDelete: any) => {
     console.log('delete attempt on', tagToDelete);
 
     console.log('packages', packageContext.testPackages);
@@ -32,7 +34,7 @@ function DropdownChip(props: any) {
     packageContext.setTestPackages(newPackages);
     props.setActiveTags(newTags);
     console.log(packageContext.testPackages);
-  }
+  }*/}
   
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);

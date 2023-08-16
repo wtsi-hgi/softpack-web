@@ -5,10 +5,6 @@ import { PackageContext } from "../PackageContext";
 export default function Test() {
   const packages = useContext(PackageContext);
 
-  const single = ['py-abc'];
-  //packages?.setTestPackages(single)
-  //packages?.setTestPackages(['single', 'double'])
-
   return (
     <Box>
       <Box>Hello from test</Box>

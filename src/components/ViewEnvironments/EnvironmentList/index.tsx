@@ -1,7 +1,7 @@
 import { Card, Container, Grid } from "@mui/material";
-import { useQuery } from "@apollo/client";
+//import { useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
-import { ALL_ENVIRONMENTS } from "../../../queries";
+//import { ALL_ENVIRONMENTS } from "../../../queries";
 import data from './data.json'
 
 // EnvironmentList displays the 'view environments' page of the program.
