@@ -1,20 +1,13 @@
 import { Card, Box, Typography, Divider, CardContent, Grid, Alert, 
   Button } from "@mui/material";
-import { useEffect, useState, useContext } from "react";
+import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
-import { PackageContext } from "../PackageContext";
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props:any) {  
   const [packages, setPackages] = useState([]);
-
-  const packageContext = useContext(PackageContext);
-
-  useEffect(() => {
-    console.log('hello from PackageSettings', packageContext?.testPackages);
-  }, [])
 
   const runEnvironmentBuild = () => {
     console.log('executing environment build from PackageSettings.tsx...');

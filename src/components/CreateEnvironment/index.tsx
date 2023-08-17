@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { Grid } from '@mui/material';
+import { PackageContext } from './PackageContext';
 import { useMutation, useQuery } from '@apollo/client';
+
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
-import { useState } from 'react';
-import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
-import { PackageContext } from './PackageContext';
 import ErrorDialog from './ErrorDialog';
+
+import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -17,12 +19,13 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
-  const [testPackages, setTestPackages] = useState(['']);
+  const [packages, setPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
     console.log('hello from runEnvironmentBuild');
-    console.log("here's all the packages", testPackages, typeof(testPackages));
-    createEnvironmentQuery({ variables: { name, description, path, testPackages } })
+    console.log("here's all the packages", packages);
+    
+    //createEnvironmentQuery({ variables: { name, description, path, testPackages } })
   }
 
   const [ createEnvironmentQuery ] = useMutation(CREATE_ENV, {
@@ -84,7 +87,7 @@ export default function CreateEnvironment() {
          packages) and the props are different; they operate across different 
          components and at different levels, therefore, they warrant different
          methods of passing, in my opinion. */}
-        <PackageContext.Provider value={{testPackages, setTestPackages}}>
+        <PackageContext.Provider value={{packages, setPackages}}>
           <PackageSettings 
             data={data.packageCollections}
             runEnvironmentBuild={runEnvironmentBuild}

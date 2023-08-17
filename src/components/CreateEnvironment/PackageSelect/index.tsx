@@ -10,7 +10,7 @@ export default function PackageSelect(props: any) {
   const packageContext = useContext(PackageContext);
 
   const [packages, setPackages] = useState([]);
-  const [activeTags, setActiveTags] = useState(['']);
+  const [activeTags, setActiveTags] = useState<string[]>([]);
 
   // Parse package names from data.
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function PackageSelect(props: any) {
   }
 
   const addPackage = (package_: string[]) => {
-    const result = packageContext.testPackages.concat(package_);
-    packageContext?.setTestPackages(result);
+    const result = packageContext.packages.concat(package_);
+    packageContext?.setPackages(result);
   }
 
   // checkActiveTagsValue determines whether the value of activeTags is its
@@ -81,13 +81,7 @@ export default function PackageSelect(props: any) {
       <Autocomplete
         multiple
         options={packages}
-        renderTags={(tags) => {
-          //setActiveTags(tags)
-
-          return (
-            renderTags(activeTags)
-          )
-        }}
+        renderTags={() => renderTags(activeTags)}
         renderInput={(params) => {
           return (
             <TextField
