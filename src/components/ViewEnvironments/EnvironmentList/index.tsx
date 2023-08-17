@@ -30,8 +30,6 @@ const EnvironmentList = () => {
     filteredEnvironments = filteredEnvironments.filter(e => parts.every(part => e.packages.some(pkg => pkg.name.includes(part))));
   }
 
-  // <input type="text" placeholder="Filter Environments By Package" onChange={e => setFilter(e.target.value)} style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }} />
-
   return <>
     <TextField
       id='name-field'
