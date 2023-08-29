@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, createContext } from 'react';
 
 // PackageContext is the context responsible for the package selecting that goes
 // on when a user is trying to create a new environment. This warrants a
-// context, because is some 'prop drilling' going on, which I wish to avoid.
+// context, because some 'prop drilling' is going on, which I wish to avoid.
 
 interface PackageContextValue {
   testPackages: string[];
@@ -11,7 +11,7 @@ interface PackageContextValue {
 
 const defaultPackage: PackageContextValue = {
   testPackages: [''],
-  setTestPackages: function (value: SetStateAction<string[]>): void {
+  setTestPackages: function (_value: SetStateAction<string[]>): void {
     throw new Error('Function not implemented.');
   }
 }
