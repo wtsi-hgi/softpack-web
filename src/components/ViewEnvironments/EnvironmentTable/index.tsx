@@ -2,26 +2,29 @@ import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material
 import { useState } from "react";
 import EnvironmentDrawer from "../Drawer";
 
-interface Environment {
+export type Environments = {
+  environments: Environment[];
+}
+
+type Environment = {
   description: string;
   id: string;
   name: string;
   packages: Package[];
   path: string;
-  __typename: string;
 }
 
-interface Package {
+type Package = {
   id: string;
   name: string;
   version: string;
 }
 
-function EnvironmentTable({ environments }: any) {
+function EnvironmentTable({ environments }: Environments) {
   const [drawerEnvName, setDrawerEnvName] = useState('');
   const [drawerPathName, setDrawerPathName] = useState('');
   const [drawerEnvDesc, setDrawerEnvDesc] = useState('');
-  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState(['']);
+  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState<string[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleOpenDrawer = (

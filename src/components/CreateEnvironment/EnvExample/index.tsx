@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // EnvExample is an accordion that displays environments.
-function EnvExample(row: any) {
+function EnvExample(row: { row: { Environment: string; Description: string } }) {
   const [open, setOpen] = useState(false);
 
   return (

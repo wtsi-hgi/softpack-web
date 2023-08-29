@@ -1,50 +1,63 @@
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
-import PackageSettings from './PackageSettings';
+import PackageSettings, { type Collection } from './PackageSettings';
 import { useState } from 'react';
 import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
 import ErrorDialog from './ErrorDialog';
+import { Environments } from '../ViewEnvironments/EnvironmentTable';
+
+type Packages = {
+  packageCollections: Collection[];
+}
+
+type CreateEnvironmentSuccess = {
+  message: string;
+  environment: Environments["environments"];
+}
+
+type EnvironmentAlreadyExistsError = {
+  name: string;
+  path: string;
+}
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
-  const { loading, data, error } = useQuery(ALL_PACKAGES);
+  const { loading, data, error } = useQuery<Packages>(ALL_PACKAGES);
   const [envBuildError, setEnvBuildError] = useState(false);
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
-  const [testPackages, setTestPackages] = useState(['']);
+  const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
     console.log('hello from runEnvironmentBuild');
-    console.log("here's all the packages", testPackages, typeof(testPackages));
+    console.log("here's all the packages", testPackages, typeof (testPackages));
     createEnvironmentQuery({ variables: { name, description, path, testPackages } })
   }
 
-  const [ createEnvironmentQuery ] = useMutation(CREATE_ENV, {
+  const [createEnvironmentQuery] = useMutation<CreateEnvironmentSuccess | EnvironmentAlreadyExistsError>(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
-    onCompleted: (event: any) => {
-      console.log('completion event', event);
+    onCompleted: data => {
+      console.log('completion event', data);
 
-      if (
-        event.createEnvironment.__typename === "CreateEnvironmentSuccess"
-      ) {
+      if ("message" in data) {
         console.log('build successful')
         setEnvBuildSuccessful(true);
       } else {
         // Regardless of error, error message says 'env with that name already
         // exists'. More specific error messages are a job for the future.
-        console.log(event)
+        console.log(data)
         setEnvBuildError(true);
       }
     },
     // onError looks at GraphQL errors specifically.
-    onError: (error: any) => {
+    onError: error => {
       const messages = error.graphQLErrors[0].message;
       console.log('GraphQL ERROR: ', messages);
       setEnvBuildError(true);
@@ -57,22 +70,22 @@ export default function CreateEnvironment() {
 
   if (error) {
     return (
-      <div style={{color:'red'}}>
+      <div style={{ color: 'red' }}>
         {error.message}
       </div>
     )
   }
 
   return (
-    <Grid 
-      container 
+    <Grid
+      container
       direction="row"
       justifyContent="center"
       alignItems="stretch"
       spacing={3}
     >
       <Grid item xs={11}>
-        <EnvironmentSettings 
+        <EnvironmentSettings
           setName={setName}
           setDescription={setDescription}
           setPath={setPath}
@@ -84,9 +97,9 @@ export default function CreateEnvironment() {
          packages) and the props are different; they operate across different 
          components and at different levels, therefore, they warrant different
          methods of passing, in my opinion. */}
-        <PackageContext.Provider value={{testPackages, setTestPackages}}>
-          <PackageSettings 
-            data={data.packageCollections}
+        <PackageContext.Provider value={{ testPackages, setTestPackages }}>
+          <PackageSettings
+            data={data?.packageCollections ?? []}
             runEnvironmentBuild={runEnvironmentBuild}
             envBuildSuccessful={envBuildSuccessful}
           />
@@ -95,7 +108,7 @@ export default function CreateEnvironment() {
       <Grid item xs={11}>
         <MatchingEnvs />
       </Grid>
-      {envBuildError && 
+      {envBuildError &&
         <ErrorDialog name={name} setError={setEnvBuildError} />}
     </Grid>
   );

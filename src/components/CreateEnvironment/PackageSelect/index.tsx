@@ -3,25 +3,35 @@ import { useEffect, useState } from "react";
 import DropdownChip from "../../PackageChip";
 import _ from 'lodash';
 
+type PackageSelectParams = {
+  data: {
+    id: string;
+    name: string;
+    versions: string[];
+  }[];
+  packages: string[];
+  setPackages: (packages: string[]) => void;
+}
+
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
-export default function PackageSelect(props: any) {
-  const [packages, setPackages] = useState([]);
-  const [lastPackage, setLastPackage] = useState(['']);
-  const [activeTags, setActiveTags] = useState(['']);
+export default function PackageSelect(props: PackageSelectParams) {
+  const [packages, setPackages] = useState<string[]>([]);
+  const [lastPackage, setLastPackage] = useState<string[]>([]);
+  const [activeTags, setActiveTags] = useState<string[]>([]);
 
   // Parse package names from data.
   useEffect(() => {
-    const packages = props.data.map((item: any) => item.name);
+    const packages = props.data.map(item => item.name);
     setPackages(packages)
   }, [props.data])
 
   // findPackageVersionsFromName finds all available versions of a package.
   const findPackageVersionsFromName = (names: string[]) => {
-    var versions: string[] = [];
+    var versions: string[][] = [];
 
-    names.map((name) => {
-      const index = props.data.findIndex((element: any) => element.name === name);
+    names.forEach((name) => {
+      const index = props.data.findIndex(element => element.name === name);
       const packageVersions = props.data[index].versions;
       versions.push(packageVersions);
     })
@@ -31,16 +41,17 @@ export default function PackageSelect(props: any) {
 
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
-  const renderTags = (tags: any) => {
+  const renderTags = (tags: string[]) => {
     const packageVersions = findPackageVersionsFromName(tags);
 
-    return activeTags.map((option: any, index: any) => ( 
-      <DropdownChip 
+    return activeTags.map((option, index) => (
+      <DropdownChip
         key={index}
         data={option}
         versions={packageVersions[index]}
         tags={tags}
         setActiveTags={setActiveTags}
+        onDelete={() => { }}
       />
     ))
   }
@@ -56,8 +67,8 @@ export default function PackageSelect(props: any) {
     let difference = value.filter(x => lastPackage.indexOf(x) === -1);
     console.log('difference', difference);
     console.log('action', action);
-    
-    const allPackages = props.packages.concat(difference);    
+
+    const allPackages = props.packages.concat(difference);
     props.setPackages(allPackages);
     setLastPackage(value);
     console.log('allPackages', allPackages);

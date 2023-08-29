@@ -1,24 +1,34 @@
-import { 
-  Box, 
-  Breadcrumbs, 
-  Chip, 
-  Divider, 
-  Drawer, 
-  Link, 
-  Tooltip, 
-  Typography 
+import {
+  Box,
+  Breadcrumbs,
+  Chip,
+  Divider,
+  Drawer,
+  Link,
+  type ModalProps,
+  Tooltip,
+  Typography
 } from "@mui/material";
+
+type DrawerParams = {
+  name: string;
+  path: string;
+  description: string;
+  packages: string[];
+  isOpen: boolean;
+  onClose: ModalProps['onClose']
+}
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
-function EnvironmentDrawer(props: any) {
+function EnvironmentDrawer(props: DrawerParams) {
 
   // convertToBreadcrumbs takes a path string as input, and converts each root
   // into its own Breadcrumb element.
   function convertToBreadcrumbs(path: string) {
     const parts = path.split('/').filter((part) => part.trim() !== '');
-  
-    return parts.map((part, index) => {  
+
+    return parts.map((part, index) => {
       return (
         <Link key={index} color="inherit" href="#" onClick={(e) => (console.log(e))}>
           {part}
@@ -32,7 +42,7 @@ function EnvironmentDrawer(props: any) {
       <Box padding={'27px'}>
         <Box
           role='presentation'
-          
+
           padding={'0 18px 18px 18px'}
           display={'flex'}
           justifyContent={'center'}
@@ -50,27 +60,27 @@ function EnvironmentDrawer(props: any) {
         <Box
           padding={'18px'}
         >
-          <Typography variant={'h4'} style={{paddingBottom:'15px'}}>Description</Typography>
-          <Typography variant={'h3'} style={{width:'400px'}}>{props.description}</Typography>
+          <Typography variant={'h4'} style={{ paddingBottom: '15px' }}>Description</Typography>
+          <Typography variant={'h3'} style={{ width: '400px' }}>{props.description}</Typography>
         </Box>
         <Box
           padding={'18px'}
           width='400px'
         >
-        <Divider />
-          <Typography paddingTop={2} variant={'h4'} style={{paddingBottom:'15px'}}>Packages</Typography>
-          {props.packages.map((name: string, i: any) => {
+          <Divider />
+          <Typography paddingTop={2} variant={'h4'} style={{ paddingBottom: '15px' }}>Packages</Typography>
+          {props.packages.map((name, i) => {
             return (
-              <Box key={i} sx={{display:"inline-flex"}}>
+              <Box key={i} sx={{ display: "inline-flex" }}>
                 <Tooltip title="Version here" placement="top">
-                  <Chip 
-                    label={name} 
+                  <Chip
+                    label={name}
                     sx={{
-                      m:'4px', 
-                      color:'#5569ff', 
-                      border:'1px solid rgba(85, 105, 255, 0.7)', 
-                      backgroundColor:'transparent'
-                    }} 
+                      m: '4px',
+                      color: '#5569ff',
+                      border: '1px solid rgba(85, 105, 255, 0.7)',
+                      backgroundColor: 'transparent'
+                    }}
                   />
                 </Tooltip>
               </Box>
