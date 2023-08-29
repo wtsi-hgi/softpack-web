@@ -111,8 +111,7 @@ function EnvironmentTable({ environments }: any) {
                 onClick={() => {
                   console.log(env)
                   handleOpenDrawer(env.name, env.path, env.description, env.packages)
-                }
-                }
+                }}
                 sx={{ paddingLeft: '20.7px' }}>{env.name}
               </Typography>
 
