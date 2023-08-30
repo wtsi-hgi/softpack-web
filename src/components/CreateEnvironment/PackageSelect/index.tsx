@@ -1,7 +1,6 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import DropdownChip from "../../PackageChip";
-import _ from 'lodash';
 
 type PackageSelectParams = {
   data: {
@@ -74,13 +73,6 @@ export default function PackageSelect(props: PackageSelectParams) {
     console.log('allPackages', allPackages);
   }
 
-  // checkActiveTagsValue determines whether the value of activeTags is its
-  // default [''].
-  const checkActiveTagsValue = () => {
-    const defaultValue = ['']
-    return _.isEqual(activeTags, defaultValue)
-  }
-
   return (
     <Box>
       <Autocomplete
@@ -98,7 +90,7 @@ export default function PackageSelect(props: PackageSelectParams) {
             <TextField
               {...params}
               variant="standard"
-              label={checkActiveTagsValue() ? "Search..." : ""}
+              label={activeTags.length ? "" : "Search..."}
             />
           );
         }}
