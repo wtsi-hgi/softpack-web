@@ -1,9 +1,10 @@
+import type { CreateEnvironmentSuccess, EnvironmentAlreadyExistsError, Packages } from '../../queries';
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
-import { ALL_PACKAGES, CREATE_ENV, type CreateEnvironmentSuccess, type EnvironmentAlreadyExistsError, type Packages } from '../../queries';
+import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
 import ErrorDialog from './ErrorDialog';
