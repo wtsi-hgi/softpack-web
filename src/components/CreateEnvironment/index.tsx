@@ -1,27 +1,12 @@
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
-import PackageSettings, { type Collection } from './PackageSettings';
+import PackageSettings from './PackageSettings';
 import { useState } from 'react';
-import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
+import { ALL_PACKAGES, CREATE_ENV, type CreateEnvironmentSuccess, type EnvironmentAlreadyExistsError, type Packages } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
 import ErrorDialog from './ErrorDialog';
-import { Environments } from '../ViewEnvironments/EnvironmentTable';
-
-type Packages = {
-  packageCollections: Collection[];
-}
-
-type CreateEnvironmentSuccess = {
-  message: string;
-  environment: Environments["environments"];
-}
-
-type EnvironmentAlreadyExistsError = {
-  name: string;
-  path: string;
-}
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {

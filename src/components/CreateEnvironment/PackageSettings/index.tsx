@@ -6,16 +6,7 @@ import { useEffect, useState, useContext } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
 import { PackageContext } from "../PackageContext";
-
-export type Collection = {
-  id: string;
-  name: string;
-  packages: {
-    id: string;
-    name: string;
-    versions: string[];
-  }[];
-}
+import { Collection } from "../../../queries";
 
 type PackageSettingsParams = {
   data: Collection[];

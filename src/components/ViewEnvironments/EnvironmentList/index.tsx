@@ -1,8 +1,8 @@
 import { Card, Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useQuery } from "@apollo/client";
-import EnvironmentTable, { type Environments } from "../EnvironmentTable";
-import { ALL_ENVIRONMENTS } from "../../../queries";
+import EnvironmentTable from "../EnvironmentTable";
+import { ALL_ENVIRONMENTS, type Environments } from "../../../queries";
 import { useState } from "react";
 
 // EnvironmentList displays the 'view environments' page of the program.
