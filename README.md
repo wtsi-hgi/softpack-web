@@ -1,12 +1,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Softpack Web
 
-Softpack Web provides the graphical user interface, designed using the [Tokyo React Template](https://github.com/bloomui/tokyo-free-white-react-admin-dashboard), for those services which are provided by softpack: multi-user software environment sharing, management and creation!
+Softpack Web provides the graphical user interface, designed using a [custom React template](https://github.com/altaf-ali/react-admin-template), for those services which are provided by softpack: multi-user software environment sharing, management and creation!
 
 ## Installation
 
 ### Starting the React App
-At the time of writing - whilst this app is still undergoing development - this app must be started through three commands, which are to be ran from inside the directory of the cloned version of this repository.
+At the time of writing - whilst this app is still undergoing development - this app must be started through three commands, which are to be ran inside the directory of the cloned version of this repository.
 
 1. `git checkout develop` - this makes sure you are in the correct branch.
 2. `npm install` - this will install all the necessary packages and dependencies for Softpack Web.
