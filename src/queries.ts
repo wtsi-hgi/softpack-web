@@ -13,7 +13,6 @@ export type Environment = {
 }
 
 export type Package = {
-  id: string;
   name: string;
   version: string;
 }
@@ -26,7 +25,6 @@ export const ALL_ENVIRONMENTS = gql`
       name
       path
       packages {
-        id
         name
         version
       }
@@ -38,7 +36,6 @@ export type Collection = {
   id: string;
   name: string;
   packages: {
-    id: string;
     name: string;
     versions: string[];
   }[];
@@ -51,10 +48,8 @@ export type Packages = {
 export const ALL_PACKAGES = gql`
   query {
     packageCollections {
-      id
       name
       packages {
-        id
         name
         versions
       }
@@ -85,7 +80,6 @@ export const CREATE_ENV = gql`
         message
         environment {
           description
-          id
           path
           state
           packages {

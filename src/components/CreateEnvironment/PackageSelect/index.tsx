@@ -4,7 +4,6 @@ import DropdownChip from "../../PackageChip";
 
 type PackageSelectParams = {
   data: {
-    id: string;
     name: string;
     versions: string[];
   }[];
