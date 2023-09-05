@@ -28,7 +28,11 @@ const EnvironmentList = () => {
   if (filter) {
     const parts = filter.split(" ");
 
-    filteredEnvironments = filteredEnvironments.filter(e => parts.every(part => e.name.includes(part) || e.packages.some(pkg => pkg.name.includes(part))));
+    filteredEnvironments = filteredEnvironments.filter(e => parts.every(part =>
+      e.name.includes(part) ||
+      e.path.split("/").pop()?.includes(part) ||
+      e.packages.some(pkg => pkg.name.includes(part))
+    ));
   }
 
   return <>
