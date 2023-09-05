@@ -1,5 +1,22 @@
 import { gql } from '@apollo/client'
 
+export type Environments = {
+  environments: Environment[];
+}
+
+export type Environment = {
+  description: string;
+  id: string;
+  name: string;
+  packages: Package[];
+  path: string;
+}
+
+export type Package = {
+  name: string;
+  version: string;
+}
+
 export const ALL_ENVIRONMENTS = gql`
   query {
     environments {
@@ -8,7 +25,6 @@ export const ALL_ENVIRONMENTS = gql`
       name
       path
       packages {
-        id
         name
         version
       }
@@ -16,19 +32,40 @@ export const ALL_ENVIRONMENTS = gql`
   }
 `
 
+export type Collection = {
+  id: string;
+  name: string;
+  packages: {
+    name: string;
+    versions: string[];
+  }[];
+}
+
+export type Packages = {
+  packageCollections: Collection[];
+}
+
 export const ALL_PACKAGES = gql`
   query {
     packageCollections {
-      id
       name
       packages {
-        id
         name
         versions
       }
     }
   }
 `
+
+export type CreateEnvironmentSuccess = {
+  message: string;
+  environment: Environment;
+}
+
+export type EnvironmentAlreadyExistsError = {
+  name: string;
+  path: string;
+}
 
 export const CREATE_ENV = gql`
   mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
@@ -43,7 +80,6 @@ export const CREATE_ENV = gql`
         message
         environment {
           description
-          id
           path
           state
           packages {

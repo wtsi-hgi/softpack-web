@@ -1,25 +1,31 @@
-import { 
-  Card, 
-  Box, 
-  Typography, 
-  Divider, 
-  CardContent, 
-  Grid, 
-  TextField, 
-  InputAdornment, 
-  Tooltip, 
-  FormControl, 
-  Select, 
-  MenuItem 
+import {
+  Card,
+  Box,
+  Typography,
+  Divider,
+  CardContent,
+  Grid,
+  TextField,
+  InputAdornment,
+  Tooltip,
+  FormControl,
+  Select,
+  MenuItem
 } from "@mui/material";
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useState } from "react";
 
+type EnvironmentSettingsProps = {
+  setName: (name: string) => void;
+  setDescription: (description: string) => void;
+  setPath: (path: string) => void;
+}
+
 // EnvironmentSettings is the card responsible for the environment settings
 // available to a user when creating a new environment. E.g. Name, Description,
 // etc.
-function EnvironmentSettings(props: any) {
+function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const [path, setPath] = useState('')
 
   return (
@@ -44,19 +50,19 @@ function EnvironmentSettings(props: any) {
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
-              <TextField 
-                id='name-field' 
-                variant='standard' 
+              <TextField
+                id='name-field'
+                variant='standard'
                 onInput={(e) => props.setName((e.target as HTMLInputElement).value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"Choose a name for your environment"}>
-                        <HelpOutlineIcon 
+                        <HelpOutlineIcon
                           sx={{
-                            color:'rgba(34, 51, 84, 0.7)', 
-                            padding:'0 0 0 8px', 
-                            fontSize:'25px'
+                            color: 'rgba(34, 51, 84, 0.7)',
+                            padding: '0 0 0 8px',
+                            fontSize: '25px'
                           }}
                         />
                       </Tooltip>
@@ -71,10 +77,10 @@ function EnvironmentSettings(props: any) {
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
-              <TextField 
-                id='description-field' 
-                multiline 
-                rows={4} 
+              <TextField
+                id='description-field'
+                multiline
+                rows={4}
                 sx={{ width: '75%' }}
                 onInput={(e) => props.setDescription((e.target as HTMLInputElement).value)}
                 variant='standard'
@@ -82,10 +88,11 @@ function EnvironmentSettings(props: any) {
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"Describe the purpose of your environment"}>
-                        <HelpOutlineIcon 
-                          sx={{color:'rgba(34, 51, 84, 0.7)', 
-                          padding:'0 0 0 8px', 
-                          fontSize:'25px'
+                        <HelpOutlineIcon
+                          sx={{
+                            color: 'rgba(34, 51, 84, 0.7)',
+                            padding: '0 0 0 8px',
+                            fontSize: '25px'
                           }}
                         />
                       </Tooltip>

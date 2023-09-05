@@ -1,3 +1,4 @@
+import type { Environments } from "../../../queries";
 import { Card, Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useQuery } from "@apollo/client";
@@ -7,17 +8,17 @@ import { useState } from "react";
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS),
+  const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS),
     [filter, setFilter] = useState<string>("")
 
   if (loading) {
     return <div>loading...</div>
   }
 
-  if (error) {
+  if (error || !data) {
     return (
       <div style={{ color: 'red' }}>
-        {error.message}
+        {error?.message || "Unknown error"}
       </div>
     )
   }

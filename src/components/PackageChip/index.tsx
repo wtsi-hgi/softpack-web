@@ -6,17 +6,25 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 //import { PackageContext } from "../CreateEnvironment/PackageContext";
 
+type DropdownChipParams = {
+  data: string;
+  onDelete: (d: string) => void;
+  versions: string[];
+  tags: string[];
+  setActiveTags: (tags: string[]) => void;
+}
+
 // DropdownChip is an MUI chip that comes with a dropdown. It is used to display
 // a package, and when clicked, displays the versions the package can come in.
-function DropdownChip(props: any) {
+function DropdownChip(props: DropdownChipParams) {
   //const packageContext = useContext(PackageContext);
-  
+
   const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [version, setVersion] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [version, setVersion] = useState<string | null>(null);
 
   // handleDelete is currently being worked upon 16/08/23
-  {/*const handleDelete = (tagToDelete: any) => {
+  {/*const handleDelete = (tagToDelete: string) => {
     console.log('delete attempt on', tagToDelete);
 
     console.log('packages', packageContext.testPackages);
@@ -35,13 +43,8 @@ function DropdownChip(props: any) {
     props.setActiveTags(newTags);
     console.log(packageContext.testPackages);
   }*/}
-  
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(!open);
-  };
 
-  const handleClose = (event: any, index: any) => {
+  const handleClose = (target: HTMLElement, index: number) => {
     // Check if index is 0 (as this refers to the latest version of the 
     // package) to decide whether or not to update label name; no need to 
     // update if user has selected latest version, as all packages are 
@@ -49,8 +52,8 @@ function DropdownChip(props: any) {
 
     if (index == 0) {
       setVersion(null);
-    } else {
-      setVersion(event.target.textContent);
+    } else if (index > 0) {
+      setVersion(target.textContent);
     }
 
     setAnchorEl(null);
@@ -61,16 +64,19 @@ function DropdownChip(props: any) {
     <div>
       <Chip
         label={version ? props.data + ' (' + version + ')' : props.data}
-        onClick={handleClick}
+        onClick={event => {
+          setAnchorEl(event.currentTarget);
+          setOpen(!open);
+        }}
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         onDelete={() => props.onDelete(props.data)}
-        sx={{m:'3px'}}
+        sx={{ m: '3px' }}
       />
       <Menu
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
+        open={!!anchorEl}
+        onClose={(e: { target: HTMLElement }) => handleClose(e.target, -1)}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -79,20 +85,20 @@ function DropdownChip(props: any) {
           vertical: 'top',
           horizontal: 'right',
         }}
-      > 
-        {props.versions.map((version: any, index: any) => {
+      >
+        {props.versions.map((version, index) => {
           return (
             <MenuItem
               key={index}
               component="a"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => handleClose(e, index)}
+              onClick={e => handleClose(e.target as HTMLElement, index)}
             >
               {version}
             </MenuItem>
           )
-        })}       
+        })}
       </Menu>
     </div>
   );

@@ -10,7 +10,7 @@ export default function Test() {
       <Box>Hello from test</Box>
       {packages?.testPackages?.map((package_) => {
         return (
-          <Box>This is package {package_}</Box>
+          <Box key={package_}>This is package {package_}</Box>
         );
       })}
     </Box>

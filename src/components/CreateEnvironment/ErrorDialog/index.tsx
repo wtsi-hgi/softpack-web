@@ -3,7 +3,7 @@ import { useState } from "react";
 
 // ErrorDialog informs the user that the environment they are trying to create
 // already exists.
-const ErrorDialog = (props:any) => {
+const ErrorDialog = (props: { name: string, setError: (err: boolean) => void }) => {
   const [dialogBoxOpen, setDialogBoxOpen] = useState(true);
 
   const handleDialogBoxClose = () => {
