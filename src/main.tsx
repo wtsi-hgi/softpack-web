@@ -8,7 +8,7 @@ import { routes } from './routes';
 import Theme from './theme';
 
 const client = new ApolloClient({
-  uri: 'http://0.0.0.0:8000/graphql',
+  uri: window.location.protocol + "//" + window.location.hostname + ':8000/graphql',
   cache: new InMemoryCache(),
 })
 
