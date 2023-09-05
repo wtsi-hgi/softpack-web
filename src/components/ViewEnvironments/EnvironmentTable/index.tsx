@@ -78,6 +78,7 @@ function EnvironmentTable({ environments }: any) {
       {environments.map((env, i) => {
         return (
           <Box
+            key={env.name}
             sx={{
               borderRadius: '10px',
               backgroundColor: 'rgba(34, 51, 84, 0.02)',
@@ -135,7 +136,7 @@ function EnvironmentTable({ environments }: any) {
             <Box sx={{ paddingLeft: '20.7px' }}>
               {env.packages.map((package_) => {
                 return (
-                  <Box sx={{ display: "inline-flex" }}>
+                  <Box key={package_.name} sx={{ display: "inline-flex" }}>
                     <Tooltip title="Version here" placement="top">
                       <Chip
                         label={package_.name}
