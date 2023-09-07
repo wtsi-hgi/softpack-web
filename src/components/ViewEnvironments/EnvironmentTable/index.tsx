@@ -34,6 +34,11 @@ function EnvironmentTable({ environments }: Environments) {
         return (
           <Box
             key={env.name}
+            onClick={e => {
+              if ((e.target as HTMLElement).classList.contains("MuiBox-root")) {
+                setDrawer(env)
+              }
+            }}
             sx={{
               borderRadius: '10px',
               backgroundColor: 'rgba(34, 51, 84, 0.02)',
@@ -62,9 +67,7 @@ function EnvironmentTable({ environments }: Environments) {
               alignItems: 'baseline'
             }}>
               <Typography
-                component={Link}
                 variant='h3'
-                onClick={() => setDrawer(env)}
                 sx={{ paddingLeft: '20.7px' }}>{env.name}
               </Typography>
 
@@ -80,7 +83,7 @@ function EnvironmentTable({ environments }: Environments) {
                 </Breadcrumbs>
               </Typography>
             </Box>
-            <Typography sx={{ padding: '9px 0 9px 20.7px' }}>{env.description}</Typography>
+            <Typography sx={{ padding: '9px 0 9px 20.7px' }}>{env.description.split("\n")[0]}</Typography>
             <Box sx={{ paddingLeft: '20.7px' }}>
               {env.packages.map((package_) => {
                 return (
