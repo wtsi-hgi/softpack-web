@@ -1,0 +1,23 @@
+.readme_copy {
+	display: grid;
+	grid-template-columns: auto 0em;
+}
+
+.readme_copy button {
+	margin: 1em -1.8em;
+	width: 1.5em;
+	height: 1.5em;
+	padding: 0;
+	border: 0;
+	background-color: transparent;
+	color: #fff;
+}
+
+.readme_copy button>svg {
+	width: 0.75em;
+	height: 0.75em;
+}
+
+.readme_copy button:active {
+	background-color: #aaa;
+}

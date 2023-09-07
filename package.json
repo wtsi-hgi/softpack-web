@@ -10,7 +10,7 @@
     "url": "https://github.com/KMace"
   },
   "homepage": "https://softpack.pages.dev",
-  "license" : "MIT",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -33,13 +33,16 @@
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.12.1"
+    "react-markdown": "^8.0.7",
+    "react-router-dom": "^6.12.1",
+    "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/lodash": "^4.14.196",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/react-syntax-highlighter": "^15.5.7",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.59.7",
     "@vitejs/plugin-react-swc": "^3.0.0",

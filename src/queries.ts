@@ -9,6 +9,7 @@ export type Environment = {
   id: string;
   name: string;
   packages: Package[];
+  readme: string;
   path: string;
 }
 
@@ -28,6 +29,7 @@ export const ALL_ENVIRONMENTS = gql`
         name
         version
       }
+      readme
     }
   }
 `
