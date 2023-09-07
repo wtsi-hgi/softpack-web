@@ -11,6 +11,7 @@
 	border: 0;
 	background-color: transparent;
 	color: #fff;
+	cursor: pointer;
 }
 
 .readme_copy button>svg {
