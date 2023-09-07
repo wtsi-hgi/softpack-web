@@ -4,6 +4,7 @@ import {
   Chip,
   Divider,
   Drawer,
+  Icon,
   Link,
   Tooltip,
   Typography
@@ -12,6 +13,7 @@ import { Environment } from "../../../queries";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import ReactMarkdown from "react-markdown";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 type DrawerParams = {
   env: Environment;
@@ -78,7 +80,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <ReactMarkdown
               components={{
                 code({ node, inline, className, children, ...props }) {
-                  return !inline ? <>
+                  return !inline ? <div className="readme_copy">
                     <SyntaxHighlighter
                       {...props}
                       children={String(children).replace(/\n$/, '')}
@@ -86,7 +88,10 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
                       style={dark}
                       PreTag="div"
                     />
-                  </> : (
+                    <button title="Copy" onClick={
+                      () => navigator.clipboard.writeText(String(children))
+                    }><Icon component={ContentCopyIcon} /></button>
+                  </div> : (
                     <code {...props} className={className}>
                       {children}
                     </code>

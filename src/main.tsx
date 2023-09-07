@@ -7,6 +7,8 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { routes } from './routes';
 import Theme from './theme';
 
+import "./style.css"
+
 const client = new ApolloClient({
   uri: window.location.protocol + "//" + window.location.hostname + ':8000/graphql',
   cache: new InMemoryCache(),

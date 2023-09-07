@@ -2,7 +2,6 @@ import type { Environment, Environments } from "../../../queries";
 import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer from "../Drawer";
-import { Package } from "../../../queries";
 
 function EnvironmentTable({ environments }: Environments) {
   const [drawer, setDrawer] = useState<Environment | null>(null);
