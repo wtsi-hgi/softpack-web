@@ -11,6 +11,7 @@ export type Environment = {
   packages: Package[];
   readme: string;
   path: string;
+  type: "softpack" | "module";
 }
 
 export type Package = {
@@ -30,6 +31,7 @@ export const ALL_ENVIRONMENTS = gql`
         version
       }
       readme
+      type
     }
   }
 `
