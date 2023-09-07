@@ -24,7 +24,7 @@ type DrawerParams = {
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   return (
-    <Drawer anchor="right" open={true} onClose={onClose}>
+    <Drawer ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }} anchor="right" open={true} onClose={onClose} style={{ "zIndex": 2000 }}>
       <Box padding={'27px'}>
         <Box
           role='presentation'
@@ -51,7 +51,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
         <Divider />
         <Box style={{ "padding": "18px" }}>
           <Typography variant={'h4'} style={{ paddingBottom: '15px' }}>Description</Typography>
-          <Typography variant={'h3'} style={{ width: '400px' }}>{env.description}</Typography>
+          <Typography style={{ width: '400px', "whiteSpace": "pre-wrap", "overflowWrap": "anywhere" }}>{env.description}</Typography>
         </Box>
         <Box style={{ "padding": "18px", "width": "400px" }}>
           <Divider />
