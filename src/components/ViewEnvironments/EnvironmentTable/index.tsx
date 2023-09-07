@@ -1,42 +1,11 @@
-import type { Environments } from "../../../queries";
+import type { Environment, Environments } from "../../../queries";
 import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer from "../Drawer";
 import { Package } from "../../../queries";
 
 function EnvironmentTable({ environments }: Environments) {
-  const [drawerEnvName, setDrawerEnvName] = useState('');
-  const [drawerPathName, setDrawerPathName] = useState('');
-  const [drawerEnvDesc, setDrawerEnvDesc] = useState('');
-  const [drawerEnvPckgs, setDrawerEnvPckgs] = useState<string[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const handleOpenDrawer = (
-    name: string, path: string, description: string, packages: Package[]) => {
-    const packageNames = returnPackageNames(packages);
-
-    setDrawerEnvName(name);
-    setDrawerPathName(path);
-    setDrawerEnvDesc(description);
-    setDrawerEnvPckgs(packageNames);
-    setIsDrawerOpen(true);
-  }
-
-  // returnPackageNames takes an array of Package objects, and returns an array
-  // of the corresponding name of each Package.
-  const returnPackageNames = (packages: Package[]) => {
-    var packageNames = [];
-
-    for (let i = 0; i < packages.length; i++) {
-      packageNames.push(packages[i].name);
-    }
-
-    return packageNames;
-  }
-
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
+  const [drawer, setDrawer] = useState<Environment | null>(null);
 
   const buildColours = [
     'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)',
@@ -96,20 +65,13 @@ function EnvironmentTable({ environments }: Environments) {
               <Typography
                 component={Link}
                 variant='h3'
-                onClick={() => {
-                  console.log(env)
-                  handleOpenDrawer(env.name, env.path, env.description, env.packages)
-                }}
+                onClick={() => setDrawer(env)}
                 sx={{ paddingLeft: '20.7px' }}>{env.name}
               </Typography>
 
-              {isDrawerOpen && <EnvironmentDrawer
-                name={drawerEnvName}
-                path={drawerPathName}
-                description={drawerEnvDesc}
-                packages={drawerEnvPckgs}
-                isOpen={isDrawerOpen}
-                onClose={handleDrawerClose}
+              {drawer === env && <EnvironmentDrawer
+                env={env}
+                onClose={() => setDrawer(null)}
               />}
 
               <Typography variant='h4' sx={{ margin: '0 5px 0 5px' }}>-</Typography>

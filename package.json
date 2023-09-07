@@ -10,7 +10,7 @@
     "url": "https://github.com/KMace"
   },
   "homepage": "https://softpack.pages.dev",
-  "license" : "MIT",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -33,6 +33,7 @@
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.7",
     "react-router-dom": "^6.12.1"
   },
   "devDependencies": {

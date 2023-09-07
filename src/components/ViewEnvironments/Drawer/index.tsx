@@ -5,40 +5,22 @@ import {
   Divider,
   Drawer,
   Link,
-  type ModalProps,
   Tooltip,
   Typography
 } from "@mui/material";
+import { Environment, Package } from "../../../queries";
+import ReactMarkdown from "react-markdown";
 
 type DrawerParams = {
-  name: string;
-  path: string;
-  description: string;
-  packages: string[];
-  isOpen: boolean;
-  onClose: ModalProps['onClose']
+  env: Environment;
+  onClose: () => void;
 }
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
-function EnvironmentDrawer(props: DrawerParams) {
-
-  // convertToBreadcrumbs takes a path string as input, and converts each root
-  // into its own Breadcrumb element.
-  function convertToBreadcrumbs(path: string) {
-    const parts = path.split('/').filter((part) => part.trim() !== '');
-
-    return parts.map((part, index) => {
-      return (
-        <Link key={index} color="inherit" href="#" onClick={(e) => (console.log(e))}>
-          {part}
-        </Link>
-      );
-    });
-  }
-
+function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   return (
-    <Drawer anchor="right" open={props.isOpen} onClose={props.onClose}>
+    <Drawer anchor="right" open={true} onClose={onClose}>
       <Box padding={'27px'}>
         <Box
           role='presentation'
@@ -49,32 +31,33 @@ function EnvironmentDrawer(props: DrawerParams) {
           flexDirection={'column'}
           alignItems={'center'}
         >
-          <Typography variant="h3">{props.name}</Typography>
+          <Typography variant="h3">{env.name}</Typography>
           <Typography variant='h4'>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-              {convertToBreadcrumbs(props.path)}
+              {
+                env.path
+                  .split("/")
+                  .map(p => p.trim())
+                  .filter(p => p)
+                  .map((p, i) => <Link key={i} color="inherit" href="#">{p}</Link>)
+              }
             </Breadcrumbs>
           </Typography>
         </Box>
         <Divider />
-        <Box
-          padding={'18px'}
-        >
+        <Box style={{ "padding": "18px" }}>
           <Typography variant={'h4'} style={{ paddingBottom: '15px' }}>Description</Typography>
-          <Typography variant={'h3'} style={{ width: '400px' }}>{props.description}</Typography>
+          <Typography variant={'h3'} style={{ width: '400px' }}>{env.description}</Typography>
         </Box>
-        <Box
-          padding={'18px'}
-          width='400px'
-        >
+        <Box style={{ "padding": "18px", "width": "400px" }}>
           <Divider />
           <Typography paddingTop={2} variant={'h4'} style={{ paddingBottom: '15px' }}>Packages</Typography>
-          {props.packages.map((name, i) => {
+          {env.packages.map((pkg, i) => {
             return (
               <Box key={i} sx={{ display: "inline-flex" }}>
                 <Tooltip title="Version here" placement="top">
                   <Chip
-                    label={name}
+                    label={pkg.name}
                     sx={{
                       m: '4px',
                       color: '#5569ff',
@@ -87,6 +70,13 @@ function EnvironmentDrawer(props: DrawerParams) {
             );
           })}
         </Box>
+        {env.readme ?
+          <Box style={{ "maxWidth": "30em", "padding": "18px" }}>
+            <Divider />
+            <ReactMarkdown>{env.readme}</ReactMarkdown>
+          </Box>
+          : <></>
+        }
       </Box>
     </Drawer>
   );
