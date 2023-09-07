@@ -44,7 +44,8 @@ function EnvironmentTable({ environments }: Environments) {
               backgroundColor: 'rgba(34, 51, 84, 0.02)',
               padding: '18px',
               margin: '0 0 18px 0',
-              position: 'relative'
+              position: 'relative',
+              cursor: "pointer"
             }}>
             <Tooltip title={buildMessages[i]} placement="top">
               {/* This is displaying some hardcoded colours to indicate the 

@@ -24,7 +24,7 @@ type DrawerParams = {
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   return (
-    <Drawer anchor="right" open={true} onClose={onClose} style={{ "zIndex": 2000 }}>
+    <Drawer ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }} anchor="right" open={true} onClose={onClose} style={{ "zIndex": 2000 }}>
       <Box padding={'27px'}>
         <Box
           role='presentation'
