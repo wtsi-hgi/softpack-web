@@ -35,7 +35,7 @@ function EnvironmentTable({ environments }: Environments) {
           <Box
             key={env.name}
             onClick={e => {
-              if ((e.target as HTMLElement).classList.contains("MuiBox-root")) {
+              if (!(e.target as HTMLElement).classList.contains("MuiBackdrop-root")) {
                 setDrawer(env)
               }
             }}
