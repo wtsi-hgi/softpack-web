@@ -8,7 +8,9 @@ import {
   Tooltip,
   Typography
 } from "@mui/material";
-import { Environment, Package } from "../../../queries";
+import { Environment } from "../../../queries";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import ReactMarkdown from "react-markdown";
 
 type DrawerParams = {
@@ -73,7 +75,25 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
         {env.readme ?
           <Box style={{ "maxWidth": "30em", "padding": "18px" }}>
             <Divider />
-            <ReactMarkdown>{env.readme}</ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  return !inline ? <>
+                    <SyntaxHighlighter
+                      {...props}
+                      children={String(children).replace(/\n$/, '')}
+                      language="bash"
+                      style={dark}
+                      PreTag="div"
+                    />
+                  </> : (
+                    <code {...props} className={className}>
+                      {children}
+                    </code>
+                  )
+                }
+              }}
+            >{env.readme}</ReactMarkdown>
           </Box>
           : <></>
         }
