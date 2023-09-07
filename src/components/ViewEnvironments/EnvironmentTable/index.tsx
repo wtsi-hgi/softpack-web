@@ -45,7 +45,8 @@ function EnvironmentTable({ environments }: Environments) {
               padding: '18px',
               margin: '0 0 18px 0',
               position: 'relative',
-              cursor: "pointer"
+              cursor: "pointer",
+              maxWidth: "40em",
             }}>
             <Tooltip title={buildMessages[i]} placement="top">
               {/* This is displaying some hardcoded colours to indicate the 
@@ -62,6 +63,9 @@ function EnvironmentTable({ environments }: Environments) {
                   borderRadius: '10px'
                 }}
               />
+            </Tooltip>
+            <Tooltip title={env.type === "softpack" ? "Built with Softpack" : "Generated from Module (not reproducable)"} placement="left">
+              <div style={{ "width": "1.75em", "height": "1.75em", "textAlign": "center", "float": "right", "border": "1px solid #000", "borderRadius": "1em" }}>{env.type === "softpack" ? "S" : "M"}</div>
             </Tooltip>
             <Box sx={{
               display: 'flex',
