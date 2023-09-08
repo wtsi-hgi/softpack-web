@@ -9,7 +9,7 @@ import { useState } from "react";
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS),
-    [filter, setFilter] = useState<string>("")
+    [filter, setFilter] = useState<string>("");
 
   if (loading) {
     return <div>loading...</div>
@@ -63,16 +63,14 @@ const EnvironmentList = () => {
     <Container>
       <Grid
         container
-        direction="row"
+        // direction="row"
         justifyContent="center"
-        alignItems="stretch"
         spacing={3}
+        columns={2}
       >
-        <Grid item xs={12}>
-          <Card>
-            <EnvironmentTable environments={filteredEnvironments} />
-          </Card>
-        </Grid>
+
+        <EnvironmentTable environments={filteredEnvironments} />
+
       </Grid>
     </Container>
   </>
