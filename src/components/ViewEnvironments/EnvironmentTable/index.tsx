@@ -1,5 +1,5 @@
 import type { Environment, Environments } from "../../../queries";
-import { Box, Breadcrumbs, Chip, Link, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Chip, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer from "../Drawer";
 
