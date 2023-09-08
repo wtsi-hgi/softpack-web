@@ -43,7 +43,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
                   .split("/")
                   .map(p => p.trim())
                   .filter(p => p)
-                  .map((p, i) => <Link key={i} color="inherit" href="#">{p}</Link>)
+                  .map((p, i) => <span key={i} color="inherit">{p}</span>)
               }
             </Breadcrumbs>
           </Typography>

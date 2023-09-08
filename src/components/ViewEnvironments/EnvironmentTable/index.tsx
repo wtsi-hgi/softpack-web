@@ -21,9 +21,9 @@ function EnvironmentTable({ environments }: Environments) {
 
     return parts.map((part, index) => {
       return (
-        <Link key={index} color="inherit" href="#" onClick={(e) => (console.log(e))}>
+        <span key={index} color="inherit">
           {part}
-        </Link>
+        </span>
       );
     });
   }
