@@ -3,6 +3,10 @@
 	grid-template-columns: auto 0em;
 }
 
+.readme_copy>div {
+	overflow-y: hidden !important;
+}
+
 .readme_copy button {
 	margin: 1em -1.8em;
 	width: 1.5em;
@@ -12,6 +16,7 @@
 	background-color: transparent;
 	color: #fff;
 	cursor: pointer;
+	z-index: 1;
 }
 
 .readme_copy button>svg {
