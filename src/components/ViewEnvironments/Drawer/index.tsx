@@ -5,7 +5,6 @@ import {
   Divider,
   Drawer,
   Icon,
-  Link,
   Tooltip,
   Typography
 } from "@mui/material";
@@ -89,7 +88,23 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
                       PreTag="div"
                     />
                     <button title="Copy" onClick={
-                      () => navigator.clipboard.writeText(String(children))
+                      () => (navigator.clipboard ? navigator.clipboard.writeText(String(children)) : Promise.reject()).catch(() => {
+                        const i = document.createElement("div"),
+                          range = document.createRange(),
+                          selection = document.getSelection();
+
+                        i.textContent = String(children);
+                        i.setAttribute("style", "position: fixed; top: 0; left: 0");
+                        document.body.append(i);
+
+                        range.selectNodeContents(i);
+                        selection?.removeAllRanges();
+                        selection?.addRange(range);
+
+                        document.execCommand("copy");
+
+                        i.remove();
+                      })
                     }><Icon component={ContentCopyIcon} /></button>
                   </div> : (
                     <code {...props} className={className}>
