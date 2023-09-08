@@ -14,20 +14,6 @@ function EnvironmentTable({ environments }: Environments) {
     'Successful', 'Successful', 'Failed',
     'Building...', 'Failed'];
 
-  // convertToBreadcrumbs takes a path string as input, and converts it into JSX
-  // which can be rendered as breadcrumbs.
-  function convertToBreadcrumbs(path: string) {
-    const parts = path.split('/').filter((part) => part.trim() !== '');
-
-    return parts.map((part, index) => {
-      return (
-        <span key={index} color="inherit">
-          {part}
-        </span>
-      );
-    });
-  }
-
   return (
     <>
       {environments.map((env, i) => {

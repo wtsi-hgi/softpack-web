@@ -1,5 +1,5 @@
 import type { Environments } from "../../../queries";
-import { Card, Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
+import { Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
