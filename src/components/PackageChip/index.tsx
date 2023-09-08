@@ -23,27 +23,6 @@ function DropdownChip(props: DropdownChipParams) {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [version, setVersion] = useState<string | null>(null);
 
-  // handleDelete is currently being worked upon 16/08/23
-  {/*const handleDelete = (tagToDelete: string) => {
-    console.log('delete attempt on', tagToDelete);
-
-    console.log('packages', packageContext.testPackages);
-    console.log('tags', props.activeTags);
-    
-    const newPackages = packageContext.testPackages.filter(
-      (package_: string) => package_ !== tagToDelete);
-
-    const newTags = props.activeTags.filter(
-      (package_: string) => package_ !== tagToDelete);
-
-    console.log('newPackages', newPackages);
-    console.log('newTags', newTags);
-    
-    packageContext.setTestPackages(newPackages);
-    props.setActiveTags(newTags);
-    console.log(packageContext.testPackages);
-  }*/}
-
   const handleClose = (target: HTMLElement, index: number) => {
     // Check if index is 0 (as this refers to the latest version of the 
     // package) to decide whether or not to update label name; no need to 

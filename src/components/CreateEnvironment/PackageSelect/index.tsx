@@ -54,8 +54,6 @@ export default function PackageSelect(props: PackageSelectParams) {
     ))
   }
 
-  console.log('active tags', activeTags);
-
   // updatePackages takes the list of all packages selected on softpackWeb
   // (python and R, at time of writing) and updates with the selected package:
   // value.
@@ -63,13 +61,10 @@ export default function PackageSelect(props: PackageSelectParams) {
     // difference is equal to the package just selected. Because value by
     // default is all the selected packages.
     let difference = value.filter(x => lastPackage.indexOf(x) === -1);
-    console.log('difference', difference);
-    console.log('action', action);
 
     const allPackages = props.packages.concat(difference);
     props.setPackages(allPackages);
     setLastPackage(value);
-    console.log('allPackages', allPackages);
   }
 
   return (

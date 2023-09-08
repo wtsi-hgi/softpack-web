@@ -21,8 +21,6 @@ export default function CreateEnvironment() {
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
-    console.log('hello from runEnvironmentBuild');
-    console.log("here's all the packages", testPackages, typeof (testPackages));
     createEnvironmentQuery({ variables: { name, description, path, testPackages } })
   }
 
@@ -30,15 +28,11 @@ export default function CreateEnvironment() {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {
-      console.log('completion event', data);
-
       if ("message" in data) {
-        console.log('build successful')
         setEnvBuildSuccessful(true);
       } else {
         // Regardless of error, error message says 'env with that name already
         // exists'. More specific error messages are a job for the future.
-        console.log(data)
         setEnvBuildError(true);
       }
     },

@@ -2,7 +2,7 @@ import {
   Card, Box, Typography, Divider, CardContent, Grid, Alert,
   Button
 } from "@mui/material";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
 import { PackageContext } from "../PackageContext";
@@ -21,12 +21,7 @@ function PackageSettings(props: PackageSettingsParams) {
 
   const packageContext = useContext(PackageContext);
 
-  useEffect(() => {
-    console.log('hello from PackageSettings', packageContext?.testPackages);
-  }, [])
-
   const runEnvironmentBuild = () => {
-    console.log('executing environment build from PackageSettings.tsx...');
     props.runEnvironmentBuild()
   }
 
