@@ -33,7 +33,7 @@ const EnvironmentList = () => {
 
       return e.name.includes(part) ||
         e.path.split("/").pop()?.includes(part) ||
-        e.packages.some(pkg => pkg.name.includes(name) && (!version || pkg.version?.includes(version)));
+        e.packages.some(pkg => pkg.name.includes(name) && (!version || pkg.version?.startsWith(version)));
     }));
   }
 
