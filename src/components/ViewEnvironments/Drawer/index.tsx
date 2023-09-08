@@ -5,7 +5,6 @@ import {
   Divider,
   Drawer,
   Icon,
-  Tooltip,
   Typography
 } from "@mui/material";
 import { Environment } from "../../../queries";
@@ -58,17 +57,15 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           {env.packages.map((pkg, i) => {
             return (
               <Box key={i} sx={{ display: "inline-flex" }}>
-                <Tooltip title={pkg.version} placement="top" PopperProps={{ style: { zIndex: 2000 } }}>
-                  <Chip
-                    label={pkg.name}
-                    sx={{
-                      m: '4px',
-                      color: '#5569ff',
-                      border: '1px solid rgba(85, 105, 255, 0.7)',
-                      backgroundColor: 'transparent'
-                    }}
-                  />
-                </Tooltip>
+                <Chip
+                  label={pkg.name + (pkg.version ? `@${pkg.version}` : "")}
+                  sx={{
+                    m: '4px',
+                    color: '#5569ff',
+                    border: '1px solid rgba(85, 105, 255, 0.7)',
+                    backgroundColor: 'transparent'
+                  }}
+                />
               </Box>
             );
           })}

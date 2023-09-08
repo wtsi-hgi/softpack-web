@@ -93,17 +93,15 @@ function EnvironmentTable({ environments }: Environments) {
               {env.packages.map((package_) => {
                 return (
                   <Box key={package_.name} sx={{ display: "inline-flex" }}>
-                    <Tooltip title={package_.version} placement="top">
-                      <Chip
-                        label={package_.name}
-                        sx={{
-                          m: '4px',
-                          color: '#5569ff',
-                          border: '1px solid rgba(85, 105, 255, 0.7)',
-                          backgroundColor: 'transparent'
-                        }}
-                      />
-                    </Tooltip>
+                    <Chip
+                      label={package_.name + (package_.version ? `@${package_.version}` : "")}
+                      sx={{
+                        m: '4px',
+                        color: '#5569ff',
+                        border: '1px solid rgba(85, 105, 255, 0.7)',
+                        backgroundColor: 'transparent'
+                      }}
+                    />
                   </Box>
                 );
               })}
