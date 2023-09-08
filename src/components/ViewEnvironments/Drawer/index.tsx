@@ -58,7 +58,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           {env.packages.map((pkg, i) => {
             return (
               <Box key={i} sx={{ display: "inline-flex" }}>
-                <Tooltip title="Version here" placement="top">
+                <Tooltip title={pkg.version} placement="top" PopperProps={{ style: { zIndex: 2000 } }}>
                   <Chip
                     label={pkg.name}
                     sx={{
