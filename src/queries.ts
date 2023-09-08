@@ -16,7 +16,7 @@ export type Environment = {
 
 export type Package = {
   name: string;
-  version: string;
+  version: string | null;
 }
 
 export const ALL_ENVIRONMENTS = gql`
