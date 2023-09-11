@@ -25,13 +25,13 @@ const Sidebar = () => {
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
       }}
     >
-      <Toolbar >
-        <Typography 
-          variant="h2" 
+      <Toolbar>
+        <Typography
+          variant="h2"
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >SoftPack</Typography>
       </Toolbar>
-      
+
       <List component="nav" sx={{ p: 0 }}>
         <ListItemButton component={NavLink} to={'/'}>
           <ListItemIcon>

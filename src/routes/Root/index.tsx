@@ -17,7 +17,7 @@ const Root = () => {
         </Toolbar>
       </AppBar>
       <Sidebar />
-      <Box component="main" sx={{ mx: 2 }}>
+      <Box component="main" sx={{ mx: 2, width: "100%" }}>
         <Toolbar />
         <Outlet />
       </Box>

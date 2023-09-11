@@ -1,5 +1,5 @@
 import type { Environments } from "../../../queries";
-import { Card, Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
+import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
@@ -9,7 +9,7 @@ import { useState } from "react";
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS),
-    [filter, setFilter] = useState<string>("")
+    [filter, setFilter] = useState<string>("");
 
   if (loading) {
     return <div>loading...</div>
@@ -60,20 +60,8 @@ const EnvironmentList = () => {
         ),
       }}>
     </TextField>
-    <Container>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={3}
-      >
-        <Grid item xs={12}>
-          <Card>
-            <EnvironmentTable environments={filteredEnvironments} />
-          </Card>
-        </Grid>
-      </Grid>
+    <Container id="environment_table">
+      <EnvironmentTable environments={filteredEnvironments} />
     </Container>
   </>
 }
