@@ -73,7 +73,7 @@ function EnvironmentTable({ environments }: Environments) {
                   </Typography>
                 </Box>
                 <Typography sx={{ padding: '9px 0 9px 20.7px' }}>{env.description.split("\n")[0]}</Typography>
-                <Box sx={{ paddingLeft: '20.7px' }}>
+                <Box sx={{ paddingLeft: '20.7px', maxHeight: "90px", overflowY: "auto" }}>
                   {env.packages.map((package_) => {
                     return (
                       <Box
