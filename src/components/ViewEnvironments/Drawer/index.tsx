@@ -75,11 +75,12 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
                   return !inline ? <div className="readme_copy">
                     <SyntaxHighlighter
                       {...props}
-                      children={String(children).replace(/\n$/, '')}
                       language="bash"
                       style={dark}
                       PreTag="div"
-                    />
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
                     <button title="Copy" onClick={
                       () => (navigator.clipboard ? navigator.clipboard.writeText(String(children)) : Promise.reject()).catch(() => {
                         const i = document.createElement("div"),

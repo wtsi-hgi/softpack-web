@@ -18,9 +18,12 @@ function EnvironmentTable({ environments }: Environments) {
     <>
       {environments.map((env, i) => {
         return (
-          <Grid item xs={1} key={env.name} style={{
-            maxWidth: "50em",
-          }}>
+          <Grid
+            item
+            xs={1}
+            key={env.name} style={{
+              maxWidth: "50em",
+            }}>
             <Card>
               <Box
                 onClick={e => {
@@ -74,7 +77,10 @@ function EnvironmentTable({ environments }: Environments) {
                 <Box sx={{ paddingLeft: '20.7px' }}>
                   {env.packages.map((package_) => {
                     return (
-                      <Box key={package_.name} sx={{ display: "inline-flex" }}>
+                      <Box
+                        key={package_.name}
+                        sx={{ display: "inline-flex" }}
+                      >
                         <Chip
                           label={package_.name + (package_.version ? `@${package_.version}` : "")}
                           sx={{
