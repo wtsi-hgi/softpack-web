@@ -31,14 +31,11 @@ function EnvironmentTable({ environments }: Environments) {
                 sx={{
                   borderRadius: '10px',
                   backgroundColor: 'rgba(34, 51, 84, 0.02)',
-                  padding: '18px',
-                  margin: '0 0 18px 0',
+                  padding: '1em',
                   position: 'relative',
                   cursor: "pointer",
                 }}>
-                <Tooltip title={buildMessages[i]} placement="top">
-                  {/* This is displaying some hardcoded colours to indicate the
-                  pretend 'status' of the environment build. */}
+                <Tooltip title={buildMessages[0]} placement="top">
                   <Box
                     sx={{
                       content: "''",
@@ -47,7 +44,7 @@ function EnvironmentTable({ environments }: Environments) {
                       left: 0,
                       width: '10px',
                       height: '100%',
-                      backgroundColor: buildColours[i],
+                      backgroundColor: buildColours[0],
                       borderRadius: '10px'
                     }}
                   />
