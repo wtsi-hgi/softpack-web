@@ -16,12 +16,13 @@ function EnvironmentTable({ environments }: Environments) {
 
   return (
     <>
-      {environments.map((env, i) => {
+      {environments.map(env => {
         return (
           <Grid
             item
             xs={1}
-            key={env.name} style={{
+            key={env.name}
+            style={{
               maxWidth: "50em",
             }}>
             <Card>
@@ -97,7 +98,6 @@ function EnvironmentTable({ environments }: Environments) {
               </Box>
             </Card>
           </Grid>
-
         );
       })}
     </>
