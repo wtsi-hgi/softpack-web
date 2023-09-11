@@ -19,7 +19,7 @@ type DrawerParams = {
 }
 
 export const breadcrumbs = (path: string) => <Breadcrumbs separator="›" aria-label="breadcrumb">
-  {path.split("/").map(p => <span>{p}</span>)}
+  {path.split("/").map((p, i) => <span key={i}>{p}</span>)}
 </Breadcrumbs>
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
