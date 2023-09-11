@@ -1,15 +1,27 @@
-import type { Environment, Environments } from "../../../queries";
+import type { Environment, Environments, States } from "../../../queries";
 import { Box, Card, Chip, Grid, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 
+type State = {
+  colour: string;
+  message: string;
+}
 
-const buildColours = [
-  'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)',
-  'rgb(51, 194, 255)', 'rgb(255, 25, 67)'],
-  buildMessages = [
-    'Successful', 'Successful', 'Failed',
-    'Building...', 'Failed'];
+const states: Record<States, State> = {
+  "queued": {
+    colour: "rgb(51, 194, 255)",
+    message: "Queued"
+  },
+  "ready": {
+    colour: "rgb(87, 202, 34)",
+    message: "Ready"
+  },
+  "failed": {
+    colour: "rgb(255, 25, 67)",
+    message: "Failed"
+  }
+};
 
 function EnvironmentTable({ environments }: Environments) {
   const [drawer, setDrawer] = useState<Environment | null>(null);
@@ -37,7 +49,7 @@ function EnvironmentTable({ environments }: Environments) {
                   position: 'relative',
                   cursor: "pointer",
                 }}>
-                <Tooltip title={buildMessages[0]} placement="top">
+                <Tooltip title={states[env.state ?? "queued"].message} placement="top">
                   <Box
                     sx={{
                       content: "''",
@@ -46,7 +58,7 @@ function EnvironmentTable({ environments }: Environments) {
                       left: 0,
                       width: '10px',
                       height: '100%',
-                      backgroundColor: buildColours[0],
+                      backgroundColor: states[env.state ?? "queued"].colour,
                       borderRadius: '10px'
                     }}
                   />
