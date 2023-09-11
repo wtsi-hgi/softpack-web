@@ -1,18 +1,18 @@
 import type { Environment, Environments } from "../../../queries";
-import { Box, Breadcrumbs, Card, Chip, Grid, Tooltip, Typography } from "@mui/material";
+import { Box, Card, Chip, Grid, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
-import EnvironmentDrawer from "../Drawer";
+import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
+
+
+const buildColours = [
+  'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)',
+  'rgb(51, 194, 255)', 'rgb(255, 25, 67)'],
+  buildMessages = [
+    'Successful', 'Successful', 'Failed',
+    'Building...', 'Failed'];
 
 function EnvironmentTable({ environments }: Environments) {
   const [drawer, setDrawer] = useState<Environment | null>(null);
-
-  const buildColours = [
-    'rgb(87, 202, 34)', 'rgb(87, 202, 34)', 'rgb(255, 25, 67)',
-    'rgb(51, 194, 255)', 'rgb(255, 25, 67)'];
-
-  const buildMessages = [
-    'Successful', 'Successful', 'Failed',
-    'Building...', 'Failed'];
 
   return (
     <>
@@ -69,10 +69,8 @@ function EnvironmentTable({ environments }: Environments) {
                     onClose={() => setDrawer(null)}
                   />}
 
-                  <Typography variant='h4' style={{ whiteSpace: "nowrap" }}>
-                    <Breadcrumbs separator="›" aria-label="breadcrumb">
-                      {[<span style={{ paddingLeft: "0.5em" }}> - {env.path.split("/").join(" > ")}</span>]}
-                    </Breadcrumbs>
+                  <Typography variant='h4' style={{ whiteSpace: "nowrap" }} className="breadcrumbs">
+                    {breadcrumbs(env.path)}
                   </Typography>
                 </Box>
                 <Typography sx={{ padding: '9px 0 9px 20.7px' }}>{env.description.split("\n")[0]}</Typography>
@@ -95,7 +93,7 @@ function EnvironmentTable({ environments }: Environments) {
                 </Box>
               </Box>
             </Card>
-          </Grid >
+          </Grid>
 
         );
       })}

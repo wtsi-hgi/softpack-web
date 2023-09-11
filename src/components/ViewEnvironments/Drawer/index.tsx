@@ -18,6 +18,10 @@ type DrawerParams = {
   onClose: () => void;
 }
 
+export const breadcrumbs = (path: string) => <Breadcrumbs separator="›" aria-label="breadcrumb">
+  {path.split("/").map(p => <span>{p}</span>)}
+</Breadcrumbs>
+
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
@@ -35,15 +39,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
         >
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant='h4'>
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-              {
-                env.path
-                  .split("/")
-                  .map(p => p.trim())
-                  .filter(p => p)
-                  .map((p, i) => <span key={i} color="inherit">{p}</span>)
-              }
-            </Breadcrumbs>
+            {breadcrumbs(env.path)}
           </Typography>
         </Box>
         <Divider />

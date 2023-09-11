@@ -27,3 +27,20 @@
 .readme_copy button:active {
 	background-color: #aaa;
 }
+
+.breadcrumbs>nav {
+	padding-left: 0.5em;
+}
+
+.breadcrumbs>nav>ol {
+	display: inline-block;
+	padding-left: 0.5em;
+}
+
+.breadcrumbs>nav>ol>li {
+	display: inline-block;
+}
+
+.breadcrumbs>nav:before {
+	content: "-";
+}
