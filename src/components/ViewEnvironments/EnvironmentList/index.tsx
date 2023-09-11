@@ -1,5 +1,5 @@
 import type { Environments } from "../../../queries";
-import { Container, Grid, InputAdornment, TextField, Tooltip } from "@mui/material";
+import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
@@ -60,18 +60,8 @@ const EnvironmentList = () => {
         ),
       }}>
     </TextField>
-    <Container>
-      <Grid
-        container
-        // direction="row"
-        justifyContent="center"
-        spacing={3}
-        columns={2}
-      >
-
-        <EnvironmentTable environments={filteredEnvironments} />
-
-      </Grid>
+    <Container id="environment_table">
+      <EnvironmentTable environments={filteredEnvironments} />
     </Container>
   </>
 }

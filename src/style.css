@@ -44,3 +44,14 @@
 .breadcrumbs>nav:before {
 	content: "-";
 }
+
+#environment_table {
+	columns: 40em auto;
+	column-gap: 1.5em;
+	max-width: unset;
+}
+
+#environment_table>div {
+	width: 38em;
+	margin: 0 auto 1.5em auto;
+}

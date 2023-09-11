@@ -22,9 +22,7 @@ function EnvironmentTable({ environments }: Environments) {
             item
             xs={1}
             key={env.name}
-            style={{
-              maxWidth: "50em",
-            }}>
+          >
             <Card>
               <Box
                 onClick={e => {
