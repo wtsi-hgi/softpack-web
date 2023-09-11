@@ -4,6 +4,8 @@ export type Environments = {
   environments: Environment[];
 }
 
+export type States = "queued" | "ready" | "failed";
+
 export type Environment = {
   description: string;
   id: string;
@@ -12,6 +14,7 @@ export type Environment = {
   readme: string;
   path: string;
   type: "softpack" | "module";
+  state?: States;
 }
 
 export type Package = {
@@ -32,6 +35,7 @@ export const ALL_ENVIRONMENTS = gql`
       }
       readme
       type
+      state
     }
   }
 `
