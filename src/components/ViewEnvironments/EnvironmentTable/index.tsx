@@ -1,5 +1,5 @@
 import type { Environment, Environments, States } from "../../../queries";
-import { Box, Card, Chip, Grid, Tooltip, Typography } from "@mui/material";
+import { Box, Chip, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 
@@ -30,7 +30,7 @@ function EnvironmentTable({ environments }: Environments) {
     <>
       {environments.map(env => <>
         <Box
-          onClick={e => setDrawer(env)}
+          onClick={() => setDrawer(env)}
           sx={{
             borderRadius: '10px',
             backgroundColor: 'rgba(34, 51, 84, 0.02)',
