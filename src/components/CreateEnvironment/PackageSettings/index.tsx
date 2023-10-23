@@ -5,12 +5,18 @@ import {
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
-import { Collection } from "../../../queries";
+import { PackageMultiVersion } from "../../../queries";
 
 type PackageSettingsParams = {
   data: Collection[];
   runEnvironmentBuild: () => void;
   envBuildSuccessful: boolean;
+}
+
+type Collection = {
+  id: string;
+  name: string;
+  packages: PackageMultiVersion[];
 }
 
 // PackageSettings is the card responsible for enabling the user to select the

@@ -40,27 +40,20 @@ export const ALL_ENVIRONMENTS = gql`
   }
 `
 
-export type Collection = {
-  id: string;
+export type PackageMultiVersion = {
   name: string;
-  packages: {
-    name: string;
-    versions: string[];
-  }[];
-}
+  versions: string[];
+};
 
 export type Packages = {
-  packageCollections: Collection[];
+  packageCollections: PackageMultiVersion[];
 }
 
 export const ALL_PACKAGES = gql`
   query {
     packageCollections {
       name
-      packages {
-        name
-        versions
-      }
+      versions
     }
   }
 `
