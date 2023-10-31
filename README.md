@@ -17,9 +17,8 @@ Then, once the above steps are complete, the user must also start the server - S
 This is done by,
 
 1. Git clone `https://github.com/wtsi-hgi/softpack-core.git`
-2. Inside the cloned repository, `git checkout feature/mutations` - this makes sure you are in the correct branch.
-3. `poetry install` - this will install all the necessary packages and dependencies for Softpack Core.
-4. `softpack-core service run` - this will compile and start the server.
+2. `poetry install` - this will install all the necessary packages and dependencies for Softpack Core.
+3. `softpack-core service run` - this will compile and start the server.
 
 ### Using the app
 Once complete, you should be able to use the app and explore the range of features which Softpack Web has to offer!
