@@ -10,7 +10,7 @@ export const routes = [
 		element: <Root />,
 		children: [
 			{
-				path: 'how-to-use',
+				path: 'about',
 				element: <About />,
 			},
 			{
