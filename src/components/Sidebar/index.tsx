@@ -1,4 +1,3 @@
-import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -6,7 +5,8 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import CreateIcon from '@mui/icons-material/Create';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from 'react-router-dom';
 import WidgetsIcon from '@mui/icons-material/Widgets';
@@ -33,11 +33,11 @@ const Sidebar = () => {
       </Toolbar>
 
       <List component="nav" sx={{ p: 0 }}>
-        <ListItemButton component={NavLink} to={'/'}>
+        <ListItemButton component={NavLink} to={'/how-to-use'}>
           <ListItemIcon>
-            <HomeIcon />
+            <HelpCenterIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary="How To Use" />
         </ListItemButton>
         <ListItemButton component={NavLink} to={'/environments'}>
           <ListItemIcon>
@@ -47,12 +47,12 @@ const Sidebar = () => {
         </ListItemButton>
         <ListItemButton component={NavLink} to={'/create'}>
           <ListItemIcon>
-            <CreateIcon />
+            <ConstructionIcon />
           </ListItemIcon>
           <ListItemText primary="Create Environment" />
         </ListItemButton>
         <Divider />
-        <ListItemButton component={NavLink} to={'settings'}>
+        <ListItemButton component={NavLink} to={'/settings'}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>

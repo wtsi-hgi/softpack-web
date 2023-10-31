@@ -1,4 +1,4 @@
-import Home from './Home';
+import HowTo from './HowTo';
 import Environments from './Environments';
 import Root from './Root';
 import Settings from './Settings';
@@ -10,10 +10,11 @@ export const routes = [
     element: <Root />,
     children: [
       {
-        index: true,
-        element: <Home />,
+        path: 'how-to-use',
+        element: <HowTo />,
       },
       {
+        index: true,
         path: 'environments',
         element: <Environments />,
       },
@@ -27,7 +28,7 @@ export const routes = [
       },
       {
         path: '*',
-        element: <Home />,
+        element: <Environments />,
       },
     ],
   },
