@@ -78,8 +78,8 @@ const About = () => {
 			When using a SoftPack environment with R modules in it, you may
 			wish to use those R modules in RStudio. Rather than create an
 			environment that has the R modules and RStudio in it, we recommend
-			excluding RStudio from the environment, and use our separate RStudio
-			module on top.
+			excluding RStudio from the environment, and instead use our separate
+			RStudio module on top.
 		</p>
 		<p>
 			First `module load` your SoftPack environment as normal, then
