@@ -1,5 +1,5 @@
 const About = () => {
-	return <>
+	return <div id="about">
 		<h1>About</h1>
 
 		<p>
@@ -14,10 +14,9 @@ const About = () => {
 			used previously.
 		</p>
 		<p>
-			For more information about softpack, you can explore its
-			<a href="http://services.hgi.sanger.ac.uk/softpack-docs/">
-				full documentation
-			</a>.
+			For more information about softpack, you can explore
+			its <a href="http://services.hgi.sanger.ac.uk/softpack-docs/">full
+				documentation</a>.
 		</p>
 
 		<h2>Discovering Environments</h2>
@@ -55,21 +54,20 @@ const About = () => {
 			for environments. To do this, you should have something like the
 			following in your ~/.bashrc file:
 		</p>
-		<pre>
-			source /etc/profile.d/modules.sh
-			export MODULEPATH=$MODULEPATH:/software/modules/
-		</pre>
+		<pre>{`source /etc/profile.d/modules.sh
+export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
 		<p>
-			Now you can copy the `module load` command in the Usage instructions
-			for your discovered environment, and paste it in to your terminal,
-			where you've ssh'd to a farm node. The Description of your
-			environment will tell you what new executables will now be in your
-			$PATH.
+			Now you can copy the <samp>module load</samp> command in the Usage
+			instructions for your discovered environment, and paste it in to
+			your terminal, where you've ssh'd to a farm node. The Description of
+			your environment will tell you what new executables will now be in
+			your $PATH.
 		</p>
 		<p>
 			For example, if you're using an environment with R modules in it,
-			running `R` from your terminal will now use the R in the singularity
-			container where the desired R modules are available to it.
+			running <samp>R</samp> from your terminal will now use the R in the
+			singularity container where the desired R modules are available to
+			it.
 		</p>
 
 		<h2>RStudio</h2>
@@ -82,15 +80,16 @@ const About = () => {
 			RStudio module on top.
 		</p>
 		<p>
-			First `module load` your SoftPack environment as normal, then
-			`module load HGI/common/rstudio`. You can then run `rstudio start`
-			to launch an instance of rstudio on the farm that will have access
-			to the R modules in your SoftPack environment. `rstudio stop` when
-			you're done. See `rstudio --help` for more information, and in
-			particular `rstudio start --help` for how to use your own locally
-			installed R modules with it as well.
+			First <samp>module load</samp> your SoftPack environment as normal,
+			then <samp>module load HGI/common/rstudio</samp>. You can then
+			run <samp>rstudio start</samp> to launch an instance of rstudio on
+			the farm that will have access to the R modules in your SoftPack
+			environment. <samp>rstudio stop</samp> when you're done.
+			See <samp>rstudio --help</samp> for more information, and in
+			particular <samp>rstudio start --help</samp> for how to use your own
+			locally installed R modules with it as well.
 		</p>
-	</>
+	</div>
 };
 
 export default About;
