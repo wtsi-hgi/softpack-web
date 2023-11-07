@@ -13,11 +13,6 @@ const About = () => {
 			versions, including the same versions of all dependencies) as you
 			used previously.
 		</p>
-		<p>
-			For more information about softpack, you can explore
-			its <a href="http://services.hgi.sanger.ac.uk/softpack-docs/">full
-				documentation</a>.
-		</p>
 
 		<h2>Discovering Environments</h2>
 
