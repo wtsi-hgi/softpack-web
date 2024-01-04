@@ -26,14 +26,14 @@ const EnvironmentList = () => {
 	let filteredEnvironments = data.environments;
 
 	if (filter) {
-		const parts = filter.split(" ");
+		const parts = filter.toLowerCase().split(" ");
 
 		filteredEnvironments = filteredEnvironments.filter(e => parts.every(part => {
 			const [name, version] = part.split("@");
 
-			return e.name.includes(part) ||
-				e.path.split("/").pop()?.includes(part) ||
-				e.packages.some(pkg => pkg.name.includes(name) && (!version || pkg.version?.startsWith(version)));
+			return e.name.toLocaleLowerCase().includes(part) ||
+				e.path.toLowerCase().split("/").pop()?.includes(part) ||
+				e.packages.some(pkg => pkg.name.toLowerCase().includes(name) && (!version || pkg.version?.toLowerCase().startsWith(version)));
 		}));
 	}
 
