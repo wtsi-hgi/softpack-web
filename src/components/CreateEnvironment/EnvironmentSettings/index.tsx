@@ -21,6 +21,7 @@ import { GROUPS } from "../../../queries";
 type EnvironmentSettingsProps = {
   setName: (name: string) => void;
   setDescription: (description: string) => void;
+  path: string;
   setPath: (path: string) => void;
 }
 
@@ -29,7 +30,6 @@ type EnvironmentSettingsProps = {
 // etc.
 function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const [username, setUsername] = useState('')
-  const [path, setPath] = useState('')
 
   const { loading, data, error } = useQuery(GROUPS, {
     variables: { username },
@@ -141,20 +141,18 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
-              {JSON.stringify(data)}
               <FormControl>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={path}
+                  value={props.path}
                   onChange={(e) => {
-                    props.setPath('groups/hgi/'); // set by default, for now
-                    setPath(e.target.value);
+                    props.setPath(e.target.value);
                   }}
                 >
-                  <MenuItem value={1}>users/kj789</MenuItem>
-                  <MenuItem value={2}>hgi/projects</MenuItem>
-                  <MenuItem value={3}>humgen/projects</MenuItem>
+                  <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
+                  {loading ? null : data.groups.map(({ name }: { name: string }) =>
+                    <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>

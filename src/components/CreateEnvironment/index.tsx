@@ -81,6 +81,7 @@ export default function CreateEnvironment() {
         <EnvironmentSettings
           setName={setName}
           setDescription={setDescription}
+          path={path}
           setPath={setPath}
         />
       </Grid>
