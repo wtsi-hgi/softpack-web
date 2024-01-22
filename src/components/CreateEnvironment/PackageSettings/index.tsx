@@ -8,21 +8,15 @@ import PackageSelect from "../PackageSelect";
 import { PackageMultiVersion } from "../../../queries";
 
 type PackageSettingsParams = {
-  data: Collection[];
+  packages: Map<string, string[]>;
   runEnvironmentBuild: () => void;
   envBuildSuccessful: boolean;
-}
-
-type Collection = {
-  id: string;
-  name: string;
-  packages: PackageMultiVersion[];
 }
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props: PackageSettingsParams) {
-  const [packages, setPackages] = useState<string[]>([]);
+  const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
     props.runEnvironmentBuild()
@@ -48,26 +42,22 @@ function PackageSettings(props: PackageSettingsParams) {
       <Divider />
       <CardContent sx={{ p: 4 }}>
         <Typography variant="subtitle2">
-          {props.data.map(program => {
-            return (
-              <Grid key={program.id} container spacing={1}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pt={2}>
-                    {program.name} Packages:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={7}>
-                  <Box pr={3} pb={4}>
-                    <PackageSelect
-                      data={program.packages}
-                      packages={packages}
-                      setPackages={setPackages}
-                    />
-                  </Box>
-                </Grid>
-              </Grid>
-            );
-          })}
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+              <Box pr={3} pt={2}>
+                Packages:
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={8} md={7}>
+              <Box pr={3} pb={4}>
+                <PackageSelect
+                  packages={props.packages}
+                  selectedPackages={selectedPackages}
+                  setSelectedPackages={setSelectedPackages}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </Typography>
         {/*<Alert 
           severity='warning' 

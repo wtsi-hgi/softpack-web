@@ -56,18 +56,10 @@ export default function CreateEnvironment() {
     )
   }
 
-  const splitPackages = [
-    {
-      "id": "r",
-      "name": "R",
-      "packages": data?.packageCollections.filter(({ name }) => name.startsWith("r-")) ?? []
-    },
-    {
-      "id": "py",
-      "name": "Python",
-      "packages": data?.packageCollections.filter(({ name }) => name.startsWith("py-")) ?? []
-    },
-  ];
+  const packages = new Map<string, string[]>()
+  data?.packageCollections.forEach(({ name, versions }) => {
+    packages.set(name, versions)
+  })
 
   return (
     <Grid
@@ -93,7 +85,7 @@ export default function CreateEnvironment() {
          methods of passing, in my opinion. */}
         <PackageContext.Provider value={{ testPackages, setTestPackages }}>
           <PackageSettings
-            data={splitPackages}
+            packages={packages}
             runEnvironmentBuild={runEnvironmentBuild}
             envBuildSuccessful={envBuildSuccessful}
           />
