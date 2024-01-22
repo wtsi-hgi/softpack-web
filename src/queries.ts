@@ -97,3 +97,11 @@ export const CREATE_ENV = gql`
     }
   }
 `
+
+export const GROUPS = gql`
+  query GroupsQuery($username: String!) {
+    groups(username: $username) {
+      name
+    }
+  }
+`
