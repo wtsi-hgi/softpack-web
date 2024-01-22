@@ -151,8 +151,9 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
                   }}
                 >
                   <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
-                  {loading ? null : data.groups.map(({ name }: { name: string }) =>
+                  {loading || error ? null : data?.groups.map(({ name }: { name: string }) =>
                     <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
+                  {error && <MenuItem disabled>error getting groups: {error.message}</MenuItem>}
                 </Select>
               </FormControl>
             </Grid>
