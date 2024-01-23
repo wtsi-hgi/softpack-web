@@ -18,6 +18,7 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
+  const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
@@ -71,7 +72,9 @@ export default function CreateEnvironment() {
     >
       <Grid item xs={11}>
         <EnvironmentSettings
+          name={name}
           setName={setName}
+          description={description}
           setDescription={setDescription}
           path={path}
           setPath={setPath}
@@ -86,6 +89,8 @@ export default function CreateEnvironment() {
         <PackageContext.Provider value={{ testPackages, setTestPackages }}>
           <PackageSettings
             packages={packages}
+            selectedPackages={selectedPackages}
+            setSelectedPackages={setSelectedPackages}
             runEnvironmentBuild={runEnvironmentBuild}
             envBuildSuccessful={envBuildSuccessful}
           />

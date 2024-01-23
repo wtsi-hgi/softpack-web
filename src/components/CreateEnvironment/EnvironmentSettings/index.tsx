@@ -19,7 +19,9 @@ import { useQuery } from "@apollo/client";
 import { GROUPS } from "../../../queries";
 
 type EnvironmentSettingsProps = {
+  name: string;
   setName: (name: string) => void;
+  description: string;
   setDescription: (description: string) => void;
   path: string;
   setPath: (path: string) => void;
@@ -60,7 +62,8 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
               <TextField
                 id='name-field'
                 variant='standard'
-                onInput={(e) => props.setName((e.target as HTMLInputElement).value)}
+                value={props.name}
+                onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -89,7 +92,8 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
                 multiline
                 rows={4}
                 sx={{ width: '75%' }}
-                onInput={(e) => props.setDescription((e.target as HTMLInputElement).value)}
+                value={props.description}
+                onChange={(e) => props.setDescription((e.target as HTMLInputElement).value)}
                 variant='standard'
                 InputProps={{
                   endAdornment: (

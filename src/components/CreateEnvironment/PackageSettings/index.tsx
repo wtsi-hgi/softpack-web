@@ -5,10 +5,11 @@ import {
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
-import { PackageMultiVersion } from "../../../queries";
 
 type PackageSettingsParams = {
   packages: Map<string, string[]>;
+  selectedPackages: string[];
+  setSelectedPackages: (packages: string[]) => void;
   runEnvironmentBuild: () => void;
   envBuildSuccessful: boolean;
 }
@@ -16,8 +17,6 @@ type PackageSettingsParams = {
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props: PackageSettingsParams) {
-  const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
-
   const runEnvironmentBuild = () => {
     props.runEnvironmentBuild()
   }
@@ -52,8 +51,8 @@ function PackageSettings(props: PackageSettingsParams) {
               <Box pr={3} pb={4}>
                 <PackageSelect
                   packages={props.packages}
-                  selectedPackages={selectedPackages}
-                  setSelectedPackages={setSelectedPackages}
+                  selectedPackages={props.selectedPackages}
+                  setSelectedPackages={props.setSelectedPackages}
                 />
               </Box>
             </Grid>
