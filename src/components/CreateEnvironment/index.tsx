@@ -1,4 +1,4 @@
-import type { CreateEnvironmentSuccess, EnvironmentAlreadyExistsError, Packages } from '../../queries';
+import type { CreateEnvironmentSuccess, EnvironmentAlreadyExistsError, Package, Packages } from '../../queries';
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
@@ -18,7 +18,7 @@ export default function CreateEnvironment() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
-  const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
+  const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {

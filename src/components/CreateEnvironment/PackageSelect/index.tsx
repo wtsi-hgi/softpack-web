@@ -1,25 +1,30 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 import DropdownChip from "../../PackageChip";
+import { Package } from "../../../queries";
+import { useMemo } from "react";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
-  selectedPackages: string[];
-  setSelectedPackages: (packages: string[]) => void;
+  selectedPackages: Package[];
+  setSelectedPackages: (packages: Package[]) => void;
 }
 
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
+  const selectedPackageNames = useMemo(() => props.selectedPackages.map(({ name }) => name), [props.selectedPackages]);
+  const selectedPackageVersions = useMemo(() => props.selectedPackages.map(({ version }) => version), [props.selectedPackages]);
+
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
   const renderTags = (tags: string[]) => {
     return tags.map((packageName, index) => (
       <DropdownChip
-        key={index}
-        data={packageName}
+        key={packageName}
+        name={packageName}
         versions={props.packages.get(packageName) ?? []}
-        tags={tags}
-        setActiveTags={props.setSelectedPackages}
+        selectedVersion={selectedPackageVersions[index]}
+        onChange={version => props.setSelectedPackages(props.selectedPackages.toSpliced(index, 1, { name: packageName, version }))}
         onDelete={() => props.setSelectedPackages(props.selectedPackages.toSpliced(index, 1))}
       />
     ))
@@ -41,8 +46,15 @@ export default function PackageSelect(props: PackageSelectParams) {
             />
           );
         }}
-        value={props.selectedPackages}
-        onChange={(_, value) => props.setSelectedPackages(value)}
+        value={selectedPackageNames}
+        onChange={(_, value) => {
+          const prevVersions = new Map<string, string | null>();
+          props.selectedPackages.forEach(({ name, version }) => prevVersions.set(name, version))
+          props.setSelectedPackages(value.map(name => ({
+            name,
+            version: prevVersions.get(name) ?? null,
+          })))
+        }}
       />
     </Box>
   );

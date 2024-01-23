@@ -2,14 +2,14 @@ import {
   Card, Box, Typography, Divider, CardContent, Grid, Alert,
   Button
 } from "@mui/material";
-import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
+import { Package } from "../../../queries";
 
 type PackageSettingsParams = {
   packages: Map<string, string[]>;
-  selectedPackages: string[];
-  setSelectedPackages: (packages: string[]) => void;
+  selectedPackages: Package[];
+  setSelectedPackages: (packages: Package[]) => void;
   runEnvironmentBuild: () => void;
   envBuildSuccessful: boolean;
 }
