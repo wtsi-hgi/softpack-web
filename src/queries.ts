@@ -59,11 +59,12 @@ export const ALL_PACKAGES = gql`
 `
 
 export type CreateEnvironmentSuccess = {
+  __typename: "CreateEnvironmentSuccess";
   message: string;
-  environment: Environment;
 }
 
 export type EnvironmentAlreadyExistsError = {
+  __typename: "EnvironmentAlreadyExistsError";
   name: string;
   path: string;
 }
@@ -72,25 +73,17 @@ export const CREATE_ENV = gql`
   mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
     createEnvironment(
       env: {
-        description: $description,
         name: $name, 
+        description: $description,
+        path: $path,
         packages: $packages,
-        path: $path}
+      }
     ) {
+      __typename
       ... on CreateEnvironmentSuccess {
         message
-        environment {
-          description
-          path
-          state
-          packages {
-            name
-            version
-          }
-        }
       }
       ... on EnvironmentAlreadyExistsError {
-        __typename
         name
         path
       }

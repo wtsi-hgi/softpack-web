@@ -22,14 +22,14 @@ export default function CreateEnvironment() {
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
-    createEnvironmentQuery({ variables: { name, description, path, testPackages } })
+    createEnvironment({ variables: { name, description, path, packages: selectedPackages } })
   }
 
-  const [createEnvironmentQuery] = useMutation<CreateEnvironmentSuccess | EnvironmentAlreadyExistsError>(CREATE_ENV, {
+  const [createEnvironment] = useMutation<CreateEnvironmentSuccess | EnvironmentAlreadyExistsError>(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {
-      if ("message" in data) {
+      if (data.__typename === "CreateEnvironmentSuccess") {
         setEnvBuildSuccessful(true);
       } else {
         // Regardless of error, error message says 'env with that name already
