@@ -29,6 +29,7 @@ export default function PackageSelect(props: PackageSelectParams) {
     <Box>
       <Autocomplete
         multiple
+        disableCloseOnSelect
         options={[...props.packages.keys()]}
         renderTags={renderTags}
         renderInput={(params) => {
