@@ -88,7 +88,6 @@ function PackageSettings(props: PackageSettingsParams) {
           onClick={runEnvironmentBuild}
           sx={{
             float: 'right',
-            width: '10%',
             mb: '2%'
           }}
         >Create
