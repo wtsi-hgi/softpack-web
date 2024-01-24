@@ -1,4 +1,4 @@
-import type { CreateEnvironmentSuccess, EnvironmentAlreadyExistsError, Package, Packages } from '../../queries';
+import type { CreateEnvironment, Package, Packages } from '../../queries';
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
@@ -12,7 +12,7 @@ import ErrorDialog from './ErrorDialog';
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery<Packages>(ALL_PACKAGES);
-  const [envBuildError, setEnvBuildError] = useState(false);
+  const [envBuildError, setEnvBuildError] = useState("");
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
   const [name, setName] = useState('');
@@ -25,23 +25,21 @@ export default function CreateEnvironment() {
     createEnvironment({ variables: { name, description, path, packages: selectedPackages } })
   }
 
-  const [createEnvironment] = useMutation<CreateEnvironmentSuccess | EnvironmentAlreadyExistsError>(CREATE_ENV, {
+  const [createEnvironment] = useMutation<CreateEnvironment>(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {
-      if (data.__typename === "CreateEnvironmentSuccess") {
+      if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
         setEnvBuildSuccessful(true);
       } else {
-        // Regardless of error, error message says 'env with that name already
-        // exists'. More specific error messages are a job for the future.
-        setEnvBuildError(true);
+        setEnvBuildError(data.createEnvironment.message);
       }
     },
     // onError looks at GraphQL errors specifically.
     onError: error => {
       const messages = error.graphQLErrors[0].message;
       console.log('GraphQL ERROR: ', messages);
-      setEnvBuildError(true);
+      setEnvBuildError(messages);
     },
   });
 
@@ -100,7 +98,7 @@ export default function CreateEnvironment() {
         <MatchingEnvs />
       </Grid>
       {envBuildError &&
-        <ErrorDialog name={name} setError={setEnvBuildError} />}
+        <ErrorDialog error={envBuildError} setError={setEnvBuildError} />}
     </Grid>
   );
 }

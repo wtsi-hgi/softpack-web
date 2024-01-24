@@ -1,28 +1,23 @@
 import { Dialog, DialogTitle, Typography, DialogContent, DialogContentText } from "@mui/material";
-import { useState } from "react";
 
 // ErrorDialog informs the user that the environment they are trying to create
 // already exists.
-const ErrorDialog = (props: { name: string, setError: (err: boolean) => void }) => {
-  const [dialogBoxOpen, setDialogBoxOpen] = useState(true);
-
+const ErrorDialog = (props: { error: string, setError: (err: string) => void }) => {
   const handleDialogBoxClose = () => {
-    setDialogBoxOpen(false);
-    props.setError(false);
+    props.setError("");
   };
 
   return (
     <Dialog
-      open={dialogBoxOpen}
+      open={props.error !== ""}
       onClose={handleDialogBoxClose}
     >
       <DialogTitle id="alert-dialog-title">
-        <Typography variant="h4">We're sorry</Typography>
+        <Typography variant="h4">Environment build failed</Typography>
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          An environment already exists with the name {props.name}!
-          Please choose a different name.
+          {props.error}
         </DialogContentText>
       </DialogContent>
     </Dialog>

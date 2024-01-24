@@ -58,15 +58,11 @@ export const ALL_PACKAGES = gql`
   }
 `
 
-export type CreateEnvironmentSuccess = {
-  __typename: "CreateEnvironmentSuccess";
-  message: string;
-}
-
-export type EnvironmentAlreadyExistsError = {
-  __typename: "EnvironmentAlreadyExistsError";
-  name: string;
-  path: string;
+export type CreateEnvironment = {
+  createEnvironment: {
+    __typename: "CreateEnvironmentSuccess" | string;
+    message: string;
+  };
 }
 
 export const CREATE_ENV = gql`
@@ -83,9 +79,8 @@ export const CREATE_ENV = gql`
       ... on CreateEnvironmentSuccess {
         message
       }
-      ... on EnvironmentAlreadyExistsError {
-        name
-        path
+      ... on Error {
+        message
       }
     }
   }
