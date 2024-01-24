@@ -3,10 +3,26 @@ import { useState, Fragment } from "react";
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Environment, Package } from "../../../queries";
+
+type EnvRowParams = {
+  environment: Environment;
+  selectedPackages: Package[];
+}
 
 // EnvExample is an accordion that displays environments.
-function EnvExample(row: { row: { Environment: string; Description: string } }) {
+function EnvExample(props: EnvRowParams) {
   const [open, setOpen] = useState(false);
+
+  const matchingPackages: Package[] = [];
+  const nonmatchingPackages: Package[] = [];
+  props.environment.packages.forEach(envPkg => {
+    if (props.selectedPackages.some(pkg => pkg.name === envPkg.name && (!pkg.version || pkg.version === envPkg.version))) {
+      matchingPackages.push(envPkg);
+    } else {
+      nonmatchingPackages.push(envPkg);
+    }
+  })
 
   return (
     <Fragment>
@@ -21,35 +37,27 @@ function EnvExample(row: { row: { Environment: string; Description: string } }) 
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.row.Environment}
+          {props.environment.name}
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.row.Description}
+          {props.environment.description}
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            {nonmatchingPackages.length > 0 && <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Non-matching Packages
               </Typography>
-              <List>
-                <ListItem>Package 1</ListItem>
-                <ListItem>Pacakge 2</ListItem>
-              </List>
-            </Box>
-            <Box sx={{ margin: 1 }}>
+              {nonmatchingPackages.map(pkg => `${pkg.name} (${pkg.version})`).join(", ")}
+            </Box>}
+            {matchingPackages.length > 0 && <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Matching Packages
               </Typography>
-              <List>
-                <ListItem>Package 1</ListItem>
-                <ListItem>Package 2</ListItem>
-                <ListItem>Package 3</ListItem>
-                <ListItem>Package 4</ListItem>
-              </List>
-            </Box>
+              {matchingPackages.map(pkg => `${pkg.name} (${pkg.version})`).join(", ")}
+            </Box>}
           </Collapse>
         </TableCell>
       </TableRow>

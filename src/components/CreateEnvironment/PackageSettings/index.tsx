@@ -2,9 +2,9 @@ import {
   Card, Box, Typography, Divider, CardContent, Grid, Alert,
   Button
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
 import { Package } from "../../../queries";
+import MatchingEnvs from "../MatchingEnvs";
 
 type PackageSettingsParams = {
   packages: Map<string, string[]>;
@@ -17,10 +17,6 @@ type PackageSettingsParams = {
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props: PackageSettingsParams) {
-  const runEnvironmentBuild = () => {
-    props.runEnvironmentBuild()
-  }
-
   return (
     <Card>
       <Box
@@ -72,25 +68,7 @@ function PackageSettings(props: PackageSettingsParams) {
           Packages come with the latest version by default. If you wish to
           change to an older version, click the package to select which one.
         </Alert>
-
-        {props.envBuildSuccessful &&
-          <Alert
-            severity="success"
-            sx={{ m: '2% 0 2% 0' }}
-          >
-            Your environment was successfully scheduled!
-          </Alert>
-        }
-        <Button
-          variant='contained'
-          startIcon={<AddIcon />}
-          onClick={runEnvironmentBuild}
-          sx={{
-            float: 'right',
-            mb: '2%'
-          }}
-        >Create
-        </Button>
+        {props.selectedPackages.length > 0 && <MatchingEnvs selectedPackages={props.selectedPackages} runEnvironmentBuild={props.runEnvironmentBuild} />}
       </CardContent>
     </Card>
   );

@@ -1,5 +1,6 @@
 import type { CreateEnvironment, Package, Packages } from '../../queries';
-import { Grid } from '@mui/material';
+import { Alert, Button, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
@@ -95,7 +96,14 @@ export default function CreateEnvironment() {
         </PackageContext.Provider>
       </Grid>
       <Grid item xs={11}>
-        <MatchingEnvs />
+        {envBuildSuccessful &&
+          <Alert
+            severity="success"
+            sx={{ m: '2% 0 2% 0' }}
+          >
+            Your environment was successfully scheduled!
+          </Alert>
+        }
       </Grid>
       {envBuildError &&
         <ErrorDialog error={envBuildError} setError={setEnvBuildError} />}
