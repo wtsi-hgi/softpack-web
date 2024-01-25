@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
-import ErrorDialog from './ErrorDialog';
+import { PopUpDialog } from './PopUpDialog';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -95,18 +95,16 @@ export default function CreateEnvironment() {
           />
         </PackageContext.Provider>
       </Grid>
-      <Grid item xs={11}>
+      
         {envBuildSuccessful &&
-          <Alert
-            severity="success"
-            sx={{ m: '2% 0 2% 0' }}
-          >
-            Your environment was successfully scheduled!
-          </Alert>
-        }
-      </Grid>
+          <PopUpDialog
+          title="Your environment was successfully scheduled!"
+          message="It should appear in the environments list shortly, and will be usable once the indicator is green."
+          onClose={() => setEnvBuildSuccessful(false)}
+        />}
+      
       {envBuildError &&
-        <ErrorDialog error={envBuildError} setError={setEnvBuildError} />}
+        <PopUpDialog title="Environment build failed" message={envBuildError} onClose={() => setEnvBuildError("")} />}
     </Grid>
   );
 }
