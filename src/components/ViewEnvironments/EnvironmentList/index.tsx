@@ -1,15 +1,34 @@
 import type { Environments } from "../../../queries";
 import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const SECOND = 1000;
+const MAX_REFETCH_INTERVAL = 10 * SECOND;
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
 	const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS),
 		[filter, setFilter] = useState<string>("");
+	const client = useApolloClient();
+	const [refetchInterval, setRefetchInterval] = useState(SECOND);
+
+	useEffect(() => {
+		let interval = setInterval(() => {
+			console.log("refetching...")
+			if (!loading && !error) {
+				console.log("definitely refetching")
+				client.refetchQueries({include: [ALL_ENVIRONMENTS]});
+			}
+			if (refetchInterval < MAX_REFETCH_INTERVAL) {
+				setRefetchInterval(refetchInterval * 2);
+			}
+		}, refetchInterval);
+		return () => clearInterval(interval);
+	}, [loading, error, refetchInterval]);
 
 	if (loading) {
 		return <div>loading...</div>
