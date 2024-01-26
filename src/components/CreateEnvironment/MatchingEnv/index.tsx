@@ -37,10 +37,10 @@ function MatchingEnv(props: EnvRowParams) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {props.environment.name}
+          {props.environment.path}/{props.environment.name}
         </TableCell>
-        <TableCell component="th" scope="row">
-          {props.environment.description}
+        <TableCell component="th" scope="row" sx={{ "white-space": "pre-line" }}>
+          {props.environment.description.split("The following executables are added to your PATH")[0]}
         </TableCell>
       </TableRow>
       <TableRow>
