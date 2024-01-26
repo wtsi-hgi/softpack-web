@@ -1,4 +1,4 @@
-import { TableRow, TableCell, IconButton, Collapse, Box, Typography, List, ListItem } from "@mui/material";
+import { TableRow, TableCell, IconButton, Collapse, Box, Typography, } from "@mui/material";
 import { useState, Fragment } from "react";
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -10,8 +10,8 @@ type EnvRowParams = {
   selectedPackages: Package[];
 }
 
-// EnvExample is an accordion that displays environments.
-function EnvExample(props: EnvRowParams) {
+// MatchingEnv displays a single row of the "matching environments" table.
+function MatchingEnv(props: EnvRowParams) {
   const [open, setOpen] = useState(false);
 
   const matchingPackages: Package[] = [];
@@ -50,13 +50,13 @@ function EnvExample(props: EnvRowParams) {
               <Typography variant="h6" gutterBottom component="div">
                 Non-matching Packages
               </Typography>
-              {nonmatchingPackages.map(pkg => `${pkg.name} (${pkg.version})`).join(", ")}
+              {nonmatchingPackages.map(pkg => `${pkg.name} (${pkg.version ?? "latest"})`).join(", ")}
             </Box>}
             {matchingPackages.length > 0 && <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Matching Packages
               </Typography>
-              {matchingPackages.map(pkg => `${pkg.name} (${pkg.version})`).join(", ")}
+              {matchingPackages.map(pkg => `${pkg.name} (${pkg.version ?? "latest"})`).join(", ")}
             </Box>}
           </Collapse>
         </TableCell>
@@ -65,4 +65,4 @@ function EnvExample(props: EnvRowParams) {
   );
 }
 
-export default EnvExample
+export default MatchingEnv

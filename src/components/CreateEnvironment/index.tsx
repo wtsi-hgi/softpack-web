@@ -1,12 +1,10 @@
 import type { CreateEnvironment, Package, Packages } from '../../queries';
-import { Alert, Button, Grid } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
 import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
-import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
 import { PopUpDialog } from './PopUpDialog';
 

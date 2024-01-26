@@ -1,6 +1,6 @@
-import { Card, Box, Typography, Divider, CardContent, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material"
+import { Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
-import EnvExample from "../EnvExample";
+import MatchingEnv from "../MatchingEnv";
 import { ALL_ENVIRONMENTS, Environments, Package } from "../../../queries";
 import { useQuery } from "@apollo/client";
 
@@ -49,7 +49,7 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
               <TableBody>
                 {matchingEnvironments.map((env, index) => {
                   return (
-                    <EnvExample key={index} environment={env} selectedPackages={props.selectedPackages} />
+                    <MatchingEnv key={index} environment={env} selectedPackages={props.selectedPackages} />
                   )
                 })}
               </TableBody>
