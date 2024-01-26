@@ -18,9 +18,7 @@ const EnvironmentList = () => {
 
 	useEffect(() => {
 		let interval = setInterval(() => {
-			console.log("refetching...")
 			if (!loading && !error) {
-				console.log("definitely refetching")
 				client.refetchQueries({include: [ALL_ENVIRONMENTS]});
 			}
 			if (refetchInterval < MAX_REFETCH_INTERVAL) {
