@@ -1,53 +1,77 @@
-import { Card, Box, Typography, Divider, CardContent, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
-import EnvExample from "../EnvExample";
+import { Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
+import MatchingEnv from "../MatchingEnv";
+import { ALL_ENVIRONMENTS, Environments, Package } from "../../../queries";
+import { useQuery } from "@apollo/client";
+
+type MatchingEnvsParams = {
+  selectedPackages: Package[];
+  runEnvironmentBuild: () => void;
+}
 
 // matchingEnvs is a hardcoded table that shows an illustration of what the
 // program should look like, as it informs users in real-time that they
 // environment they are trying to create already exists.
-export default function matchingEnvs() {
+export default function matchingEnvs(props: MatchingEnvsParams) {
+ 	const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS);
+
+  if (loading) {
+    return <div>...</div>
+  }
+  if (error) {
+    return "error"
+  }
   
-  const envs = [
-    {'Environment':'tremendous-mandril',
-     'Description':'Mauris laoreet blandit odio, vitae mollis enim.'}, 
-  
-    {'Environment':'ubiquitous-clam',
-    'Description':'Pellentesque feugiat accumsan consectetur.'},
-  ];
+  const matchingEnvironments = data!.environments.filter(e => (
+    props.selectedPackages.every(pkg => (
+      e.packages.some(envPkg => pkg.name === envPkg.name && (!pkg.version || pkg.version === envPkg.version))
+    ))
+  ))
 
   return (
-    <Card>
-      <Box p={3}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Environments Matching Your Criteria
+    <>
+      {matchingEnvironments.length > 0
+        ? <>
+          <Box>
+            <Typography variant="subtitle1" gutterBottom>
+              Use one of these existing, matching, environments:
+            </Typography>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table" size='small'>
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Environment</TableCell>
+                  <TableCell align="left">Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {matchingEnvironments.map((env, index) => {
+                  return (
+                    <MatchingEnv key={index} environment={env} selectedPackages={props.selectedPackages} />
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Typography variant="subtitle1" gutterBottom align="right">
+            Or, create a new environment:
           </Typography>
-          <Typography variant="subtitle2">
-            Save time and space by selecting one of the options
-            below
-          </Typography>
-        </Box>
+        </>
+        : null}
+      <Box>
+        <Button
+          variant='contained'
+          startIcon={<AddIcon />}
+          onClick={props.runEnvironmentBuild}
+          sx={{
+            float: 'right',
+            mb: '2%'
+          }}
+        >Create
+        </Button>
       </Box>
-      <Divider />
-      <CardContent sx={{p: 4}}>
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table" size='small'>
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Environment</TableCell>
-                <TableCell align="left">Description</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {envs.map((row, index) => {
-                return (
-                  <EnvExample key={index} row={row} />
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
+    </>
   )
 }

@@ -1,33 +1,21 @@
 import {
   Card, Box, Typography, Divider, CardContent, Grid, Alert,
-  Button
 } from "@mui/material";
-import { useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
 import PackageSelect from "../PackageSelect";
-import { PackageMultiVersion } from "../../../queries";
+import { Package } from "../../../queries";
+import MatchingEnvs from "../MatchingEnvs";
 
 type PackageSettingsParams = {
-  data: Collection[];
+  packages: Map<string, string[]>;
+  selectedPackages: Package[];
+  setSelectedPackages: (packages: Package[]) => void;
   runEnvironmentBuild: () => void;
   envBuildSuccessful: boolean;
-}
-
-type Collection = {
-  id: string;
-  name: string;
-  packages: PackageMultiVersion[];
 }
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
 function PackageSettings(props: PackageSettingsParams) {
-  const [packages, setPackages] = useState<string[]>([]);
-
-  const runEnvironmentBuild = () => {
-    props.runEnvironmentBuild()
-  }
-
   return (
     <Card>
       <Box
@@ -48,26 +36,22 @@ function PackageSettings(props: PackageSettingsParams) {
       <Divider />
       <CardContent sx={{ p: 4 }}>
         <Typography variant="subtitle2">
-          {props.data.map(program => {
-            return (
-              <Grid key={program.id} container spacing={1}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pt={2}>
-                    {program.name} Packages:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={7}>
-                  <Box pr={3} pb={4}>
-                    <PackageSelect
-                      data={program.packages}
-                      packages={packages}
-                      setPackages={setPackages}
-                    />
-                  </Box>
-                </Grid>
-              </Grid>
-            );
-          })}
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+              <Box pr={3} pt={2}>
+                Packages:
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={8} md={7}>
+              <Box pr={3} pb={4}>
+                <PackageSelect
+                  packages={props.packages}
+                  selectedPackages={props.selectedPackages}
+                  setSelectedPackages={props.setSelectedPackages}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </Typography>
         {/*<Alert 
           severity='warning' 
@@ -83,26 +67,7 @@ function PackageSettings(props: PackageSettingsParams) {
           Packages come with the latest version by default. If you wish to
           change to an older version, click the package to select which one.
         </Alert>
-
-        {props.envBuildSuccessful &&
-          <Alert
-            severity="success"
-            sx={{ m: '2% 0 2% 0' }}
-          >
-            Your environment was successfully scheduled!
-          </Alert>
-        }
-        <Button
-          variant='contained'
-          startIcon={<AddIcon />}
-          onClick={runEnvironmentBuild}
-          sx={{
-            float: 'right',
-            width: '10%',
-            mb: '2%'
-          }}
-        >Create
-        </Button>
+        {props.selectedPackages.length > 0 && <MatchingEnvs selectedPackages={props.selectedPackages} runEnvironmentBuild={props.runEnvironmentBuild} />}
       </CardContent>
     </Card>
   );

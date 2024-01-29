@@ -7,21 +7,18 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 //import { PackageContext } from "../CreateEnvironment/PackageContext";
 
 type DropdownChipParams = {
-  data: string;
-  onDelete: (d: string) => void;
+  name: string;
   versions: string[];
-  tags: string[];
-  setActiveTags: (tags: string[]) => void;
+  selectedVersion: string | null;
+  onChange: (version: string | null) => void;
+  onDelete: () => void;
 }
 
 // DropdownChip is an MUI chip that comes with a dropdown. It is used to display
 // a package, and when clicked, displays the versions the package can come in.
 function DropdownChip(props: DropdownChipParams) {
-  //const packageContext = useContext(PackageContext);
-
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-  const [version, setVersion] = useState<string | null>(null);
 
   const handleClose = (target: HTMLElement, index: number) => {
     // Check if index is 0 (as this refers to the latest version of the 
@@ -30,9 +27,9 @@ function DropdownChip(props: DropdownChipParams) {
     // implicitly their latest version.
 
     if (index == 0) {
-      setVersion(null);
+      props.onChange(null);
     } else if (index > 0) {
-      setVersion(target.textContent);
+      props.onChange(target.textContent);
     }
 
     setAnchorEl(null);
@@ -42,14 +39,14 @@ function DropdownChip(props: DropdownChipParams) {
   return (
     <div>
       <Chip
-        label={version ? props.data + ' (' + version + ')' : props.data}
+        label={props.selectedVersion ? `${props.name} (${props.selectedVersion})` : props.name}
         onClick={event => {
           setAnchorEl(event.currentTarget);
           setOpen(!open);
         }}
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        onDelete={() => props.onDelete(props.data)}
+        onDelete={props.onDelete}
         sx={{ m: '3px' }}
       />
       <Menu

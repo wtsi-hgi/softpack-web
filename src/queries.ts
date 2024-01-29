@@ -58,42 +58,38 @@ export const ALL_PACKAGES = gql`
   }
 `
 
-export type CreateEnvironmentSuccess = {
-  message: string;
-  environment: Environment;
-}
-
-export type EnvironmentAlreadyExistsError = {
-  name: string;
-  path: string;
+export type CreateEnvironment = {
+  createEnvironment: {
+    __typename: "CreateEnvironmentSuccess" | string;
+    message: string;
+  };
 }
 
 export const CREATE_ENV = gql`
   mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
     createEnvironment(
       env: {
-        description: $description,
         name: $name, 
+        description: $description,
+        path: $path,
         packages: $packages,
-        path: $path}
+      }
     ) {
+      __typename
       ... on CreateEnvironmentSuccess {
         message
-        environment {
-          description
-          path
-          state
-          packages {
-            name
-            version
-          }
-        }
       }
-      ... on EnvironmentAlreadyExistsError {
-        __typename
-        name
-        path
+      ... on Error {
+        message
       }
+    }
+  }
+`
+
+export const GROUPS = gql`
+  query GroupsQuery($username: String!) {
+    groups(username: $username) {
+      name
     }
   }
 `

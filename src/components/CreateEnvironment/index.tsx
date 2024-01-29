@@ -1,46 +1,44 @@
-import type { CreateEnvironmentSuccess, EnvironmentAlreadyExistsError, Packages } from '../../queries';
+import type { CreateEnvironment, Package, Packages } from '../../queries';
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
 import PackageSettings from './PackageSettings';
 import { useState } from 'react';
 import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
-import MatchingEnvs from './MatchingEnvs';
 import { PackageContext } from './PackageContext';
-import ErrorDialog from './ErrorDialog';
+import { PopUpDialog } from './PopUpDialog';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery<Packages>(ALL_PACKAGES);
-  const [envBuildError, setEnvBuildError] = useState(false);
+  const [envBuildError, setEnvBuildError] = useState("");
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [path, setPath] = useState('');
+  const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
-    createEnvironmentQuery({ variables: { name, description, path, testPackages } })
+    createEnvironment({ variables: { name, description, path, packages: selectedPackages } })
   }
 
-  const [createEnvironmentQuery] = useMutation<CreateEnvironmentSuccess | EnvironmentAlreadyExistsError>(CREATE_ENV, {
+  const [createEnvironment] = useMutation<CreateEnvironment>(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {
-      if ("message" in data) {
+      if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
         setEnvBuildSuccessful(true);
       } else {
-        // Regardless of error, error message says 'env with that name already
-        // exists'. More specific error messages are a job for the future.
-        setEnvBuildError(true);
+        setEnvBuildError(data.createEnvironment.message);
       }
     },
     // onError looks at GraphQL errors specifically.
     onError: error => {
       const messages = error.graphQLErrors[0].message;
       console.log('GraphQL ERROR: ', messages);
-      setEnvBuildError(true);
+      setEnvBuildError(messages);
     },
   });
 
@@ -56,18 +54,10 @@ export default function CreateEnvironment() {
     )
   }
 
-  const splitPackages = [
-    {
-      "id": "r",
-      "name": "R",
-      "packages": data?.packageCollections.filter(({ name }) => name.startsWith("r-")) ?? []
-    },
-    {
-      "id": "py",
-      "name": "Python",
-      "packages": data?.packageCollections.filter(({ name }) => name.startsWith("py-")) ?? []
-    },
-  ];
+  const packages = new Map<string, string[]>()
+  data?.packageCollections.forEach(({ name, versions }) => {
+    packages.set(name, versions)
+  })
 
   return (
     <Grid
@@ -79,8 +69,11 @@ export default function CreateEnvironment() {
     >
       <Grid item xs={11}>
         <EnvironmentSettings
+          name={name}
           setName={setName}
+          description={description}
           setDescription={setDescription}
+          path={path}
           setPath={setPath}
         />
       </Grid>
@@ -92,17 +85,24 @@ export default function CreateEnvironment() {
          methods of passing, in my opinion. */}
         <PackageContext.Provider value={{ testPackages, setTestPackages }}>
           <PackageSettings
-            data={splitPackages}
+            packages={packages}
+            selectedPackages={selectedPackages}
+            setSelectedPackages={setSelectedPackages}
             runEnvironmentBuild={runEnvironmentBuild}
             envBuildSuccessful={envBuildSuccessful}
           />
         </PackageContext.Provider>
       </Grid>
-      <Grid item xs={11}>
-        <MatchingEnvs />
-      </Grid>
+      
+        {envBuildSuccessful &&
+          <PopUpDialog
+          title="Your environment was successfully scheduled!"
+          message="It should appear in the environments list shortly, and will be usable once the indicator is green."
+          onClose={() => setEnvBuildSuccessful(false)}
+        />}
+      
       {envBuildError &&
-        <ErrorDialog name={name} setError={setEnvBuildError} />}
+        <PopUpDialog title="Environment build failed" message={envBuildError} onClose={() => setEnvBuildError("")} />}
     </Grid>
   );
 }
