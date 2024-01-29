@@ -66,7 +66,7 @@ function EnvironmentTable({ environments }: Environments) {
               <Typography variant='h4' style={{ whiteSpace: "nowrap" }} className="breadcrumbs">
                 {breadcrumbs(env.path)}
               </Typography>
-            B</Box>
+            </Box>
             <Typography sx={{ padding: '9px 0' }}>{env.description.split("\n")[0]}</Typography>
             <Box sx={{ maxHeight: "90px", overflowY: "auto" }}>
               {env.packages.map((package_) => {
