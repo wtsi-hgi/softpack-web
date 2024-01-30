@@ -39,7 +39,7 @@ function MatchingEnv(props: EnvRowParams) {
         <TableCell component="th" scope="row">
           {props.environment.path}/{props.environment.name}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ "white-space": "pre-line" }}>
+        <TableCell component="th" scope="row" sx={{ whiteSpace: "pre-line" }}>
           {props.environment.description.split("The following executables are added to your PATH")[0]}
         </TableCell>
       </TableRow>
