@@ -94,7 +94,6 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
               <TextField
                 id='description-field'
                 multiline
-                rows={4}
                 sx={{ width: '75%' }}
                 value={props.description}
                 onChange={(e) => props.setDescription((e.target as HTMLInputElement).value)}
