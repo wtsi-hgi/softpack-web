@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GROUPS } from "../../../queries";
 
@@ -36,6 +36,10 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const { loading, data, error } = useQuery(GROUPS, {
     variables: { username },
   });
+
+  useEffect(() => {
+    props.setPath("");
+  }, [username]);
 
   return (
     <Card>
@@ -154,7 +158,9 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
                     props.setPath(e.target.value);
                   }}
                 >
-                  <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
+                  {(data?.groups?.length ?? 0) > 0
+                    ? <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
+                    : <MenuItem disabled>Invalid username</MenuItem>}
                   {loading || error ? null : data?.groups.map(({ name }: { name: string }) =>
                     <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
                   {error && <MenuItem disabled>error getting groups: {error.message}</MenuItem>}
