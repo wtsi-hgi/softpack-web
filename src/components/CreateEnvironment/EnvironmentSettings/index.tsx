@@ -148,7 +148,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
-              <FormControl>
+              <FormControl variant="standard" sx={{ minWidth: 189 }}>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
