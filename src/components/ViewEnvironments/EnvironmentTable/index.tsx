@@ -1,5 +1,5 @@
 import type { Environment, Environments, States } from "../../../queries";
-import { Box, Chip, Tooltip, Typography } from "@mui/material";
+import { Box, Chip, LinearProgress, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 
@@ -55,39 +55,42 @@ function EnvironmentTable({ environments }: Environments) {
           <Tooltip title={env.type === "softpack" ? "Built with Softpack" : "Generated from Module (not reproducable)"} placement="left">
             <div style={{ "width": "1.75em", "height": "1.75em", "textAlign": "center", "float": "right", "border": "1px solid #000", "borderRadius": "1em", "marginTop": "-0.95em", "marginRight": "-0.95em" }}>{env.type === "softpack" ? "S" : "M"}</div>
           </Tooltip>
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'baseline'
-          }}>
-            <Typography
-              variant='h3'
-              sx={{ paddingLeft: '20.7px' }}>{env.name}
-            </Typography>
+          <Box sx={{ padding: "0 20.7px" }}>
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'baseline'
+            }}>
+              <Typography variant='h3'>{env.name}
+              </Typography>
 
-            <Typography variant='h4' style={{ whiteSpace: "nowrap" }} className="breadcrumbs">
-              {breadcrumbs(env.path)}
-            </Typography>
-          </Box>
-          <Typography sx={{ padding: '9px 0 9px 20.7px' }}>{env.description.split("\n")[0]}</Typography>
-          <Box sx={{ paddingLeft: '20.7px', maxHeight: "90px", overflowY: "auto" }}>
-            {env.packages.map((package_) => {
-              return (
-                <Box
-                  key={package_.name}
-                  sx={{ display: "inline-flex" }}
-                >
-                  <Chip
-                    label={package_.name + (package_.version ? `@${package_.version}` : "")}
-                    sx={{
-                      m: '4px',
-                      color: '#5569ff',
-                      border: '1px solid rgba(85, 105, 255, 0.7)',
-                      backgroundColor: 'transparent'
-                    }}
-                  />
-                </Box>
-              );
-            })}
+              <Typography variant='h4' style={{ whiteSpace: "nowrap" }} className="breadcrumbs">
+                {breadcrumbs(env.path)}
+              </Typography>
+            </Box>
+            <Typography sx={{ padding: '9px 0' }}>{env.description.split("\n")[0]}</Typography>
+            <Box sx={{ maxHeight: "90px", overflowY: "auto" }}>
+              {env.packages.map((package_) => {
+                return (
+                  <Box
+                    key={package_.name}
+                    sx={{ display: "inline-flex" }}
+                  >
+                    <Chip
+                      label={package_.name + (package_.version ? `@${package_.version}` : "")}
+                      sx={{
+                        m: '4px',
+                        color: '#5569ff',
+                        border: '1px solid rgba(85, 105, 255, 0.7)',
+                        backgroundColor: 'transparent'
+                      }}
+                    />
+                  </Box>
+                );
+              })}
+            </Box>
+            {env.state === "queued" && <Box sx={{ paddingTop: "8px" }}>
+              <LinearProgress />
+              </Box>}
           </Box>
         </Box>
         {
