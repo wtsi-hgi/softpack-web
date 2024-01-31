@@ -1,7 +1,8 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 import DropdownChip from "../../PackageChip";
 import { Package } from "../../../queries";
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
+import { Listbox } from "./Listbox";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -35,7 +36,9 @@ export default function PackageSelect(props: PackageSelectParams) {
       <Autocomplete
         multiple
         disableCloseOnSelect
+        disableListWrap
         options={[...props.packages.keys()]}
+        ListboxComponent={Listbox}
         renderTags={renderTags}
         renderInput={(params) => {
           return (
@@ -46,6 +49,10 @@ export default function PackageSelect(props: PackageSelectParams) {
             />
           );
         }}
+        renderOption={(props, option, state) => (
+          // this gets passed to Listbox's renderRow, but we have to lie about the type...
+          { props, option, state } as unknown as ReactNode
+        )}
         value={selectedPackageNames}
         onChange={(_, value) => {
           const prevVersions = new Map<string, string | null>();

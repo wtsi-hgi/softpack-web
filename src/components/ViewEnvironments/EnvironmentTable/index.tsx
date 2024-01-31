@@ -1,6 +1,6 @@
 import type { Environment, Environments, States } from "../../../queries";
 import { Box, Chip, LinearProgress, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 
 type State = {
@@ -28,7 +28,7 @@ function EnvironmentTable({ environments }: Environments) {
 
   return (
     <>
-      {environments.map(env => <>
+      {environments.map(env => <Fragment key={env.id}>
         <Box
           onClick={() => setDrawer(env)}
           sx={{
@@ -99,7 +99,7 @@ function EnvironmentTable({ environments }: Environments) {
             onClose={() => setDrawer(null)}
           />
         }
-      </>)}
+      </Fragment>)}
     </>
   );
 }
