@@ -42,8 +42,8 @@ function PackageSettings(props: PackageSettingsParams) {
                 Packages:
               </Box>
             </Grid>
-            <Grid item xs={12} sm={8} md={7}>
-              <Box pr={3} pb={4}>
+            <Grid item xs={12} sm={8} md={9}>
+              <Box pb={4} sx={{ width: "75%" }}>
                 <PackageSelect
                   packages={props.packages}
                   selectedPackages={props.selectedPackages}
