@@ -10,6 +10,7 @@ type PackageSettingsParams = {
   selectedPackages: Package[];
   setSelectedPackages: (packages: Package[]) => void;
   runEnvironmentBuild: () => void;
+  envBuildInFlight: boolean;
   envBuildSuccessful: boolean;
 }
 
@@ -67,7 +68,11 @@ function PackageSettings(props: PackageSettingsParams) {
           Packages come with the latest version by default. If you wish to
           change to an older version, click the package to select which one.
         </Alert>
-        {props.selectedPackages.length > 0 && <MatchingEnvs selectedPackages={props.selectedPackages} runEnvironmentBuild={props.runEnvironmentBuild} />}
+        {props.selectedPackages.length > 0 && <MatchingEnvs
+          selectedPackages={props.selectedPackages}
+          runEnvironmentBuild={props.runEnvironmentBuild}
+          envBuildInFlight={props.envBuildInFlight}
+          />}
       </CardContent>
     </Card>
   );
