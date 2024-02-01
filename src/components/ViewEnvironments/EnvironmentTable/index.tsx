@@ -28,7 +28,7 @@ function EnvironmentTable({ environments }: Environments) {
 
   return (
     <>
-      {environments.map(env => <Fragment key={env.id}>
+      {environments.map(env => <Fragment key={`${env.path}/${env.name}`}>
         <Box
           onClick={() => setDrawer(env)}
           sx={{

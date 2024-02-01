@@ -8,7 +8,6 @@ export type States = "queued" | "ready" | "failed";
 
 export type Environment = {
   description: string;
-  id: string;
   name: string;
   packages: Package[];
   readme: string;
@@ -26,7 +25,6 @@ export const ALL_ENVIRONMENTS = gql`
   query {
     environments {
       description
-      id
       name
       path
       packages {
