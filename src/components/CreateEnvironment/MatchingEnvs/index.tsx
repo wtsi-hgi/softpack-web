@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
+  envBuildInFlight: boolean;
   runEnvironmentBuild: () => void;
 }
 
@@ -64,6 +65,7 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
         <Button
           variant='contained'
           startIcon={<AddIcon />}
+          disabled={props.envBuildInFlight}
           onClick={props.runEnvironmentBuild}
           sx={{
             float: 'right',

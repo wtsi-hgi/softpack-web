@@ -24,7 +24,7 @@ export default function CreateEnvironment() {
     createEnvironment({ variables: { name, description, path, packages: selectedPackages } })
   }
 
-  const [createEnvironment] = useMutation<CreateEnvironment>(CREATE_ENV, {
+  const [createEnvironment, { loading: envBuildInFlight }] = useMutation<CreateEnvironment>(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {
@@ -89,6 +89,7 @@ export default function CreateEnvironment() {
             selectedPackages={selectedPackages}
             setSelectedPackages={setSelectedPackages}
             runEnvironmentBuild={runEnvironmentBuild}
+            envBuildInFlight={envBuildInFlight}
             envBuildSuccessful={envBuildSuccessful}
           />
         </PackageContext.Provider>
