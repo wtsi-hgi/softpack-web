@@ -55,7 +55,7 @@ export default function PackageSelect(props: PackageSelectParams) {
         )}
         value={selectedPackageNames}
         onChange={(_, value) => {
-          const prevVersions = new Map<string, string | null>();
+          const prevVersions = new Map<string, string | null | undefined>();
           props.selectedPackages.forEach(({ name, version }) => prevVersions.set(name, version))
           props.setSelectedPackages(value.map(name => ({
             name,

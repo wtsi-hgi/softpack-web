@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "./__generated__/gql"
 
 export type Environments = {
   environments: Environment[];
@@ -13,16 +13,16 @@ export type Environment = {
   readme: string;
   path: string;
   type: "softpack" | "module";
-  state?: States;
+  state?: States | null;
 }
 
 export type Package = {
   name: string;
-  version: string | null;
+  version?: string | null;
 }
 
-export const ALL_ENVIRONMENTS = gql`
-  query {
+export const ALL_ENVIRONMENTS = gql(`
+  query Environments {
     environments {
       description
       name
@@ -36,7 +36,7 @@ export const ALL_ENVIRONMENTS = gql`
       state
     }
   }
-`
+`);
 
 export type PackageMultiVersion = {
   name: string;
@@ -47,14 +47,14 @@ export type Packages = {
   packageCollections: PackageMultiVersion[];
 }
 
-export const ALL_PACKAGES = gql`
-  query {
+export const ALL_PACKAGES = gql(`
+  query Packages {
     packageCollections {
       name
       versions
     }
   }
-`
+`);
 
 export type CreateEnvironment = {
   createEnvironment: {
@@ -63,7 +63,7 @@ export type CreateEnvironment = {
   };
 }
 
-export const CREATE_ENV = gql`
+export const CREATE_ENV = gql(`
   mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
     createEnvironment(
       env: {
@@ -82,12 +82,12 @@ export const CREATE_ENV = gql`
       }
     }
   }
-`
+`);
 
-export const GROUPS = gql`
-  query GroupsQuery($username: String!) {
+export const GROUPS = gql(`
+  query Groups($username: String!) {
     groups(username: $username) {
       name
     }
   }
-`
+`);

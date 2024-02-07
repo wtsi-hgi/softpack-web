@@ -16,7 +16,9 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen": "graphql-codegen",
+    "watch:gen": "graphql-codegen -w"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
@@ -39,6 +41,9 @@
     "react-window": "^1.8.10"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/lodash": "^4.14.196",
     "@types/react": "^18.0.28",
@@ -52,7 +57,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.0.2",
+    "typescript": "^5.3.3",
     "vite": "^4.3.2"
   }
 }

@@ -1,4 +1,4 @@
-import type { CreateEnvironment, Package, Packages } from '../../queries';
+import type { Package } from '../../queries';
 import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import EnvironmentSettings from './EnvironmentSettings';
@@ -10,7 +10,7 @@ import { PopUpDialog } from './PopUpDialog';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
-  const { loading, data, error } = useQuery<Packages>(ALL_PACKAGES);
+  const { loading, data, error } = useQuery(ALL_PACKAGES);
   const [envBuildError, setEnvBuildError] = useState("");
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
 
@@ -24,7 +24,7 @@ export default function CreateEnvironment() {
     createEnvironment({ variables: { name, description, path, packages: selectedPackages } })
   }
 
-  const [createEnvironment, { loading: envBuildInFlight }] = useMutation<CreateEnvironment>(CREATE_ENV, {
+  const [createEnvironment, { loading: envBuildInFlight }] = useMutation(CREATE_ENV, {
     // onCompleted will pick up any errors which the backend itself raises, like
     // an environment name already existing.
     onCompleted: data => {

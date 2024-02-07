@@ -3,3 +3,4 @@ dist
 build
 node_modules/
 vite.config.ts
+__generated__/

@@ -1,7 +1,7 @@
 import { Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
 import MatchingEnv from "../MatchingEnv";
-import { ALL_ENVIRONMENTS, Environments, Package } from "../../../queries";
+import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { useQuery } from "@apollo/client";
 
 type MatchingEnvsParams = {
@@ -14,7 +14,7 @@ type MatchingEnvsParams = {
 // program should look like, as it informs users in real-time that they
 // environment they are trying to create already exists.
 export default function matchingEnvs(props: MatchingEnvsParams) {
- 	const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS);
+ 	const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
 
   if (loading) {
     return <div>...</div>

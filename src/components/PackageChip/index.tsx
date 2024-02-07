@@ -9,7 +9,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 type DropdownChipParams = {
   name: string;
   versions: string[];
-  selectedVersion: string | null;
+  selectedVersion: string | null | undefined;
   onChange: (version: string | null) => void;
   onDelete: () => void;
 }

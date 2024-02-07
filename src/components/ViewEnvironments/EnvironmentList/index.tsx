@@ -1,4 +1,3 @@
-import type { Environments } from "../../../queries";
 import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useApolloClient, useQuery } from "@apollo/client";
@@ -11,8 +10,8 @@ const MAX_REFETCH_INTERVAL = 10 * SECOND;
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-	const { loading, data, error } = useQuery<Environments>(ALL_ENVIRONMENTS),
-		[filter, setFilter] = useState<string>("");
+	const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
+	const [filter, setFilter] = useState("");
 	const client = useApolloClient();
 	const [refetchInterval, setRefetchInterval] = useState(SECOND);
 
