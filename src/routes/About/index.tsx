@@ -84,6 +84,69 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
 			particular <samp>rstudio start --help</samp> for how to use your own
 			locally installed R modules with it as well.
 		</p>
+
+		<h2>Creation</h2>
+
+		<p>If recipes already exist for all your desired software, you'll be
+		able to use the web frontend to create software environments for
+		yourself. If recipes don't exist, you'll have to contact the admin and
+		have them create the recipe first.</p>
+
+		<p>Following is an example of creating an environment of your own
+		for the "xxhash" software.</p>
+
+		<ul>
+			<li>
+				Click the "Create Environment" link in the left-hand side-bar.
+			</li>
+			<li>
+				Enter a name for this environment, a description, your username
+				and then click on the folder dropdown and select
+				users/[your username]
+			</li>
+			<li>
+				In the "Package Settings" section, start typing "xxhash" in to
+				the "Packages" field. A selection of matching packages will pop
+				up; select the "xxhash" result.
+			</li>
+			<li>
+				Without changing anything else you'd install the latest version
+				(that there is a spack recipe for). Instead, click the little
+				arrow in the xxhash entry and select 0.7.4 to install an older
+				version.
+			</li>
+			<li>
+				Now click the "CREATE" button, which should result in a pop-up
+				message saying your request has been scheduled. (If you see a
+				"Environment build failed" message instead, contact the admin to
+				investigate.)
+			</li>
+		</ul>
+		
+		<p>
+			The creation of your environment will take an unknown amount of
+			time, depending on how many other builds have been scheduled before
+			yours. It could be minutes or an entire day; please be patient.
+		</p>
+		
+		<p>
+			You can click the "Environments" link in the left-hand side-bar and
+			find your environment by searching for "tutorial [your username]".
+			It will start with a blue "queued" status and turn green when it is
+			ready to use (no need to refresh the page).
+		</p>
+		
+		<p>
+			If it turns red to indicate a failure, contact your admin and
+			they'll investigate. Otherwise, you can click it to get its module
+			load command similar to the "Usage" section above.
+		</p>
+		
+		<p>
+			If you no longer want this tutorial environment, please contact the
+			admin and we'll delete it for you (deletion isn't currently
+			available from the frontend).
+		</p>
 	</div>
 };
 
