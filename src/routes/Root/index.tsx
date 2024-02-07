@@ -4,15 +4,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from '../../components/Sidebar';
 import { InputAdornment, TextField, Tooltip } from '@mui/material';
-import { useState } from 'react';
 import { UsernameContext } from '../../components/UsernameContext';
 
 const Root = () => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useLocalStorage("username", "");
 
   return (
     <Box sx={{ display: 'flex' }}>

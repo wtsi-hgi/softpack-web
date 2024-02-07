@@ -27,6 +27,7 @@
     "@fontsource/roboto": "^5.0.1",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.2",
+    "@uidotdev/usehooks": "^2.4.1",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
