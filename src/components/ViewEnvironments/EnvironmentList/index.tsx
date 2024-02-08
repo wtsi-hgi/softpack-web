@@ -1,8 +1,8 @@
-import { Card, CardContent, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardContent, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 
@@ -61,34 +61,31 @@ const EnvironmentList = () => {
 	}
 
 	return <>
-		<TextField
-			id='name-field'
-			variant='standard'
-			placeholder="Search for Environments"
-			style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
-			onChange={e => setFilter(e.target.value)}
-			InputProps={{
-				endAdornment: (
-					<InputAdornment position="end">
-						<HelpIcon title={"Filter by space-delineated list of packages"} />
-					</InputAdornment>
-				),
-			}}>
-		</TextField>
-		<Card variant="outlined">
-			<CardContent>
-				<Typography variant="h2">Filters</Typography>
-				<FormGroup>
-					<FormControlLabel
-						control={<Checkbox />}
-						label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
-						disableTypography
-						checked={onlyMine}
-						onChange={e => setOnlyMine((e.target as any).checked)}
-					/>
-				</FormGroup>
-			</CardContent>
-		</Card>
+		<Box style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}>
+			<TextField
+				id='name-field'
+				variant='standard'
+				placeholder="Search for Environments"
+				style={{ width: "100%" }}
+				onChange={e => setFilter(e.target.value)}
+				InputProps={{
+					endAdornment: (
+						<InputAdornment position="end">
+							<HelpIcon title={"Filter by space-delineated list of packages"} />
+						</InputAdornment>
+					),
+				}}>
+			</TextField>
+			<FormGroup>
+				<FormControlLabel
+					control={<Checkbox />}
+					label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
+					disableTypography
+					checked={onlyMine}
+					onChange={e => setOnlyMine((e.target as any).checked)}
+				/>
+			</FormGroup>
+		</Box>
 		<Container id="environment_table">
 			<EnvironmentTable environments={filteredEnvironments} />
 		</Container>
