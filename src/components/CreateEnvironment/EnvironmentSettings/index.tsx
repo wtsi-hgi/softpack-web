@@ -17,7 +17,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useContext, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { GROUPS } from "../../../queries";
-import { UsernameContext } from "../../UsernameContext";
+import { UserContext } from "../../UserContext";
 
 type EnvironmentSettingsProps = {
   name: string;
@@ -32,11 +32,7 @@ type EnvironmentSettingsProps = {
 // available to a user when creating a new environment. E.g. Name, Description,
 // etc.
 function EnvironmentSettings(props: EnvironmentSettingsProps) {
-  const username = useContext(UsernameContext);
-
-  const { loading, data, error } = useQuery(GROUPS, {
-    variables: { username },
-  });
+  const { username, groups } = useContext(UserContext);
 
   useEffect(() => {
     props.setPath("");
@@ -131,13 +127,11 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
                   }}
                 >
                   {username
-                    ? (data?.groups?.length ?? 0) > 0
+                    ? (groups?.length ?? 0) > 0
                       ? <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
                       : <MenuItem disabled>Invalid username</MenuItem>
                     : <MenuItem disabled>Enter your username in the top-right</MenuItem>}
-                  {loading || error ? null : data?.groups.map(({ name }: { name: string }) =>
-                    <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
-                  {error && <MenuItem disabled>error getting groups: {error.message}</MenuItem>}
+                  {groups.map(name => <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>

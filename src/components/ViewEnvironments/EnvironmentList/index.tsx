@@ -1,9 +1,10 @@
-import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Card, CardContent, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { HelpIcon } from "../../HelpIcon";
+import { UserContext } from "../../UserContext";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -14,6 +15,8 @@ const EnvironmentList = () => {
 	const [filter, setFilter] = useState("");
 	const client = useApolloClient();
 	const [refetchInterval, setRefetchInterval] = useState(SECOND);
+	const [onlyMine, setOnlyMine] = useState(false);
+	const { username, groups } = useContext(UserContext);
 
 	useEffect(() => {
 		let interval = setInterval(() => {
@@ -53,6 +56,10 @@ const EnvironmentList = () => {
 		}));
 	}
 
+	if (onlyMine) {
+		filteredEnvironments = filteredEnvironments.filter(e => e.path === `users/${username}` || groups.some(g => e.path === `groups/${g}`))
+	}
+
 	return <>
 		<TextField
 			id='name-field'
@@ -63,19 +70,25 @@ const EnvironmentList = () => {
 			InputProps={{
 				endAdornment: (
 					<InputAdornment position="end">
-						<Tooltip title={"Filter by space-delineated list of packages"}>
-							<HelpOutlineIcon
-								sx={{
-									color: 'rgba(34, 51, 84, 0.7)',
-									padding: '0 0 0 8px',
-									fontSize: '25px'
-								}}
-							/>
-						</Tooltip>
+						<HelpIcon title={"Filter by space-delineated list of packages"} />
 					</InputAdornment>
 				),
 			}}>
 		</TextField>
+		<Card variant="outlined">
+			<CardContent>
+				<Typography variant="h2">Filters</Typography>
+				<FormGroup>
+					<FormControlLabel
+						control={<Checkbox />}
+						label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
+						disableTypography
+						checked={onlyMine}
+						onChange={e => setOnlyMine((e.target as any).checked)}
+					/>
+				</FormGroup>
+			</CardContent>
+		</Card>
 		<Container id="environment_table">
 			<EnvironmentTable environments={filteredEnvironments} />
 		</Container>
