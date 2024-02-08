@@ -80,6 +80,9 @@ const EnvironmentList = () => {
 		return acc;
 	}, {} as Record<string, typeof filteredEnvironments>));
 
+	const allExpanded = Object.values(sectionExpanded).every(x => x === true);
+	const allCollapsed = Object.values(sectionExpanded).every(x => x === false);
+
 	return <>
 		<Box style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}>
 			<TextField
@@ -114,21 +117,21 @@ const EnvironmentList = () => {
 			</FormGroup>
 		</Box>
 		<Container id="environment_table">
-			{byUserGroup && <><Link
+			{byUserGroup && <>{allCollapsed ? "Collapse" : <Link
 				component="button"
 				variant="body2"
 				sx={{ verticalAlign: "baseline" }}
 				onClick={() => {
 					setSectionExpanded(Object.fromEntries(Object.keys(sectionExpanded).map(k => [k, false])))
 				}}
-			>Collapse</Link> / <Link
+			>Collapse</Link>} / {allExpanded ? "Expand" : <Link
 				component="button"
 				variant="body2"
 				sx={{ verticalAlign: "baseline" }}
 				onClick={() => {
 					setSectionExpanded(Object.fromEntries(Object.keys(sectionExpanded).map(k => [k, true])))
 				}}
-			>Expand</Link> all</>}
+			>Expand</Link>} all</>}
 			{byUserGroup
 				? environmentsByOwner.toSorted(([a,], [b,]) => compareStrings(a, b)).map(([name, envs]) =>
 					<details
