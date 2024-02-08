@@ -11,15 +11,7 @@ const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
 
 function compareStrings(a: string, b: string) {
-	const nameA = a.toUpperCase();
-	const nameB = b.toUpperCase();
-	if (nameA < nameB) {
-		return -1;
-	}
-	if (nameA > nameB) {
-		return 1;
-	}
-	return 0;
+	return a.localeCompare(b, "en", { sensitivity: "base" })
 }
 
 // EnvironmentList displays the 'view environments' page of the program.
