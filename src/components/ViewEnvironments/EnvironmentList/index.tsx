@@ -42,7 +42,17 @@ const EnvironmentList = () => {
 		)
 	}
 
-	let filteredEnvironments = data.environments;
+	let filteredEnvironments = data.environments.toSorted((a, b) => {
+		const nameA = a.name.toUpperCase();
+		const nameB = b.name.toUpperCase();
+		if (nameA < nameB) {
+			return -1;
+		}
+		if (nameA > nameB) {
+			return 1;
+		}
+		return 0;
+	});
 
 	if (filter) {
 		const parts = filter.toLowerCase().split(" ");
@@ -76,7 +86,7 @@ const EnvironmentList = () => {
 					),
 				}}>
 			</TextField>
-			<FormGroup>
+			{groups.length > 0 && <FormGroup>
 				<FormControlLabel
 					control={<Checkbox />}
 					label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
@@ -84,7 +94,7 @@ const EnvironmentList = () => {
 					checked={onlyMine}
 					onChange={e => setOnlyMine((e.target as any).checked)}
 				/>
-			</FormGroup>
+			</FormGroup>}
 		</Box>
 		<Container id="environment_table">
 			<EnvironmentTable environments={filteredEnvironments} />
