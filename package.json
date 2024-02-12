@@ -24,7 +24,7 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.1",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.2",
+    "@mui/material": "^5.15.6",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
