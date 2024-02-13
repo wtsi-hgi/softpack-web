@@ -1,10 +1,8 @@
-import { gql } from "./__generated__/gql"
-import type { Environment } from "./__generated__/graphql"
-export type { Environment } from "./__generated__/graphql"
+import { gql } from "./__generated__/gql";
+import type { EnvironmentsQuery } from "./__generated__/graphql";
 
-export type Environments = {
-  environments: Environment[];
-}
+export type Environments = EnvironmentsQuery["environments"];
+export type Environment = Environments[number];
 
 export type States = "queued" | "ready" | "failed";
 

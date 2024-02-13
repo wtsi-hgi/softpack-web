@@ -25,7 +25,7 @@ const states: Record<States, State> = {
   }
 };
 
-function EnvironmentTable({ environments }: Environments) {
+function EnvironmentTable({ environments }: { environments: Environments }) {
   const [drawer, setDrawer] = useState<Environment | null>(null);
 
   return (

@@ -15,8 +15,6 @@ import {
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useContext, useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { GROUPS } from "../../../queries";
 import { UserContext } from "../../UserContext";
 
 type EnvironmentSettingsProps = {
