@@ -1,55 +1,75 @@
-import { ListSubheader, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { HTMLAttributes, ReactElement, createContext, forwardRef, useContext, useEffect, useRef } from "react";
-import { VariableSizeList, ListChildComponentProps } from "react-window";
+import {
+  ListSubheader,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import {
+  HTMLAttributes,
+  ReactElement,
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
+import { ListChildComponentProps, VariableSizeList } from "react-window";
 
 // virtualised listbox, passed to <Autocomplete>.
 // substantially based on the example in the MUI documentation.
-export const Listbox = forwardRef<HTMLDivElement, HTMLAttributes<HTMLElement>>(function Listbox(props, ref) {
-  const { children, ...otherProps } = props;
-  const allChildren = (children as ReactElement[]).flatMap(child => [child, ...((child as { children? : ReactElement[] }).children || [])])
+export const Listbox = forwardRef<HTMLDivElement, HTMLAttributes<HTMLElement>>(
+  function Listbox(props, ref) {
+    const { children, ...otherProps } = props;
+    const allChildren = (children as ReactElement[]).flatMap((child) => [
+      child,
+      ...((child as { children?: ReactElement[] }).children || []),
+    ]);
 
-  const theme = useTheme();
-  const smUp = useMediaQuery(theme.breakpoints.up('sm'), {
-    noSsr: true,
-  });
-  const itemCount = allChildren.length;
-  const itemSize = smUp ? 36 : 48;
+    const theme = useTheme();
+    const smUp = useMediaQuery(theme.breakpoints.up("sm"), {
+      noSsr: true,
+    });
+    const itemCount = allChildren.length;
+    const itemSize = smUp ? 36 : 48;
 
-  const getChildSize = (child: React.ReactElement) => {
-    if (child.hasOwnProperty("group")) {
-      return 48;
-    }
+    const getChildSize = (child: React.ReactElement) => {
+      if (child.hasOwnProperty("group")) {
+        return 48;
+      }
 
-    return itemSize;
-  };
+      return itemSize;
+    };
 
-  const getHeight = () => {
-    if (itemCount > 8) {
-      return 8 * itemSize;
-    }
-    return allChildren.map(getChildSize).reduce((a, b) => a + b, 0);
-  };
+    const getHeight = () => {
+      if (itemCount > 8) {
+        return 8 * itemSize;
+      }
+      return allChildren.map(getChildSize).reduce((a, b) => a + b, 0);
+    };
 
-  const gridRef = useResetCache(itemCount);
+    const gridRef = useResetCache(itemCount);
 
-  return <div ref={ref}>
-    <OuterElementContext.Provider value={otherProps}>
-      <VariableSizeList
-        itemData={allChildren}
-        height={getHeight() + 2 * LISTBOX_PADDING}
-        width="100%"
-        ref={gridRef}
-        outerElementType={OuterElementType}
-        innerElementType="ul"
-        itemSize={(index) => getChildSize(allChildren[index])}
-        overscanCount={5}
-        itemCount={itemCount}
-      >
-        {renderRow}
-      </VariableSizeList>
-    </OuterElementContext.Provider>
-  </div>;
-});
+    return (
+      <div ref={ref}>
+        <OuterElementContext.Provider value={otherProps}>
+          <VariableSizeList
+            itemData={allChildren}
+            height={getHeight() + 2 * LISTBOX_PADDING}
+            width="100%"
+            ref={gridRef}
+            outerElementType={OuterElementType}
+            innerElementType="ul"
+            itemSize={(index) => getChildSize(allChildren[index])}
+            overscanCount={5}
+            itemCount={itemCount}
+          >
+            {renderRow}
+          </VariableSizeList>
+        </OuterElementContext.Provider>
+      </div>
+    );
+  },
+);
 
 const LISTBOX_PADDING = 8;
 

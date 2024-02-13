@@ -1,33 +1,33 @@
-import About from './About';
-import Environments from './Environments';
-import Root from './Root';
-import Settings from './Settings';
-import CreateEnvironment from '../components/CreateEnvironment';
+import CreateEnvironment from "../components/CreateEnvironment";
+import About from "./About";
+import Environments from "./Environments";
+import Root from "./Root";
+import Settings from "./Settings";
 
 export const routes = [
   {
-    path: '/',
+    path: "/",
     element: <Root />,
     children: [
       {
-        path: 'about',
+        path: "about",
         element: <About />,
       },
       {
         index: true,
-        path: 'environments',
+        path: "environments",
         element: <Environments />,
       },
       {
-        path: 'create',
+        path: "create",
         element: <CreateEnvironment />,
       },
       {
-        path: 'settings',
+        path: "settings",
         element: <Settings />,
       },
       {
-        path: '',
+        path: "",
         element: <Environments />,
       },
     ],

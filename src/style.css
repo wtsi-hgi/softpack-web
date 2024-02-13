@@ -1,67 +1,67 @@
 .readme_copy {
-	display: grid;
-	grid-template-columns: auto 0em;
+  display: grid;
+  grid-template-columns: auto 0em;
 }
 
-.readme_copy>div {
-	overflow-y: hidden !important;
+.readme_copy > div {
+  overflow-y: hidden !important;
 }
 
 .readme_copy button {
-	margin: 1em -1.8em;
-	width: 1.5em;
-	height: 1.5em;
-	padding: 0;
-	border: 0;
-	background-color: transparent;
-	color: #fff;
-	cursor: pointer;
-	z-index: 1;
+  margin: 1em -1.8em;
+  width: 1.5em;
+  height: 1.5em;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1;
 }
 
-.readme_copy button>svg {
-	width: 0.75em;
-	height: 0.75em;
+.readme_copy button > svg {
+  width: 0.75em;
+  height: 0.75em;
 }
 
 .readme_copy button:active {
-	background-color: #aaa;
+  background-color: #aaa;
 }
 
-.breadcrumbs>nav {
-	padding-left: 0.5em;
+.breadcrumbs > nav {
+  padding-left: 0.5em;
 }
 
-.breadcrumbs>nav>ol {
-	padding-left: 0.5em;
+.breadcrumbs > nav > ol {
+  padding-left: 0.5em;
 }
 
-.breadcrumbs>nav>ol>li {
-	display: inline-block;
+.breadcrumbs > nav > ol > li {
+  display: inline-block;
 }
 
 #environment_table {
-	max-width: unset;
+  max-width: unset;
 }
 
 #about {
-	max-width: 40em;
+  max-width: 40em;
 }
 
 samp {
-	display: inline-block;
-	border: 1px solid #888;
-	padding: 2px;
-	margin: 1px;
-	background-color: #eee;
+  display: inline-block;
+  border: 1px solid #888;
+  padding: 2px;
+  margin: 1px;
+  background-color: #eee;
 }
 
 summary {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 #about pre {
-	border: 1px solid #888;
-	padding: 0.5em;
-	background-color: #eee;
+  border: 1px solid #888;
+  padding: 0.5em;
+  background-color: #eee;
 }

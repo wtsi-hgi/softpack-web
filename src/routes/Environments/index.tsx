@@ -1,7 +1,7 @@
 import EnvironmentList from "../../components/ViewEnvironments/EnvironmentList";
 
 const Environments = () => {
-  return <EnvironmentList/>
+  return <EnvironmentList />;
 };
 
 export default Environments;

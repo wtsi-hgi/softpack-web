@@ -1,9 +1,16 @@
 import {
-  Card, Box, Typography, Divider, CardContent, Grid, Alert,
+  Alert,
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
 } from "@mui/material";
-import PackageSelect from "../PackageSelect";
+
 import { Package } from "../../../queries";
 import MatchingEnvs from "../MatchingEnvs";
+import PackageSelect from "../PackageSelect";
 
 type PackageSettingsParams = {
   packages: Map<string, string[]>;
@@ -12,7 +19,7 @@ type PackageSettingsParams = {
   runEnvironmentBuild: () => void;
   envBuildInFlight: boolean;
   envBuildSuccessful: boolean;
-}
+};
 
 // PackageSettings is the card responsible for enabling the user to select the
 // specific packages to build the environment with.
@@ -38,7 +45,7 @@ function PackageSettings(props: PackageSettingsParams) {
       <CardContent sx={{ p: 4 }}>
         <Typography variant="subtitle2">
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
               <Box pr={3} pt={2}>
                 Packages:
               </Box>
@@ -54,25 +61,24 @@ function PackageSettings(props: PackageSettingsParams) {
             </Grid>
           </Grid>
         </Typography>
-        {/*<Alert 
-          severity='warning' 
+        {/*<Alert
+          severity='warning'
           sx={{m: '2% 0 2% 0'}}
         >
-          See below: you can use an already existing environment that matches 
+          See below: you can use an already existing environment that matches
           your criteria.
         </Alert>*/}
-        <Alert
-          severity='info'
-          sx={{ m: '2% 0 2% 0' }}
-        >
+        <Alert severity="info" sx={{ m: "2% 0 2% 0" }}>
           Packages come with the latest version by default. If you wish to
           change to an older version, click the package to select which one.
         </Alert>
-        {props.selectedPackages.length > 0 && <MatchingEnvs
-          selectedPackages={props.selectedPackages}
-          runEnvironmentBuild={props.runEnvironmentBuild}
-          envBuildInFlight={props.envBuildInFlight}
-          />}
+        {props.selectedPackages.length > 0 && (
+          <MatchingEnvs
+            selectedPackages={props.selectedPackages}
+            runEnvironmentBuild={props.runEnvironmentBuild}
+            envBuildInFlight={props.envBuildInFlight}
+          />
+        )}
       </CardContent>
     </Card>
   );
