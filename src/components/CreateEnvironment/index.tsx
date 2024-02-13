@@ -7,12 +7,15 @@ import { useState } from 'react';
 import { ALL_PACKAGES, CREATE_ENV } from '../../queries';
 import { PackageContext } from './PackageContext';
 import { PopUpDialog } from './PopUpDialog';
+import { useLocalStorage } from '@uidotdev/usehooks';
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
   const [envBuildError, setEnvBuildError] = useState("");
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
+  const [, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
+  const [, setOnlyMine] = useLocalStorage("environments-mine", false);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -30,6 +33,10 @@ export default function CreateEnvironment() {
     onCompleted: data => {
       if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
         setEnvBuildSuccessful(true);
+        // when the user next navigates to the Environments page, they should be
+        // presented with their currently-building environment.
+        setIgnoreReady(true);
+        setOnlyMine(true);
       } else {
         setEnvBuildError(data.createEnvironment.message);
       }
@@ -94,14 +101,14 @@ export default function CreateEnvironment() {
           />
         </PackageContext.Provider>
       </Grid>
-      
-        {envBuildSuccessful &&
-          <PopUpDialog
+
+      {envBuildSuccessful &&
+        <PopUpDialog
           title="Your environment was successfully scheduled!"
           message="It should appear in the environments list shortly, and will be usable once the indicator is green."
           onClose={() => setEnvBuildSuccessful(false)}
         />}
-      
+
       {envBuildError &&
         <PopUpDialog title="Environment build failed" message={envBuildError} onClose={() => setEnvBuildError("")} />}
     </Grid>

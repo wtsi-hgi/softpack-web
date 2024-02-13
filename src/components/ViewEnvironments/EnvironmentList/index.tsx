@@ -1,4 +1,4 @@
-import { Box, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { humanize } from "../../../humanize";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -20,8 +21,9 @@ const EnvironmentList = () => {
 	const [filter, setFilter] = useState("");
 	const client = useApolloClient();
 	const [refetchInterval, setRefetchInterval] = useState(SECOND);
-	const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
 	const [byUserGroup, setByUserGroup] = useLocalStorage("environments-byusergroup", false);
+	const [ignoreReady, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
+	const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
 	const { username, groups } = useContext(UserContext);
 	const [sectionExpanded, setSectionExpanded] = useState<Record<string, boolean>>({});
 
@@ -49,6 +51,10 @@ const EnvironmentList = () => {
 		)
 	}
 
+	const environmentsInProgress = data.environments.filter(e => e.state == "queued");
+
+	const avgWaitSecs = data.environments.find(e => e.avgWaitSecs != null)?.avgWaitSecs
+
 	let filteredEnvironments = data.environments.toSorted((a, b) => compareStrings(a.name, b.name));
 
 	if (filter) {
@@ -61,6 +67,10 @@ const EnvironmentList = () => {
 				e.path.toLowerCase().split("/").pop()?.includes(part) ||
 				e.packages.some(pkg => pkg.name.toLowerCase().includes(name) && (!version || pkg.version?.toLowerCase().startsWith(version)));
 		}));
+	}
+
+	if (ignoreReady) {
+		filteredEnvironments = filteredEnvironments.filter(e => e.state !== "ready")
 	}
 
 	if (onlyMine && groups.length > 0) {
@@ -99,6 +109,13 @@ const EnvironmentList = () => {
 					checked={byUserGroup}
 					onChange={e => setByUserGroup((e.target as any).checked)}
 				/>
+				<FormControlLabel
+					control={<Checkbox />}
+					label={<>Building <HelpIcon title="Only show queued/failed environments" /></>}
+					disableTypography
+					checked={ignoreReady}
+					onChange={e => setIgnoreReady((e.target as any).checked)}
+				/>
 				{groups.length > 0 && <FormControlLabel
 					control={<Checkbox />}
 					label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
@@ -107,6 +124,12 @@ const EnvironmentList = () => {
 					onChange={e => setOnlyMine((e.target as any).checked)}
 				/>}
 			</FormGroup>
+			{filteredEnvironments.some(e => e.state === "queued") || ignoreReady ? <Alert severity="info">
+				There are currently {environmentsInProgress.length} environments in the build queue.
+				Average wait time: {avgWaitSecs != null
+					? humanize(avgWaitSecs * 1000)
+					: "unknown"}.
+			</Alert> : null}
 		</Box>
 		<Container id="environment_table">
 			{byUserGroup && <>{allCollapsed ? "Collapse" : <Link
