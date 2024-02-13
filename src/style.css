@@ -33,7 +33,6 @@
 }
 
 .breadcrumbs>nav>ol {
-	display: inline-block;
 	padding-left: 0.5em;
 }
 
@@ -41,22 +40,8 @@
 	display: inline-block;
 }
 
-.breadcrumbs>nav:before {
-	content: "-";
-}
-
 #environment_table {
-	columns: 40em auto;
-	column-gap: 1.5em;
 	max-width: unset;
-}
-
-#environment_table>div {
-	width: 38em;
-	margin: 0 auto 1.5em auto;
-	break-inside: avoid;
-	will-change: opacity;
-	box-shadow: 0px 9px 16px rgba(159, 162, 191, .18), 0px 2px 2px rgba(159, 162, 191, 0.32);
 }
 
 #about {
@@ -69,6 +54,10 @@ samp {
 	padding: 2px;
 	margin: 1px;
 	background-color: #eee;
+}
+
+summary {
+	cursor: pointer;
 }
 
 #about pre {

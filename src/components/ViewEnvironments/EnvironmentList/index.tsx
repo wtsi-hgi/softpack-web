@@ -1,12 +1,18 @@
-import { Container, InputAdornment, TextField, Tooltip } from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Box, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { HelpIcon } from "../../HelpIcon";
+import { UserContext } from "../../UserContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
+
+function compareStrings(a: string, b: string) {
+	return a.localeCompare(b, "en", { sensitivity: "base" })
+}
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
@@ -14,6 +20,10 @@ const EnvironmentList = () => {
 	const [filter, setFilter] = useState("");
 	const client = useApolloClient();
 	const [refetchInterval, setRefetchInterval] = useState(SECOND);
+	const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
+	const [byUserGroup, setByUserGroup] = useLocalStorage("environments-byusergroup", false);
+	const { username, groups } = useContext(UserContext);
+	const [sectionExpanded, setSectionExpanded] = useState<Record<string, boolean>>({});
 
 	useEffect(() => {
 		let interval = setInterval(() => {
@@ -39,7 +49,7 @@ const EnvironmentList = () => {
 		)
 	}
 
-	let filteredEnvironments = data.environments;
+	let filteredEnvironments = data.environments.toSorted((a, b) => compareStrings(a.name, b.name));
 
 	if (filter) {
 		const parts = filter.toLowerCase().split(" ");
@@ -53,31 +63,81 @@ const EnvironmentList = () => {
 		}));
 	}
 
+	if (onlyMine && groups.length > 0) {
+		filteredEnvironments = filteredEnvironments.filter(e => e.path === `users/${username}` || groups.some(g => e.path === `groups/${g}`))
+	}
+
+	const environmentsByOwner = Object.entries(filteredEnvironments.reduce((acc, env) => {
+		acc[env.path] = [...acc[env.path] ?? [], env];
+		return acc;
+	}, {} as Record<string, typeof filteredEnvironments>));
+
+	const allExpanded = Object.values(sectionExpanded).every(x => x === true);
+	const allCollapsed = Object.values(sectionExpanded).every(x => x === false);
+
 	return <>
-		<TextField
-			id='name-field'
-			variant='standard'
-			placeholder="Search for Environments"
-			style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
-			onChange={e => setFilter(e.target.value)}
-			InputProps={{
-				endAdornment: (
-					<InputAdornment position="end">
-						<Tooltip title={"Filter by space-delineated list of packages"}>
-							<HelpOutlineIcon
-								sx={{
-									color: 'rgba(34, 51, 84, 0.7)',
-									padding: '0 0 0 8px',
-									fontSize: '25px'
-								}}
-							/>
-						</Tooltip>
-					</InputAdornment>
-				),
-			}}>
-		</TextField>
+		<Box style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}>
+			<TextField
+				id='name-field'
+				variant='standard'
+				placeholder="Search for Environments"
+				style={{ width: "100%" }}
+				onChange={e => setFilter(e.target.value)}
+				InputProps={{
+					endAdornment: (
+						<InputAdornment position="end">
+							<HelpIcon title={"Filter by space-delineated list of packages"} />
+						</InputAdornment>
+					),
+				}}>
+			</TextField>
+			<FormGroup row>
+				<FormControlLabel
+					control={<Checkbox />}
+					label={<>By user/group <HelpIcon title="List each user/group's environments separately" /></>}
+					disableTypography
+					checked={byUserGroup}
+					onChange={e => setByUserGroup((e.target as any).checked)}
+				/>
+				{groups.length > 0 && <FormControlLabel
+					control={<Checkbox />}
+					label={<>Mine <HelpIcon title="Environments owned by you or one of your groups" /></>}
+					disableTypography
+					checked={onlyMine}
+					onChange={e => setOnlyMine((e.target as any).checked)}
+				/>}
+			</FormGroup>
+		</Box>
 		<Container id="environment_table">
-			<EnvironmentTable environments={filteredEnvironments} />
+			{byUserGroup && <>{allCollapsed ? "Collapse" : <Link
+				component="button"
+				variant="body2"
+				sx={{ verticalAlign: "baseline" }}
+				onClick={() => {
+					setSectionExpanded(Object.fromEntries(Object.keys(sectionExpanded).map(k => [k, false])))
+				}}
+			>Collapse</Link>} / {allExpanded ? "Expand" : <Link
+				component="button"
+				variant="body2"
+				sx={{ verticalAlign: "baseline" }}
+				onClick={() => {
+					setSectionExpanded(Object.fromEntries(Object.keys(sectionExpanded).map(k => [k, true])))
+				}}
+			>Expand</Link>} all</>}
+			{byUserGroup
+				? environmentsByOwner.toSorted(([a,], [b,]) => compareStrings(a, b)).map(([name, envs]) =>
+					<details
+						key={name}
+						open={sectionExpanded[name] ?? (sectionExpanded[name] = false)}
+						onToggle={e => setSectionExpanded({...sectionExpanded, [name]: (e.target as any).open})}
+					>
+						<summary>
+							<Typography variant="h4" pl={1} pb={1} sx={{ display: "inline-block" }}>{name}</Typography>
+						</summary>
+						<EnvironmentTable environments={envs} />
+					</details>
+				)
+				: <EnvironmentTable environments={filteredEnvironments} />}
 		</Container>
 	</>
 }

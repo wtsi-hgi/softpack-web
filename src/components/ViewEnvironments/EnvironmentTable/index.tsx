@@ -2,6 +2,7 @@ import type { Environment, Environments, States } from "../../../queries";
 import { Box, Chip, LinearProgress, Tooltip, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
+import { Masonry } from "@mui/lab";
 
 type State = {
   colour: string;
@@ -27,7 +28,7 @@ function EnvironmentTable({ environments }: Environments) {
   const [drawer, setDrawer] = useState<Environment | null>(null);
 
   return (
-    <>
+    <Masonry columns={{ sm: 1, md: 2, lg: 2, xl: 3 }} spacing={2}>
       {environments.map(env => <Fragment key={`${env.path}/${env.name}`}>
         <Box
           onClick={() => setDrawer(env)}
@@ -37,6 +38,10 @@ function EnvironmentTable({ environments }: Environments) {
             padding: '1em',
             position: 'relative',
             cursor: "pointer",
+            margin: "0 auto 1.5em auto",
+            breakInside: "avoid",
+            willChange: "opacity",
+            boxShadow: "0px 9px 16px rgba(159, 162, 191, .18), 0px 2px 2px rgba(159, 162, 191, 0.32)",
           }}>
           <Tooltip title={states[env.state ?? "queued"].message} placement="top">
             <Box
@@ -60,7 +65,7 @@ function EnvironmentTable({ environments }: Environments) {
               display: 'flex',
               alignItems: 'baseline'
             }}>
-              <Typography variant='h3'>{env.name}
+              <Typography variant='h3' sx={{ wordBreak: "break-all" }}>{env.name}
               </Typography>
 
               <Typography variant='h4' style={{ whiteSpace: "nowrap" }} className="breadcrumbs">
@@ -100,7 +105,7 @@ function EnvironmentTable({ environments }: Environments) {
           />
         }
       </Fragment>)}
-    </>
+    </Masonry>
   );
 }
 
