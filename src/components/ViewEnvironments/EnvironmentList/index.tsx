@@ -1,4 +1,4 @@
-import { Box, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Checkbox, Container, FormControlLabel, FormGroup, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { useApolloClient, useQuery } from "@apollo/client";
 import EnvironmentTable from "../EnvironmentTable";
 import { ALL_ENVIRONMENTS } from "../../../queries";
@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { humanize } from "../../../humanize";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -49,6 +50,10 @@ const EnvironmentList = () => {
 			</div>
 		)
 	}
+
+	const environmentsInProgress = data.environments.filter(e => e.state == "queued");
+
+	const avgWaitSecs = data.environments.find(e => e.avgWaitSecs != null)?.avgWaitSecs
 
 	let filteredEnvironments = data.environments.toSorted((a, b) => compareStrings(a.name, b.name));
 
@@ -119,6 +124,12 @@ const EnvironmentList = () => {
 					onChange={e => setOnlyMine((e.target as any).checked)}
 				/>}
 			</FormGroup>
+			{filteredEnvironments.some(e => e.state === "queued") || ignoreReady ? <Alert severity="info">
+				There are currently {environmentsInProgress.length} environments in the build queue.
+				Average wait time: {avgWaitSecs != null
+					? humanize(avgWaitSecs * 1000)
+					: "unknown"}.
+			</Alert> : null}
 		</Box>
 		<Container id="environment_table">
 			{byUserGroup && <>{allCollapsed ? "Collapse" : <Link

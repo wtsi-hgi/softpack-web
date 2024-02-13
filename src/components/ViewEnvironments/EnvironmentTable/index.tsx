@@ -1,8 +1,9 @@
 import type { Environment, Environments, States } from "../../../queries";
-import { Box, Chip, LinearProgress, Tooltip, Typography } from "@mui/material";
+import { Alert, Box, Chip, LinearProgress, Tooltip, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 import { Masonry } from "@mui/lab";
+import { humanize } from "../../../humanize";
 
 type State = {
   colour: string;
@@ -95,7 +96,11 @@ function EnvironmentTable({ environments }: Environments) {
             </Box>
             {env.state === "queued" && <Box sx={{ paddingTop: "8px" }}>
               <LinearProgress />
-              </Box>}
+              <Alert severity="info" icon={false}>
+                Queued: {humanize((env.buildStart ? Date.parse(env.buildStart) : Date.now()) - Date.parse(env.requested))}
+                {env.buildStart ? <>; Building: {humanize((env.buildDone ? Date.parse(env.buildDone) : Date.now()) - Date.parse(env.buildStart))}</> : null}
+              </Alert>
+            </Box>}
           </Box>
         </Box>
         {
