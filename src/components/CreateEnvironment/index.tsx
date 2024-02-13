@@ -15,7 +15,7 @@ export default function CreateEnvironment() {
   const [envBuildError, setEnvBuildError] = useState("");
   const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
   const [, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
-	const [, setOnlyMine] = useLocalStorage("environments-mine", false);
+  const [, setOnlyMine] = useLocalStorage("environments-mine", false);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -101,14 +101,14 @@ export default function CreateEnvironment() {
           />
         </PackageContext.Provider>
       </Grid>
-      
-        {envBuildSuccessful &&
-          <PopUpDialog
+
+      {envBuildSuccessful &&
+        <PopUpDialog
           title="Your environment was successfully scheduled!"
           message="It should appear in the environments list shortly, and will be usable once the indicator is green."
           onClose={() => setEnvBuildSuccessful(false)}
         />}
-      
+
       {envBuildError &&
         <PopUpDialog title="Environment build failed" message={envBuildError} onClose={() => setEnvBuildError("")} />}
     </Grid>
