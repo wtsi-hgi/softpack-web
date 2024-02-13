@@ -1,20 +1,12 @@
 import { gql } from "./__generated__/gql"
+import type { Environment } from "./__generated__/graphql"
+export type { Environment } from "./__generated__/graphql"
 
 export type Environments = {
   environments: Environment[];
 }
 
 export type States = "queued" | "ready" | "failed";
-
-export type Environment = {
-  description: string;
-  name: string;
-  packages: Package[];
-  readme: string;
-  path: string;
-  type: "softpack" | "module";
-  state?: States | null;
-}
 
 export type Package = {
   name: string;

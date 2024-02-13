@@ -20,8 +20,9 @@ const EnvironmentList = () => {
 	const [filter, setFilter] = useState("");
 	const client = useApolloClient();
 	const [refetchInterval, setRefetchInterval] = useState(SECOND);
-	const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
 	const [byUserGroup, setByUserGroup] = useLocalStorage("environments-byusergroup", false);
+	const [ignoreReady, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
+	const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
 	const { username, groups } = useContext(UserContext);
 	const [sectionExpanded, setSectionExpanded] = useState<Record<string, boolean>>({});
 
@@ -63,6 +64,10 @@ const EnvironmentList = () => {
 		}));
 	}
 
+	if (ignoreReady) {
+		filteredEnvironments = filteredEnvironments.filter(e => e.state !== "ready")
+	}
+
 	if (onlyMine && groups.length > 0) {
 		filteredEnvironments = filteredEnvironments.filter(e => e.path === `users/${username}` || groups.some(g => e.path === `groups/${g}`))
 	}
@@ -98,6 +103,13 @@ const EnvironmentList = () => {
 					disableTypography
 					checked={byUserGroup}
 					onChange={e => setByUserGroup((e.target as any).checked)}
+				/>
+				<FormControlLabel
+					control={<Checkbox />}
+					label={<>Building <HelpIcon title="Only show queued/failed environments" /></>}
+					disableTypography
+					checked={ignoreReady}
+					onChange={e => setIgnoreReady((e.target as any).checked)}
 				/>
 				{groups.length > 0 && <FormControlLabel
 					control={<Checkbox />}

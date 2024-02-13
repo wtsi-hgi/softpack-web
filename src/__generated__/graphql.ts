@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** Date with time (isoformat) */
+  DateTime: { input: any; output: any; }
   Upload: { input: any; output: any; }
 };
 
@@ -38,12 +40,16 @@ export type DeleteResponse = DeleteEnvironmentSuccess | EnvironmentNotFoundError
 
 export type Environment = {
   __typename?: 'Environment';
+  avgWaitSecs?: Maybe<Scalars['Float']['output']>;
+  buildDone?: Maybe<Scalars['DateTime']['output']>;
+  buildStart?: Maybe<Scalars['DateTime']['output']>;
   description: Scalars['String']['output'];
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   packages: Array<Package>;
   path: Scalars['String']['output'];
   readme: Scalars['String']['output'];
+  requested?: Maybe<Scalars['DateTime']['output']>;
   state?: Maybe<State>;
   type: Type;
 };
