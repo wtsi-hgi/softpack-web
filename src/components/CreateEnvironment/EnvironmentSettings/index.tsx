@@ -1,22 +1,20 @@
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
-  Card,
   Box,
-  Typography,
-  Divider,
+  Card,
   CardContent,
-  Grid,
-  TextField,
-  InputAdornment,
-  Tooltip,
+  Divider,
   FormControl,
+  Grid,
+  InputAdornment,
+  MenuItem,
   Select,
-  MenuItem
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useContext, useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { GROUPS } from "../../../queries";
+
 import { UserContext } from "../../UserContext";
 
 type EnvironmentSettingsProps = {
@@ -26,7 +24,7 @@ type EnvironmentSettingsProps = {
   setDescription: (description: string) => void;
   path: string;
   setPath: (path: string) => void;
-}
+};
 
 // EnvironmentSettings is the card responsible for the environment settings
 // available to a user when creating a new environment. E.g. Name, Description,
@@ -54,65 +52,72 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
       <CardContent sx={{ p: 4 }}>
         <Typography variant="subtitle2">
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
                 Name:
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
               <TextField
-                id='name-field'
-                variant='standard'
+                id="name-field"
+                variant="standard"
                 value={props.name}
-                onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
+                onChange={(e) =>
+                  props.setName((e.target as HTMLInputElement).value)
+                }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title={"Choose a name for your environment"}>
                         <HelpOutlineIcon
                           sx={{
-                            color: 'rgba(34, 51, 84, 0.7)',
-                            padding: '0 0 0 8px',
-                            fontSize: '25px'
+                            color: "rgba(34, 51, 84, 0.7)",
+                            padding: "0 0 0 8px",
+                            fontSize: "25px",
                           }}
                         />
                       </Tooltip>
                     </InputAdornment>
                   ),
-                }}>
-              </TextField>
+                }}
+              ></TextField>
             </Grid>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
                 Description:
               </Box>
             </Grid>
             <Grid item xs={12} sm={8} md={9} pb={3}>
               <TextField
-                id='description-field'
+                id="description-field"
                 multiline
-                sx={{ width: '75%' }}
+                sx={{ width: "75%" }}
                 value={props.description}
-                onChange={(e) => props.setDescription((e.target as HTMLInputElement).value)}
-                variant='standard'
+                onChange={(e) =>
+                  props.setDescription((e.target as HTMLInputElement).value)
+                }
+                variant="standard"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <Tooltip title={"Describe the purpose of your environment"}>
+                      <Tooltip
+                        title={"Describe the purpose of your environment"}
+                      >
                         <HelpOutlineIcon
                           sx={{
-                            color: 'rgba(34, 51, 84, 0.7)',
-                            padding: '0 0 0 8px',
-                            fontSize: '25px'
+                            color: "rgba(34, 51, 84, 0.7)",
+                            padding: "0 0 0 8px",
+                            fontSize: "25px",
                           }}
                         />
                       </Tooltip>
                     </InputAdornment>
                   ),
-                }}></TextField>
+                }}
+              ></TextField>
             </Grid>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-              <Box pr={3} pb={3} display='flex' justifyContent='flex-end'>
+            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
                 Folder:
               </Box>
             </Grid>
@@ -126,12 +131,24 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
                     props.setPath(e.target.value);
                   }}
                 >
-                  {username
-                    ? (groups?.length ?? 0) > 0
-                      ? <MenuItem value={`users/${username}`}>users/{username}</MenuItem>
-                      : <MenuItem disabled>Invalid username</MenuItem>
-                    : <MenuItem disabled>Enter your username in the top-right</MenuItem>}
-                  {groups.map(name => <MenuItem key={name} value={`groups/${name}`}>groups/{name}</MenuItem>)}
+                  {username ? (
+                    (groups?.length ?? 0) > 0 ? (
+                      <MenuItem value={`users/${username}`}>
+                        users/{username}
+                      </MenuItem>
+                    ) : (
+                      <MenuItem disabled>Invalid username</MenuItem>
+                    )
+                  ) : (
+                    <MenuItem disabled>
+                      Enter your username in the top-right
+                    </MenuItem>
+                  )}
+                  {groups.map((name) => (
+                    <MenuItem key={name} value={`groups/${name}`}>
+                      groups/{name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -142,4 +159,4 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
   );
 }
 
-export default EnvironmentSettings
+export default EnvironmentSettings;

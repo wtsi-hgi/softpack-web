@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext } from 'react';
+import { Dispatch, SetStateAction, createContext } from "react";
 
 // PackageContext is the context responsible for the package selecting that goes
 // on when a user is trying to create a new environment. This warrants a
@@ -10,10 +10,11 @@ interface PackageContextValue {
 }
 
 const defaultPackage: PackageContextValue = {
-  testPackages: [''],
+  testPackages: [""],
   setTestPackages: function (_value: SetStateAction<string[]>): void {
-    throw new Error('Function not implemented.');
-  }
-}
+    throw new Error("Function not implemented.");
+  },
+};
 
-export const PackageContext = createContext<PackageContextValue>(defaultPackage);
+export const PackageContext =
+  createContext<PackageContextValue>(defaultPackage);

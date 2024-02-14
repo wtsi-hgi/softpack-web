@@ -1,0 +1,24 @@
+exclude: "/__generated__/"
+repos:
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.4.2
+    hooks:
+      - id: forbid-crlf
+      - id: remove-crlf
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-yaml
+        args: [--unsafe]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - "prettier@3.1.0"
+          - "@trivago/prettier-plugin-sort-imports@4.3.0"
+        # Versions of Node >16 are not available for Ubuntu 18.04.
+        language_version: 16.20.2

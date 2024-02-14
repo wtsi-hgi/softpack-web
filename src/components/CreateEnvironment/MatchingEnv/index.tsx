@@ -1,14 +1,21 @@
-import { TableRow, TableCell, IconButton, Collapse, Box, Typography, } from "@mui/material";
-import { useState, Fragment } from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {
+  Box,
+  Collapse,
+  IconButton,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { Fragment, useState } from "react";
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Environment, Package } from "../../../queries";
 
 type EnvRowParams = {
   environment: Environment;
   selectedPackages: Package[];
-}
+};
 
 // MatchingEnv displays a single row of the "matching environments" table.
 function MatchingEnv(props: EnvRowParams) {
@@ -16,17 +23,23 @@ function MatchingEnv(props: EnvRowParams) {
 
   const matchingPackages: Package[] = [];
   const nonmatchingPackages: Package[] = [];
-  props.environment.packages.forEach(envPkg => {
-    if (props.selectedPackages.some(pkg => pkg.name === envPkg.name && (!pkg.version || pkg.version === envPkg.version))) {
+  props.environment.packages.forEach((envPkg) => {
+    if (
+      props.selectedPackages.some(
+        (pkg) =>
+          pkg.name === envPkg.name &&
+          (!pkg.version || pkg.version === envPkg.version),
+      )
+    ) {
       matchingPackages.push(envPkg);
     } else {
       nonmatchingPackages.push(envPkg);
     }
-  })
+  });
 
   return (
     <Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -40,24 +53,36 @@ function MatchingEnv(props: EnvRowParams) {
           {props.environment.path}/{props.environment.name}
         </TableCell>
         <TableCell component="th" scope="row" sx={{ whiteSpace: "pre-line" }}>
-          {props.environment.description.split("The following executables are added to your PATH")[0]}
+          {
+            props.environment.description.split(
+              "The following executables are added to your PATH",
+            )[0]
+          }
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            {nonmatchingPackages.length > 0 && <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Non-matching Packages
-              </Typography>
-              {nonmatchingPackages.map(pkg => `${pkg.name} (${pkg.version ?? "latest"})`).join(", ")}
-            </Box>}
-            {matchingPackages.length > 0 && <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Matching Packages
-              </Typography>
-              {matchingPackages.map(pkg => `${pkg.name} (${pkg.version ?? "latest"})`).join(", ")}
-            </Box>}
+            {nonmatchingPackages.length > 0 && (
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Non-matching Packages
+                </Typography>
+                {nonmatchingPackages
+                  .map((pkg) => `${pkg.name} (${pkg.version ?? "latest"})`)
+                  .join(", ")}
+              </Box>
+            )}
+            {matchingPackages.length > 0 && (
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Matching Packages
+                </Typography>
+                {matchingPackages
+                  .map((pkg) => `${pkg.name} (${pkg.version ?? "latest"})`)
+                  .join(", ")}
+              </Box>
+            )}
           </Collapse>
         </TableCell>
       </TableRow>
@@ -65,4 +90,4 @@ function MatchingEnv(props: EnvRowParams) {
   );
 }
 
-export default MatchingEnv
+export default MatchingEnv;
