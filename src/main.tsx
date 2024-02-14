@@ -13,7 +13,7 @@ const client = new ApolloClient({
     window.location.protocol +
     "//" +
     window.location.hostname +
-    ":8000/graphql",
+    `:${import.meta.env.VITE_CORE_PORT ?? 8000}/graphql`,
   cache: new InMemoryCache(),
 });
 
