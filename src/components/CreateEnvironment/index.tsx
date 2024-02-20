@@ -13,8 +13,10 @@ import { PopUpDialog } from "./PopUpDialog";
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
-  const [envBuildError, setEnvBuildError] = useState("");
-  const [envBuildSuccessful, setEnvBuildSuccessful] = useState(false);
+  const [envBuildResult, setEnvBuildResult] = useState({
+    title: "",
+    message: "",
+  });
   const [, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
   const [, setOnlyMine] = useLocalStorage("environments-mine", false);
 
@@ -37,20 +39,36 @@ export default function CreateEnvironment() {
       // an environment name already existing.
       onCompleted: (data) => {
         if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
-          setEnvBuildSuccessful(true);
+          setEnvBuildResult({
+            title: "Your environment was successfully scheduled!",
+            message:
+              "It should appear in the environments list shortly, and will be usable once the indicator is green.",
+          });
           // when the user next navigates to the Environments page, they should be
           // presented with their currently-building environment.
           setIgnoreReady(true);
           setOnlyMine(true);
+        } else if (data.createEnvironment.__typename === "BuilderError") {
+          setEnvBuildResult({
+            title: "Your environment was queued",
+            message:
+              "The build service is currently unavailable. The environment will start to build once it returns.",
+          });
         } else {
-          setEnvBuildError(data.createEnvironment.message);
+          setEnvBuildResult({
+            title: "Environment build failed",
+            message: data.createEnvironment.message,
+          });
         }
       },
       // onError looks at GraphQL errors specifically.
       onError: (error) => {
         const messages = error.graphQLErrors[0].message;
         console.log("GraphQL ERROR: ", messages);
-        setEnvBuildError(messages);
+        setEnvBuildResult({
+          title: "Environment build failed",
+          message: messages,
+        });
       },
     },
   );
@@ -99,24 +117,15 @@ export default function CreateEnvironment() {
             setSelectedPackages={setSelectedPackages}
             runEnvironmentBuild={runEnvironmentBuild}
             envBuildInFlight={envBuildInFlight}
-            envBuildSuccessful={envBuildSuccessful}
           />
         </PackageContext.Provider>
       </Grid>
 
-      {envBuildSuccessful && (
+      {envBuildResult.title !== "" && (
         <PopUpDialog
-          title="Your environment was successfully scheduled!"
-          message="It should appear in the environments list shortly, and will be usable once the indicator is green."
-          onClose={() => setEnvBuildSuccessful(false)}
-        />
-      )}
-
-      {envBuildError && (
-        <PopUpDialog
-          title="Environment build failed"
-          message={envBuildError}
-          onClose={() => setEnvBuildError("")}
+          title={envBuildResult.title}
+          message={envBuildResult.message}
+          onClose={() => setEnvBuildResult({ title: "", message: "" })}
         />
       )}
     </Grid>

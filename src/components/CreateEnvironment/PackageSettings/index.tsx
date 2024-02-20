@@ -18,7 +18,6 @@ type PackageSettingsParams = {
   setSelectedPackages: (packages: Package[]) => void;
   runEnvironmentBuild: () => void;
   envBuildInFlight: boolean;
-  envBuildSuccessful: boolean;
 };
 
 // PackageSettings is the card responsible for enabling the user to select the
