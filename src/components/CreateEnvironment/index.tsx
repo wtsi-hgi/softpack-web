@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Grid } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useState } from "react";
 
@@ -7,7 +16,7 @@ import type { Package } from "../../queries";
 import { ALL_PACKAGES, CREATE_ENV } from "../../queries";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
-import PackageSettings from "./PackageSettings";
+import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 
 // CreateEnvironment displays the 'create environment' page.
@@ -95,30 +104,55 @@ export default function CreateEnvironment() {
       spacing={3}
     >
       <Grid item xs={11}>
-        <EnvironmentSettings
-          name={name}
-          setName={setName}
-          description={description}
-          setDescription={setDescription}
-          path={path}
-          setPath={setPath}
-        />
-      </Grid>
-      <Grid item xs={11}>
-        {/* Some stuff is being passed as props, even though I am wrapping
-         component in context, because the thing in context (selected
-         packages) and the props are different; they operate across different
-         components and at different levels, therefore, they warrant different
-         methods of passing, in my opinion. */}
-        <PackageContext.Provider value={{ testPackages, setTestPackages }}>
-          <PackageSettings
-            packages={packages}
-            selectedPackages={selectedPackages}
-            setSelectedPackages={setSelectedPackages}
-            runEnvironmentBuild={runEnvironmentBuild}
-            envBuildInFlight={envBuildInFlight}
-          />
-        </PackageContext.Provider>
+        <Card>
+          <Box p={2}>
+            <Typography variant="h4">Environment Settings</Typography>
+          </Box>
+          <Divider />
+          <CardContent sx={{ p: 4 }}>
+            <Typography variant="subtitle2">
+              <EnvironmentSettings
+                name={name}
+                setName={setName}
+                description={description}
+                setDescription={setDescription}
+                path={path}
+                setPath={setPath}
+              />
+              <PackageContext.Provider
+                value={{ testPackages, setTestPackages }}
+              >
+                <PackageMatcher
+                  packages={packages}
+                  selectedPackages={selectedPackages}
+                  setSelectedPackages={setSelectedPackages}
+                  runEnvironmentBuild={runEnvironmentBuild}
+                  envBuildInFlight={envBuildInFlight}
+                />
+              </PackageContext.Provider>
+            </Typography>
+            <Box>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                disabled={
+                  envBuildInFlight ||
+                  name.length === 0 ||
+                  description.length === 0 ||
+                  path.length === 0 ||
+                  selectedPackages.length === 0
+                }
+                onClick={runEnvironmentBuild}
+                sx={{
+                  float: "right",
+                  mb: "2%",
+                }}
+              >
+                Create
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       </Grid>
 
       {envBuildResult.title !== "" && (

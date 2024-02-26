@@ -19,6 +19,13 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type AddTagResponse = AddTagSuccess | EnvironmentNotFoundError | InvalidInputError;
+
+export type AddTagSuccess = Success & {
+  __typename?: 'AddTagSuccess';
+  message: Scalars['String']['output'];
+};
+
 export type BuilderError = Error & {
   __typename?: 'BuilderError';
   message: Scalars['String']['output'];
@@ -51,6 +58,7 @@ export type Environment = {
   readme: Scalars['String']['output'];
   requested?: Maybe<Scalars['DateTime']['output']>;
   state?: Maybe<State>;
+  tags: Array<Scalars['String']['output']>;
   type: Type;
 };
 
@@ -108,10 +116,18 @@ export type PackageMultiVersion = {
 
 export type SchemaMutation = {
   __typename?: 'SchemaMutation';
+  addTag: AddTagResponse;
   createEnvironment: CreateResponse;
   createFromModule: CreateResponse;
   deleteEnvironment: DeleteResponse;
   updateFromModule: UpdateResponse;
+};
+
+
+export type SchemaMutationAddTagArgs = {
+  name: Scalars['String']['input'];
+  path: Scalars['String']['input'];
+  tag: Scalars['String']['input'];
 };
 
 

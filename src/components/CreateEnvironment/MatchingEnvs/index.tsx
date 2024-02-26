@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
-import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
-  Button,
   Paper,
   Table,
   TableBody,
@@ -81,20 +79,6 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
           </Typography>
         </>
       ) : null}
-      <Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          disabled={props.envBuildInFlight}
-          onClick={props.runEnvironmentBuild}
-          sx={{
-            float: "right",
-            mb: "2%",
-          }}
-        >
-          Create
-        </Button>
-      </Box>
     </>
   );
 }
