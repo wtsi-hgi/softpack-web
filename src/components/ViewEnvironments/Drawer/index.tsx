@@ -13,6 +13,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import { Environment } from "../../../queries";
+import { EnvironmentTags } from "../EnvironmentTags";
 
 type DrawerParams = {
   env: Environment;
@@ -49,6 +50,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
         >
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
+          <EnvironmentTags tags={env.tags} />
         </Box>
         {env.readme ? (
           <>

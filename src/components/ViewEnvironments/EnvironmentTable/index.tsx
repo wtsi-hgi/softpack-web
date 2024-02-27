@@ -4,6 +4,7 @@ import {
   Box,
   Chip,
   LinearProgress,
+  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -12,6 +13,7 @@ import { Fragment, useState } from "react";
 import { humanize } from "../../../humanize";
 import type { Environment, Environments, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
+import { EnvironmentTags } from "../EnvironmentTags";
 
 type State = {
   colour: string;
@@ -114,6 +116,7 @@ function EnvironmentTable({ environments }: { environments: Environments }) {
                   {breadcrumbs(env.path)}
                 </Typography>
               </Box>
+              <EnvironmentTags tags={env.tags} />
               <Typography sx={{ padding: "9px 0" }}>
                 {env.description.split("\n")[0]}
               </Typography>
