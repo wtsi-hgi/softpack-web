@@ -6,6 +6,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  createFilterOptions,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 
@@ -25,6 +26,15 @@ type EnvironmentSettingsProps = {
   setPath: (path: string) => void;
 };
 
+function isValidTag(tag: string): boolean {
+  // this logic copied from softpack-core environment.py
+  return !!(
+    tag === tag.trim() &&
+    tag.match(/^[a-zA-Z0-9 ._-]+$/) &&
+    !tag.match(/\s\s/)
+  );
+}
+
 // EnvironmentSettings is the card responsible for the environment settings
 // available to a user when creating a new environment. E.g. Name, Description,
 // etc.
@@ -36,11 +46,25 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
     props.setPath("");
   }, [username]);
 
-  const allTags = new Set([...props.availableTags, ...props.tags]);
-  const tagOptions: (string | { label: string; value: string })[] =
-    Array.from(allTags).toSorted(compareStrings);
-  if (tagInput && tagOptions.indexOf(tagInput) < 0) {
-    tagOptions.unshift({ label: `Add "${tagInput}"`, value: tagInput });
+  const allTags = new Set([
+    ...props.availableTags,
+    ...props.tags.filter(isValidTag),
+  ]);
+  const tagOptions: (
+    | string
+    | { label: string; value: string; origValue: string }
+  )[] = Array.from(allTags).toSorted(compareStrings);
+  const trimmedTagInput = tagInput.trim(); // do a certain amount of auto-correcting
+  if (
+    tagOptions.indexOf(trimmedTagInput) < 0 &&
+    trimmedTagInput.length > 0 &&
+    isValidTag(trimmedTagInput) // but not too much
+  ) {
+    tagOptions.unshift({
+      label: `Add "${trimmedTagInput}"`,
+      value: trimmedTagInput,
+      origValue: tagInput,
+    });
   }
 
   return (
@@ -87,14 +111,18 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
         <Box sx={{ width: "75%" }}>
           <Autocomplete
             multiple
-            freeSolo
+            openOnFocus
             options={tagOptions}
+            filterOptions={createFilterOptions({
+              stringify: (option) =>
+                typeof option === "string" ? option : option.origValue,
+            })}
             value={props.tags}
             onChange={(_, value) =>
               props.setTags(
-                value.map((elem) =>
-                  typeof elem === "string" ? elem : elem.value,
-                ),
+                value
+                  .map((elem) => (typeof elem === "string" ? elem : elem.value))
+                  .filter(isValidTag),
               )
             }
             inputValue={tagInput}

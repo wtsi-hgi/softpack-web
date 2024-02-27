@@ -51,6 +51,7 @@ export default function PackageSelect(props: PackageSelectParams) {
     <Box>
       <Autocomplete
         multiple
+        openOnFocus
         disableCloseOnSelect
         disableListWrap
         options={[...props.packages.keys()]}
