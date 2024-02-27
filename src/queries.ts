@@ -21,6 +21,7 @@ export const ALL_ENVIRONMENTS = gql(`
         name
         version
       }
+      tags
       readme
       type
       state
@@ -50,21 +51,15 @@ export const ALL_PACKAGES = gql(`
   }
 `);
 
-export type CreateEnvironment = {
-  createEnvironment: {
-    __typename: "CreateEnvironmentSuccess" | string;
-    message: string;
-  };
-};
-
 export const CREATE_ENV = gql(`
-  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!) {
+  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!, $tags: [String!]) {
     createEnvironment(
       env: {
         name: $name,
         description: $description,
         path: $path,
         packages: $packages,
+        tags: $tags,
       }
     ) {
       __typename

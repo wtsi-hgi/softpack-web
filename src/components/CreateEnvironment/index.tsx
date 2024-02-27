@@ -12,16 +12,23 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useState } from "react";
 
-import type { Package } from "../../queries";
-import { ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import type { Environment, Environments, Package } from "../../queries";
+import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 
+// getAvailableTags returns all tags, including duplicates, currently used by
+// the passed environments.
+function getAvailableTags(environments: Environments): string[] {
+  return environments.flatMap((e) => e.tags);
+}
+
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
+  const environmentsQuery = useQuery(ALL_ENVIRONMENTS);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
@@ -32,12 +39,13 @@ export default function CreateEnvironment() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [path, setPath] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
     createEnvironment({
-      variables: { name, description, path, packages: selectedPackages },
+      variables: { name, description, path, packages: selectedPackages, tags },
     });
   };
 
@@ -82,18 +90,23 @@ export default function CreateEnvironment() {
     },
   );
 
-  if (loading) {
+  if (loading || environmentsQuery.loading) {
     return <div>loading...</div>;
   }
 
-  if (error) {
-    return <div style={{ color: "red" }}>{error.message}</div>;
+  const e = error || environmentsQuery.error;
+  if (e) {
+    return <div style={{ color: "red" }}>{e.message}</div>;
   }
 
   const packages = new Map<string, string[]>();
   data?.packageCollections.forEach(({ name, versions }) => {
     packages.set(name, versions);
   });
+
+  const availableTags = [
+    ...new Set(getAvailableTags(environmentsQuery.data?.environments ?? [])),
+  ];
 
   return (
     <Grid
@@ -116,6 +129,9 @@ export default function CreateEnvironment() {
                 setName={setName}
                 description={description}
                 setDescription={setDescription}
+                availableTags={availableTags}
+                tags={tags}
+                setTags={setTags}
                 path={path}
                 setPath={setPath}
               />

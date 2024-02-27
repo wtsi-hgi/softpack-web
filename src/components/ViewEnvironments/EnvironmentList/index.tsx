@@ -14,6 +14,7 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 
+import { compareStrings } from "../../../compare";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS } from "../../../queries";
 import { HelpIcon } from "../../HelpIcon";
@@ -22,10 +23,6 @@ import EnvironmentTable from "../EnvironmentTable";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
-
-function compareStrings(a: string, b: string) {
-  return a.localeCompare(b, "en", { sensitivity: "base" });
-}
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {

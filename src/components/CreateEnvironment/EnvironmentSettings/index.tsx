@@ -1,21 +1,15 @@
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
   Autocomplete,
   Box,
-  Card,
-  CardContent,
-  Divider,
   FormControl,
   Grid,
-  InputAdornment,
   MenuItem,
   Select,
   TextField,
-  Tooltip,
-  Typography,
 } from "@mui/material";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
+import { compareStrings } from "../../../compare";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 
@@ -24,6 +18,9 @@ type EnvironmentSettingsProps = {
   setName: (name: string) => void;
   description: string;
   setDescription: (description: string) => void;
+  availableTags: string[];
+  tags: string[];
+  setTags: (tags: string[]) => void;
   path: string;
   setPath: (path: string) => void;
 };
@@ -33,10 +30,18 @@ type EnvironmentSettingsProps = {
 // etc.
 function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const { username, groups } = useContext(UserContext);
+  const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
     props.setPath("");
   }, [username]);
+
+  const allTags = new Set([...props.availableTags, ...props.tags]);
+  const tagOptions: (string | { label: string; value: string })[] =
+    Array.from(allTags).toSorted(compareStrings);
+  if (tagInput && tagOptions.indexOf(tagInput) < 0) {
+    tagOptions.unshift({ label: `Add "${tagInput}"`, value: tagInput });
+  }
 
   return (
     <Grid container spacing={1}>
@@ -82,7 +87,21 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
         <Box sx={{ width: "75%" }}>
           <Autocomplete
             multiple
-            options={["a", "b", "c"]}
+            freeSolo
+            options={tagOptions}
+            value={props.tags}
+            onChange={(_, value) =>
+              props.setTags(
+                value.map((elem) =>
+                  typeof elem === "string" ? elem : elem.value,
+                ),
+              )
+            }
+            inputValue={tagInput}
+            onInputChange={(_, value) => setTagInput(value)}
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.label
+            }
             renderInput={(params) => {
               return <TextField {...params} variant="standard" />;
             }}
