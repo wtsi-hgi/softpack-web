@@ -9,10 +9,18 @@ import Typography from "@mui/material/Typography";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Outlet } from "react-router-dom";
 
+import { AvailableTagsContext } from "../../components/AvailableTagsContext";
+import { EnvironmentsQueryContext } from "../../components/EnvironmentsQueryContext";
 import { HelpIcon } from "../../components/HelpIcon";
 import Sidebar from "../../components/Sidebar";
 import { UserContext } from "../../components/UserContext";
-import { GROUPS } from "../../queries";
+import { ALL_ENVIRONMENTS, Environments, GROUPS } from "../../queries";
+
+// getAvailableTags returns all tags, including duplicates, currently used by
+// the passed environments.
+function getAvailableTags(environments: Environments): string[] {
+  return environments.flatMap((e) => e.tags);
+}
 
 const Root = () => {
   const [username, setUsername] = useLocalStorage("username", "");
@@ -25,6 +33,12 @@ const Root = () => {
     : (data?.groups ?? []).length == 0
       ? "Invalid username"
       : null;
+
+  const environmentsQuery = useQuery(ALL_ENVIRONMENTS);
+
+  const availableTags = [
+    ...new Set(getAvailableTags(environmentsQuery.data?.environments ?? [])),
+  ];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -66,11 +80,15 @@ const Root = () => {
         </Toolbar>
       </AppBar>
       <UserContext.Provider value={{ username, groups }}>
-        <Sidebar />
-        <Box component="main" sx={{ mx: 2, width: "100%" }}>
-          <Toolbar />
-          <Outlet />
-        </Box>
+        <EnvironmentsQueryContext.Provider value={environmentsQuery}>
+          <AvailableTagsContext.Provider value={availableTags}>
+            <Sidebar />
+            <Box component="main" sx={{ mx: 2, width: "100%" }}>
+              <Toolbar />
+              <Outlet />
+            </Box>
+          </AvailableTagsContext.Provider>
+        </EnvironmentsQueryContext.Provider>
       </UserContext.Provider>
     </Box>
   );

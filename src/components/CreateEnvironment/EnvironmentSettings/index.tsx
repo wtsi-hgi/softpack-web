@@ -1,17 +1,15 @@
 import {
-  Autocomplete,
   Box,
   FormControl,
   Grid,
   MenuItem,
   Select,
   TextField,
-  createFilterOptions,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
-import { compareStrings } from "../../../compare";
 import { HelpIcon } from "../../HelpIcon";
+import { TagSelect } from "../../TagSelect";
 import { UserContext } from "../../UserContext";
 
 type EnvironmentSettingsProps = {
@@ -19,53 +17,21 @@ type EnvironmentSettingsProps = {
   setName: (name: string) => void;
   description: string;
   setDescription: (description: string) => void;
-  availableTags: string[];
   tags: string[];
   setTags: (tags: string[]) => void;
   path: string;
   setPath: (path: string) => void;
 };
 
-function isValidTag(tag: string): boolean {
-  // this logic copied from softpack-core environment.py
-  return !!(
-    tag === tag.trim() &&
-    tag.match(/^[a-zA-Z0-9 ._-]+$/) &&
-    !tag.match(/\s\s/)
-  );
-}
-
 // EnvironmentSettings is the card responsible for the environment settings
 // available to a user when creating a new environment. E.g. Name, Description,
 // etc.
 function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const { username, groups } = useContext(UserContext);
-  const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
     props.setPath("");
   }, [username]);
-
-  const allTags = new Set([
-    ...props.availableTags,
-    ...props.tags.filter(isValidTag),
-  ]);
-  const tagOptions: (
-    | string
-    | { label: string; value: string; origValue: string }
-  )[] = Array.from(allTags).toSorted(compareStrings);
-  const trimmedTagInput = tagInput.trim(); // do a certain amount of auto-correcting
-  if (
-    tagOptions.indexOf(trimmedTagInput) < 0 &&
-    trimmedTagInput.length > 0 &&
-    isValidTag(trimmedTagInput) // but not too much
-  ) {
-    tagOptions.unshift({
-      label: `Add "${trimmedTagInput}"`,
-      value: trimmedTagInput,
-      origValue: tagInput,
-    });
-  }
 
   return (
     <Grid container spacing={1}>
@@ -109,31 +75,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
       </Grid>
       <Grid item xs={12} sm={8} md={9} pb={3}>
         <Box sx={{ width: "75%" }}>
-          <Autocomplete
-            multiple
-            openOnFocus
-            options={tagOptions}
-            filterOptions={createFilterOptions({
-              stringify: (option) =>
-                typeof option === "string" ? option : option.origValue,
-            })}
-            value={props.tags}
-            onChange={(_, value) =>
-              props.setTags(
-                value
-                  .map((elem) => (typeof elem === "string" ? elem : elem.value))
-                  .filter(isValidTag),
-              )
-            }
-            inputValue={tagInput}
-            onInputChange={(_, value) => setTagInput(value)}
-            getOptionLabel={(option) =>
-              typeof option === "string" ? option : option.label
-            }
-            renderInput={(params) => {
-              return <TextField {...params} variant="standard" />;
-            }}
-          />
+          <TagSelect multiple value={props.tags} onChange={props.setTags} />
         </Box>
       </Grid>
       <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>

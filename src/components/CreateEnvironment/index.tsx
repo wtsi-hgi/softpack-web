@@ -10,25 +10,20 @@ import {
   Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import type { Environment, Environments, Package } from "../../queries";
-import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import type { Package } from "../../queries";
+import { ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 
-// getAvailableTags returns all tags, including duplicates, currently used by
-// the passed environments.
-function getAvailableTags(environments: Environments): string[] {
-  return environments.flatMap((e) => e.tags);
-}
-
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
-  const environmentsQuery = useQuery(ALL_ENVIRONMENTS);
+  const environmentsQuery = useContext(EnvironmentsQueryContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
@@ -104,10 +99,6 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
-  const availableTags = [
-    ...new Set(getAvailableTags(environmentsQuery.data?.environments ?? [])),
-  ];
-
   return (
     <Grid
       container
@@ -129,7 +120,6 @@ export default function CreateEnvironment() {
                 setName={setName}
                 description={description}
                 setDescription={setDescription}
-                availableTags={availableTags}
                 tags={tags}
                 setTags={setTags}
                 path={path}

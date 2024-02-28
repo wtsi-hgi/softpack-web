@@ -17,6 +17,7 @@ import { useContext, useEffect, useState } from "react";
 import { compareStrings } from "../../../compare";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS } from "../../../queries";
+import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
@@ -26,7 +27,7 @@ const MAX_REFETCH_INTERVAL = 10 * SECOND;
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
+  const { loading, data, error } = useContext(EnvironmentsQueryContext); //useQuery(ALL_ENVIRONMENTS);
   const [filter, setFilter] = useState("");
   const client = useApolloClient();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);

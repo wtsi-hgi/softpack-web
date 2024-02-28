@@ -73,6 +73,21 @@ export const CREATE_ENV = gql(`
   }
 `);
 
+export const ADD_TAG = gql(`
+  mutation AddTag($name: String!, $path: String!, $tag: String!) {
+    addTag(
+      name: $name,
+      path: $path,
+      tag: $tag,
+    ) {
+      __typename
+      ... on Error {
+        message
+      }
+    }
+  }
+`);
+
 export const GROUPS = gql(`
   query Groups($username: String!) {
     groups(username: $username) {
