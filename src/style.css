@@ -75,3 +75,9 @@ summary {
 .tag-input .MuiInput-root {
   min-height: 39px;
 }
+
+/* Add a background to hovered/focused tags in the tag cloud */
+.tag-cloud a:hover,
+.tag-cloud a:focus {
+  background-color: hsl(0 0% 95%);
+}
