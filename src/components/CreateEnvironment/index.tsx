@@ -15,7 +15,6 @@ import { useContext, useState } from "react";
 import type { Package } from "../../queries";
 import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
 import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
-import { UserContext } from "../UserContext";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";

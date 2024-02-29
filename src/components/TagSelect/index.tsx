@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  AutocompleteProps,
   AutocompleteRenderInputParams,
   TextField,
   createFilterOptions,

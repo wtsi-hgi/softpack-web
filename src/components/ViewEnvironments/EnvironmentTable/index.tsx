@@ -10,7 +10,7 @@ import {
 import { Fragment, useState } from "react";
 
 import { humanize } from "../../../humanize";
-import type { Environment, Environments, States } from "../../../queries";
+import type { Environments, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 import { EnvironmentTags } from "../EnvironmentTags";
 

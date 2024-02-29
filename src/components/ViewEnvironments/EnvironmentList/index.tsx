@@ -1,5 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
-import { fieldNameFromStoreName } from "@apollo/client/cache";
+import { useApolloClient } from "@apollo/client";
 import {
   Alert,
   Autocomplete,
@@ -9,10 +8,8 @@ import {
   FormControlLabel,
   FormGroup,
   InputAdornment,
-  Link,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
@@ -55,9 +52,6 @@ const EnvironmentList = () => {
     false,
   );
   const { username, groups } = useContext(UserContext);
-  const [sectionExpanded, setSectionExpanded] = useState<
-    Record<string, boolean>
-  >({});
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -148,19 +142,6 @@ const EnvironmentList = () => {
   const allGroups = [...allGroupsSet].sort(compareStrings);
   const allUsers = [...allUsersSet].sort(compareStrings);
   const allTags = [...allTagsSet].sort(compareStrings);
-
-  const environmentsByOwner = Object.entries(
-    filteredEnvironments.reduce(
-      (acc, env) => {
-        acc[env.path] = [...(acc[env.path] ?? []), env];
-        return acc;
-      },
-      {} as Record<string, typeof filteredEnvironments>,
-    ),
-  );
-
-  const allExpanded = Object.values(sectionExpanded).every((x) => x === true);
-  const allCollapsed = Object.values(sectionExpanded).every((x) => x === false);
 
   return (
     <>
@@ -285,78 +266,7 @@ const EnvironmentList = () => {
         ) : null}
       </Box>
       <Container id="environment_table">
-        {false && (
-          <>
-            {allCollapsed ? (
-              "Collapse"
-            ) : (
-              <Link
-                component="button"
-                variant="body2"
-                sx={{ verticalAlign: "baseline" }}
-                onClick={() => {
-                  setSectionExpanded(
-                    Object.fromEntries(
-                      Object.keys(sectionExpanded).map((k) => [k, false]),
-                    ),
-                  );
-                }}
-              >
-                Collapse
-              </Link>
-            )}{" "}
-            /{" "}
-            {allExpanded ? (
-              "Expand"
-            ) : (
-              <Link
-                component="button"
-                variant="body2"
-                sx={{ verticalAlign: "baseline" }}
-                onClick={() => {
-                  setSectionExpanded(
-                    Object.fromEntries(
-                      Object.keys(sectionExpanded).map((k) => [k, true]),
-                    ),
-                  );
-                }}
-              >
-                Expand
-              </Link>
-            )}{" "}
-            all
-          </>
-        )}
-        {false ? (
-          environmentsByOwner
-            .toSorted(([a], [b]) => compareStrings(a, b))
-            .map(([name, envs]) => (
-              <details
-                key={name}
-                open={sectionExpanded[name] ?? (sectionExpanded[name] = false)}
-                onToggle={(e) =>
-                  setSectionExpanded({
-                    ...sectionExpanded,
-                    [name]: (e.target as any).open,
-                  })
-                }
-              >
-                <summary>
-                  <Typography
-                    variant="h4"
-                    pl={1}
-                    pb={1}
-                    sx={{ display: "inline-block" }}
-                  >
-                    {name}
-                  </Typography>
-                </summary>
-                <EnvironmentTable environments={envs} />
-              </details>
-            ))
-        ) : (
-          <EnvironmentTable environments={filteredEnvironments} />
-        )}
+        <EnvironmentTable environments={filteredEnvironments} />
       </Container>
     </>
   );

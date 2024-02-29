@@ -1,30 +1,22 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Breadcrumbs,
-  Button,
   Chip,
   Divider,
   Drawer,
-  Grid,
   Icon,
   Stack,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import {
-  ADD_TAG,
-  ALL_ENVIRONMENTS,
-  Environment,
-  Environments,
-} from "../../../queries";
-import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment } from "../../../queries";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
 
