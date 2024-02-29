@@ -13,8 +13,9 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useState } from "react";
 
 import type { Package } from "../../queries";
-import { ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
 import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
+import { UserContext } from "../UserContext";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
@@ -24,12 +25,20 @@ import { PopUpDialog } from "./PopUpDialog";
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
   const environmentsQuery = useContext(EnvironmentsQueryContext);
+  const { username, groups } = useContext(UserContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
   });
   const [, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
-  const [, setOnlyMine] = useLocalStorage("environments-mine", false);
+  const [, setFilterUsers] = useLocalStorage<string[]>(
+    "environments-filterusers",
+    [],
+  );
+  const [, setFilterGroups] = useLocalStorage<string[]>(
+    "environments-filtergroups",
+    [],
+  );
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -47,25 +56,39 @@ export default function CreateEnvironment() {
   const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
     CREATE_ENV,
     {
+      refetchQueries: [ALL_ENVIRONMENTS],
       // onCompleted will pick up any errors which the backend itself raises, like
       // an environment name already existing.
       onCompleted: (data) => {
-        if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
-          setEnvBuildResult({
-            title: "Your environment was successfully scheduled!",
-            message:
-              "It should appear in the environments list shortly, and will be usable once the indicator is green.",
-          });
+        if (
+          data.createEnvironment.__typename === "CreateEnvironmentSuccess" ||
+          data.createEnvironment.__typename === "BuilderError"
+        ) {
+          if (
+            data.createEnvironment.__typename === "CreateEnvironmentSuccess"
+          ) {
+            setEnvBuildResult({
+              title: "Your environment was successfully scheduled!",
+              message:
+                "It should appear in the environments list shortly, and will be usable once the indicator is green.",
+            });
+          } else {
+            setEnvBuildResult({
+              title: "Your environment was queued",
+              message:
+                "The build service is currently unavailable. The environment will start to build once it returns.",
+            });
+          }
           // when the user next navigates to the Environments page, they should be
           // presented with their currently-building environment.
           setIgnoreReady(true);
-          setOnlyMine(true);
-        } else if (data.createEnvironment.__typename === "BuilderError") {
-          setEnvBuildResult({
-            title: "Your environment was queued",
-            message:
-              "The build service is currently unavailable. The environment will start to build once it returns.",
-          });
+          if (path.startsWith("users/")) {
+            setFilterUsers([path.split("/")[1]]);
+            setFilterGroups([]);
+          } else {
+            setFilterUsers([]);
+            setFilterGroups([path.split("/")[1]]);
+          }
         } else {
           setEnvBuildResult({
             title: "Environment build failed",

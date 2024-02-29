@@ -1,6 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
+import { fieldNameFromStoreName } from "@apollo/client/cache";
 import {
   Alert,
+  Autocomplete,
   Box,
   Checkbox,
   Container,
@@ -8,6 +10,7 @@ import {
   FormGroup,
   InputAdornment,
   Link,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -25,21 +28,28 @@ import EnvironmentTable from "../EnvironmentTable";
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
 
+function arrayEqual<T>(a: T[], b: T[]): boolean {
+  return a.length === b.length && a.every((val, idx) => val === b[idx]);
+}
+
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useContext(EnvironmentsQueryContext); //useQuery(ALL_ENVIRONMENTS);
   const [filter, setFilter] = useState("");
   const client = useApolloClient();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);
-  const [byUserGroup, setByUserGroup] = useLocalStorage(
-    "environments-byusergroup",
-    false,
+  const [filterUsers, setFilterUsers] = useLocalStorage<string[]>(
+    "environments-filterusers",
+    [],
+  );
+  const [filterGroups, setFilterGroups] = useLocalStorage<string[]>(
+    "environments-filtergroups",
+    [],
   );
   const [ignoreReady, setIgnoreReady] = useLocalStorage(
     "environments-ignoreready",
     false,
   );
-  const [onlyMine, setOnlyMine] = useLocalStorage("environments-mine", false);
   const { username, groups } = useContext(UserContext);
   const [sectionExpanded, setSectionExpanded] = useState<
     Record<string, boolean>
@@ -78,6 +88,7 @@ const EnvironmentList = () => {
     compareStrings(a.name, b.name),
   );
 
+  // filter by name/package
   if (filter) {
     const parts = filter.toLowerCase().split(" ");
 
@@ -87,7 +98,6 @@ const EnvironmentList = () => {
 
         return (
           e.name.toLocaleLowerCase().includes(part) ||
-          e.path.toLowerCase().split("/").pop()?.includes(part) ||
           e.packages.some(
             (pkg) =>
               pkg.name.toLowerCase().includes(name) &&
@@ -98,19 +108,32 @@ const EnvironmentList = () => {
     );
   }
 
+  // filter by owner
+  if (filterUsers.length > 0 || filterGroups.length > 0) {
+    filteredEnvironments = filteredEnvironments.filter(
+      (e) =>
+        filterUsers.some((user) => e.path === `users/${user}`) ||
+        filterGroups.some((group) => e.path === `groups/${group}`),
+    );
+  }
+
   if (ignoreReady) {
     filteredEnvironments = filteredEnvironments.filter(
       (e) => e.state !== "ready",
     );
   }
 
-  if (onlyMine && groups.length > 0) {
-    filteredEnvironments = filteredEnvironments.filter(
-      (e) =>
-        e.path === `users/${username}` ||
-        groups.some((g) => e.path === `groups/${g}`),
-    );
-  }
+  const allGroupsSet = new Set<string>();
+  const allUsersSet = new Set<string>();
+  data.environments.map((env) => {
+    if (env.path.startsWith("users/")) {
+      allUsersSet.add(env.path.split("/")[1]);
+    } else {
+      allGroupsSet.add(env.path.split("/")[1]);
+    }
+  });
+  const allGroups = [...allGroupsSet].toSorted(compareStrings);
+  const allUsers = [...allUsersSet].toSorted(compareStrings);
 
   const environmentsByOwner = Object.entries(
     filteredEnvironments.reduce(
@@ -133,7 +156,7 @@ const EnvironmentList = () => {
         <TextField
           id="name-field"
           variant="standard"
-          placeholder="Search for Environments"
+          placeholder="Search for Environments by name or package"
           style={{ width: "100%" }}
           onChange={(e) => setFilter(e.target.value)}
           InputProps={{
@@ -146,46 +169,84 @@ const EnvironmentList = () => {
             ),
           }}
         ></TextField>
-        <FormGroup row>
-          <FormControlLabel
-            control={<Checkbox />}
-            label={
-              <>
-                By user/group{" "}
-                <HelpIcon title="List each user/group's environments separately" />
-              </>
-            }
-            disableTypography
-            checked={byUserGroup}
-            onChange={(e) => setByUserGroup((e.target as any).checked)}
+        <Stack direction="row" spacing={1} py={0.5} alignItems="center">
+          <Autocomplete
+            openOnFocus
+            size="small"
+            options={allUsers}
+            multiple
+            value={filterUsers}
+            onChange={(_, value) => setFilterUsers(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Filter by user"
+              />
+            )}
+            sx={{ minWidth: 160 }}
           />
-          <FormControlLabel
-            control={<Checkbox />}
-            label={
-              <>
-                Building{" "}
-                <HelpIcon title="Only show queued/failed environments" />
-              </>
-            }
-            disableTypography
-            checked={ignoreReady}
-            onChange={(e) => setIgnoreReady((e.target as any).checked)}
+          <Autocomplete
+            openOnFocus
+            size="small"
+            options={allGroups}
+            multiple
+            value={filterGroups}
+            onChange={(_, value) => setFilterGroups(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Filter by group"
+              />
+            )}
+            sx={{ minWidth: 160 }}
           />
-          {groups.length > 0 && (
+          <FormGroup row>
             <FormControlLabel
               control={<Checkbox />}
               label={
                 <>
-                  Mine{" "}
-                  <HelpIcon title="Environments owned by you or one of your groups" />
+                  Building{" "}
+                  <HelpIcon title="Only show queued/failed environments" />
                 </>
               }
               disableTypography
-              checked={onlyMine}
-              onChange={(e) => setOnlyMine((e.target as any).checked)}
+              checked={ignoreReady}
+              onChange={(e) => setIgnoreReady((e.target as any).checked)}
             />
-          )}
-        </FormGroup>
+            {groups.length > 0 && (
+              <FormControlLabel
+                control={<Checkbox />}
+                label={
+                  <>
+                    Mine{" "}
+                    <HelpIcon title="Environments owned by you or one of your groups" />
+                  </>
+                }
+                disableTypography
+                checked={
+                  arrayEqual(filterUsers, [username]) &&
+                  arrayEqual(
+                    filterGroups,
+                    groups.filter((group) => allGroups.includes(group)),
+                  )
+                }
+                onChange={(_, checked) => {
+                  if (checked) {
+                    setFilterUsers([username]);
+                    setFilterGroups(
+                      groups.filter((group) => allGroups.includes(group)),
+                    );
+                  } else {
+                    setFilterUsers([]);
+                    setFilterGroups([]);
+                  }
+                }}
+              />
+            )}
+          </FormGroup>
+        </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
         ignoreReady ? (
           <Alert severity="info">
@@ -196,7 +257,7 @@ const EnvironmentList = () => {
         ) : null}
       </Box>
       <Container id="environment_table">
-        {byUserGroup && (
+        {false && (
           <>
             {allCollapsed ? (
               "Collapse"
@@ -238,7 +299,7 @@ const EnvironmentList = () => {
             all
           </>
         )}
-        {byUserGroup ? (
+        {false ? (
           environmentsByOwner
             .toSorted(([a], [b]) => compareStrings(a, b))
             .map(([name, envs]) => (
