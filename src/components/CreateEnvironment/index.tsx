@@ -25,7 +25,6 @@ import { PopUpDialog } from "./PopUpDialog";
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
   const environmentsQuery = useContext(EnvironmentsQueryContext);
-  const { username, groups } = useContext(UserContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
@@ -37,6 +36,10 @@ export default function CreateEnvironment() {
   );
   const [, setFilterGroups] = useLocalStorage<string[]>(
     "environments-filtergroups",
+    [],
+  );
+  const [, setFilterTags] = useLocalStorage<string[]>(
+    "environments-filtertags",
     [],
   );
 
@@ -89,6 +92,7 @@ export default function CreateEnvironment() {
             setFilterUsers([]);
             setFilterGroups([path.split("/")[1]]);
           }
+          setFilterTags(tags);
         } else {
           setEnvBuildResult({
             title: "Environment build failed",

@@ -46,6 +46,10 @@ const EnvironmentList = () => {
     "environments-filtergroups",
     [],
   );
+  const [filterTags, setFilterTags] = useLocalStorage<string[]>(
+    "environments-filtertags",
+    [],
+  );
   const [ignoreReady, setIgnoreReady] = useLocalStorage(
     "environments-ignoreready",
     false,
@@ -117,6 +121,13 @@ const EnvironmentList = () => {
     );
   }
 
+  // filter by tag
+  if (filterTags.length > 0) {
+    filteredEnvironments = filteredEnvironments.filter((e) =>
+      filterTags.some((tag) => e.tags.includes(tag)),
+    );
+  }
+
   if (ignoreReady) {
     filteredEnvironments = filteredEnvironments.filter(
       (e) => e.state !== "ready",
@@ -125,15 +136,18 @@ const EnvironmentList = () => {
 
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
+  const allTagsSet = new Set<string>();
   data.environments.map((env) => {
     if (env.path.startsWith("users/")) {
       allUsersSet.add(env.path.split("/")[1]);
     } else {
       allGroupsSet.add(env.path.split("/")[1]);
     }
+    env.tags.forEach((tag) => allTagsSet.add(tag));
   });
-  const allGroups = [...allGroupsSet].toSorted(compareStrings);
-  const allUsers = [...allUsersSet].toSorted(compareStrings);
+  const allGroups = [...allGroupsSet].sort(compareStrings);
+  const allUsers = [...allUsersSet].sort(compareStrings);
+  const allTags = [...allTagsSet].sort(compareStrings);
 
   const environmentsByOwner = Object.entries(
     filteredEnvironments.reduce(
@@ -156,15 +170,13 @@ const EnvironmentList = () => {
         <TextField
           id="name-field"
           variant="standard"
-          placeholder="Search for Environments by name or package"
+          placeholder="Search for Environments by name or package[@version]"
           style={{ width: "100%" }}
           onChange={(e) => setFilter(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <HelpIcon
-                  title={"Filter by space-delineated list of packages"}
-                />
+                <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
               </InputAdornment>
             ),
           }}
@@ -198,6 +210,22 @@ const EnvironmentList = () => {
                 {...params}
                 variant="outlined"
                 placeholder="Filter by group"
+              />
+            )}
+            sx={{ minWidth: 160 }}
+          />
+          <Autocomplete
+            openOnFocus
+            size="small"
+            options={allTags}
+            multiple
+            value={filterTags}
+            onChange={(_, value) => setFilterTags(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Filter by tag"
               />
             )}
             sx={{ minWidth: 160 }}
