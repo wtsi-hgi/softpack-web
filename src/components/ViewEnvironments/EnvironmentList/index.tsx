@@ -31,7 +31,7 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-  const { loading, data, error } = useContext(EnvironmentsQueryContext); //useQuery(ALL_ENVIRONMENTS);
+  const { loading, data, error } = useContext(EnvironmentsQueryContext);
   const [filter, setFilter] = useState("");
   const client = useApolloClient();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);

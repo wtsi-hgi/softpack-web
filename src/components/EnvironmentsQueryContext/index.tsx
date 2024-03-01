@@ -10,4 +10,4 @@ export type EnvironmentsQueryContextType = ReturnType<
   typeof useQuery<EnvironmentsQuery, EnvironmentsQueryVariables>
 >;
 export const EnvironmentsQueryContext =
-  createContext<EnvironmentsQueryContextType>(null!); // FIXME
+  createContext<EnvironmentsQueryContextType>(null!);
