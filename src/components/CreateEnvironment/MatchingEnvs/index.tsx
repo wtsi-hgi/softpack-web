@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
+import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
 import MatchingEnv from "../MatchingEnv";
 
 type MatchingEnvsParams = {
@@ -52,28 +53,10 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
               Use one of these existing, matching, environments:
             </Typography>
           </Box>
-          <TableContainer component={Paper}>
-            <Table aria-label="collapsible table" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell>Environment</TableCell>
-                  <TableCell align="left">Description</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {matchingEnvironments.map((env, index) => {
-                  return (
-                    <MatchingEnv
-                      key={index}
-                      environment={env}
-                      selectedPackages={props.selectedPackages}
-                    />
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <EnvironmentTable
+            environments={matchingEnvironments}
+            highlightPackages={props.selectedPackages}
+          />
           <Typography variant="subtitle1" gutterBottom align="right">
             Or, create a new environment:
           </Typography>

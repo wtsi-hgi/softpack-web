@@ -16,7 +16,7 @@ import { useContext, useEffect, useState } from "react";
 
 import { compareStrings } from "../../../compare";
 import { humanize } from "../../../humanize";
-import { ALL_ENVIRONMENTS } from "../../../queries";
+import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
@@ -82,11 +82,10 @@ const EnvironmentList = () => {
   const avgWaitSecs = data.environments.find((e) => e.avgWaitSecs != null)
     ?.avgWaitSecs;
 
-  let filteredEnvironments = data.environments.toSorted((a, b) =>
-    compareStrings(a.name, b.name),
-  );
+  let filteredEnvironments = [...data.environments];
 
   // filter by name/package
+  const highlightPackagesSet = new Set<Package>();
   if (filter) {
     const parts = filter.toLowerCase().split(" ");
 
@@ -95,16 +94,23 @@ const EnvironmentList = () => {
         const [name, version] = part.split("@");
 
         return (
-          e.name.toLocaleLowerCase().includes(part) ||
-          e.packages.some(
-            (pkg) =>
+          e.packages.some((pkg) => {
+            const match =
               pkg.name.toLowerCase().includes(name) &&
-              (!version || pkg.version?.toLowerCase().startsWith(version)),
-          )
+              (!version || pkg.version?.toLowerCase().startsWith(version));
+            if (match) {
+              highlightPackagesSet.add({
+                name: pkg.name,
+                version: pkg.version,
+              });
+            }
+            return match;
+          }) || e.name.toLocaleLowerCase().includes(part)
         );
       }),
     );
   }
+  const highlightPackages = [...highlightPackagesSet];
 
   // filter by owner
   if (filterUsers.length > 0 || filterGroups.length > 0) {
@@ -266,7 +272,10 @@ const EnvironmentList = () => {
         ) : null}
       </Box>
       <Container id="environment_table">
-        <EnvironmentTable environments={filteredEnvironments} />
+        <EnvironmentTable
+          environments={filteredEnvironments}
+          highlightPackages={highlightPackages}
+        />
       </Container>
     </>
   );
