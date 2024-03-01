@@ -2,7 +2,7 @@ import CreateEnvironment from "../components/CreateEnvironment";
 import About from "./About";
 import Environments from "./Environments";
 import Root from "./Root";
-import Settings from "./Settings";
+import Tags from "./Tags";
 
 export const routes = [
   {
@@ -19,12 +19,12 @@ export const routes = [
         element: <Environments />,
       },
       {
-        path: "create",
-        element: <CreateEnvironment />,
+        path: "tags",
+        element: <Tags />,
       },
       {
-        path: "settings",
-        element: <Settings />,
+        path: "create",
+        element: <CreateEnvironment />,
       },
       {
         path: "",

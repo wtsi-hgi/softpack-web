@@ -52,7 +52,6 @@ function DropdownChip(props: DropdownChipParams) {
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         onDelete={props.onDelete}
-        sx={{ m: "3px" }}
       />
       <Menu
         anchorEl={anchorEl}

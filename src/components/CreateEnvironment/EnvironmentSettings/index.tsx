@@ -1,20 +1,15 @@
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
   Box,
-  Card,
-  CardContent,
-  Divider,
   FormControl,
   Grid,
-  InputAdornment,
   MenuItem,
   Select,
   TextField,
-  Tooltip,
-  Typography,
 } from "@mui/material";
 import { useContext, useEffect } from "react";
 
+import { HelpIcon } from "../../HelpIcon";
+import { TagSelect } from "../../TagSelect";
 import { UserContext } from "../../UserContext";
 
 type EnvironmentSettingsProps = {
@@ -22,6 +17,8 @@ type EnvironmentSettingsProps = {
   setName: (name: string) => void;
   description: string;
   setDescription: (description: string) => void;
+  tags: string[];
+  setTags: (tags: string[]) => void;
   path: string;
   setPath: (path: string) => void;
 };
@@ -37,125 +34,86 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
   }, [username]);
 
   return (
-    <Card>
-      <Box p={3}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Environment Settings
-          </Typography>
-          <Typography variant="subtitle2">
-            Manage details related to your environment
-          </Typography>
+    <Grid container spacing={1}>
+      <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+        <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
+          Name:
+          <HelpIcon title="Choose a name for your environment" />
         </Box>
-      </Box>
-      <Divider />
-      <CardContent sx={{ p: 4 }}>
-        <Typography variant="subtitle2">
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
-              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
-                Name:
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={8} md={9} pb={3}>
-              <TextField
-                id="name-field"
-                variant="standard"
-                value={props.name}
-                onChange={(e) =>
-                  props.setName((e.target as HTMLInputElement).value)
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title={"Choose a name for your environment"}>
-                        <HelpOutlineIcon
-                          sx={{
-                            color: "rgba(34, 51, 84, 0.7)",
-                            padding: "0 0 0 8px",
-                            fontSize: "25px",
-                          }}
-                        />
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
-            </Grid>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
-              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
-                Description:
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={8} md={9} pb={3}>
-              <TextField
-                id="description-field"
-                multiline
-                sx={{ width: "75%" }}
-                value={props.description}
-                onChange={(e) =>
-                  props.setDescription((e.target as HTMLInputElement).value)
-                }
-                variant="standard"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip
-                        title={"Describe the purpose of your environment"}
-                      >
-                        <HelpOutlineIcon
-                          sx={{
-                            color: "rgba(34, 51, 84, 0.7)",
-                            padding: "0 0 0 8px",
-                            fontSize: "25px",
-                          }}
-                        />
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
-            </Grid>
-            <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
-              <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
-                Folder:
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={8} md={9} pb={3}>
-              <FormControl variant="standard" sx={{ minWidth: 189 }}>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={props.path}
-                  onChange={(e) => {
-                    props.setPath(e.target.value);
-                  }}
-                >
-                  {username ? (
-                    (groups?.length ?? 0) > 0 ? (
-                      <MenuItem value={`users/${username}`}>
-                        users/{username}
-                      </MenuItem>
-                    ) : (
-                      <MenuItem disabled>Invalid username</MenuItem>
-                    )
-                  ) : (
-                    <MenuItem disabled>
-                      Enter your username in the top-right
-                    </MenuItem>
-                  )}
-                  {groups.map((name) => (
-                    <MenuItem key={name} value={`groups/${name}`}>
-                      groups/{name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Typography>
-      </CardContent>
-    </Card>
+      </Grid>
+      <Grid item xs={12} sm={8} md={9} pb={3}>
+        <TextField
+          id="name-field"
+          variant="standard"
+          value={props.name}
+          onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+        <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
+          Description:
+          <HelpIcon title="Describe the purpose of your environment" />
+        </Box>
+      </Grid>
+      <Grid item xs={12} sm={8} md={9} pb={3}>
+        <TextField
+          id="description-field"
+          multiline
+          sx={{ width: "75%" }}
+          value={props.description}
+          onChange={(e) =>
+            props.setDescription((e.target as HTMLInputElement).value)
+          }
+          variant="standard"
+        />
+      </Grid>
+      <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+        <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
+          Tags:
+          <HelpIcon title="Optionally, tag your environment for discoverability" />
+        </Box>
+      </Grid>
+      <Grid item xs={12} sm={8} md={9} pb={3}>
+        <Box sx={{ width: "75%" }}>
+          <TagSelect multiple value={props.tags} onChange={props.setTags} />
+        </Box>
+      </Grid>
+      <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
+        <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
+          Folder:
+          <HelpIcon title="Select a folder to organise your environment" />
+        </Box>
+      </Grid>
+      <Grid item xs={12} sm={8} md={9} pb={3}>
+        <FormControl variant="standard" sx={{ minWidth: 189 }}>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={props.path}
+            onChange={(e) => {
+              props.setPath(e.target.value);
+            }}
+          >
+            {username ? (
+              (groups?.length ?? 0) > 0 ? (
+                <MenuItem value={`users/${username}`}>
+                  users/{username}
+                </MenuItem>
+              ) : (
+                <MenuItem disabled>Invalid username</MenuItem>
+              )
+            ) : (
+              <MenuItem disabled>Enter your username in the top-right</MenuItem>
+            )}
+            {groups.map((name) => (
+              <MenuItem key={name} value={`groups/${name}`}>
+                groups/{name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+    </Grid>
   );
 }
 

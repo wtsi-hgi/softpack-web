@@ -1,9 +1,8 @@
 import ConstructionIcon from "@mui/icons-material/Construction";
 import HelpCenterIcon from "@mui/icons-material/HelpCenter";
-import SettingsIcon from "@mui/icons-material/Settings";
+import TagIcon from "@mui/icons-material/LocalOffer";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import { Typography } from "@mui/material";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -47,18 +46,17 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Environments" />
         </ListItemButton>
+        <ListItemButton component={NavLink} to={"/tags"}>
+          <ListItemIcon>
+            <TagIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tags" />
+        </ListItemButton>
         <ListItemButton component={NavLink} to={"/create"}>
           <ListItemIcon>
             <ConstructionIcon />
           </ListItemIcon>
           <ListItemText primary="Create Environment" />
-        </ListItemButton>
-        <Divider />
-        <ListItemButton component={NavLink} to={"/settings"}>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Settings" />
         </ListItemButton>
       </List>
     </Drawer>

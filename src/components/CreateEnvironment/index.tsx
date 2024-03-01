@@ -1,59 +1,97 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Grid } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import type { Package } from "../../queries";
-import { ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
+import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
-import PackageSettings from "./PackageSettings";
+import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
   const { loading, data, error } = useQuery(ALL_PACKAGES);
+  const environmentsQuery = useContext(EnvironmentsQueryContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
   });
   const [, setIgnoreReady] = useLocalStorage("environments-ignoreready", false);
-  const [, setOnlyMine] = useLocalStorage("environments-mine", false);
+  const [, setFilterUsers] = useLocalStorage<string[]>(
+    "environments-filterusers",
+    [],
+  );
+  const [, setFilterGroups] = useLocalStorage<string[]>(
+    "environments-filtergroups",
+    [],
+  );
+  const [, setFilterTags] = useLocalStorage<string[]>(
+    "environments-filtertags",
+    [],
+  );
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [path, setPath] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {
     createEnvironment({
-      variables: { name, description, path, packages: selectedPackages },
+      variables: { name, description, path, packages: selectedPackages, tags },
     });
   };
 
   const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
     CREATE_ENV,
     {
+      refetchQueries: [ALL_ENVIRONMENTS],
       // onCompleted will pick up any errors which the backend itself raises, like
       // an environment name already existing.
       onCompleted: (data) => {
-        if (data.createEnvironment.__typename === "CreateEnvironmentSuccess") {
-          setEnvBuildResult({
-            title: "Your environment was successfully scheduled!",
-            message:
-              "It should appear in the environments list shortly, and will be usable once the indicator is green.",
-          });
+        if (
+          data.createEnvironment.__typename === "CreateEnvironmentSuccess" ||
+          data.createEnvironment.__typename === "BuilderError"
+        ) {
+          if (
+            data.createEnvironment.__typename === "CreateEnvironmentSuccess"
+          ) {
+            setEnvBuildResult({
+              title: "Your environment was successfully scheduled!",
+              message:
+                "It should appear in the environments list shortly, and will be usable once the indicator is green.",
+            });
+          } else {
+            setEnvBuildResult({
+              title: "Your environment was queued",
+              message:
+                "The build service is currently unavailable. The environment will start to build once it returns.",
+            });
+          }
           // when the user next navigates to the Environments page, they should be
           // presented with their currently-building environment.
           setIgnoreReady(true);
-          setOnlyMine(true);
-        } else if (data.createEnvironment.__typename === "BuilderError") {
-          setEnvBuildResult({
-            title: "Your environment was queued",
-            message:
-              "The build service is currently unavailable. The environment will start to build once it returns.",
-          });
+          if (path.startsWith("users/")) {
+            setFilterUsers([path.split("/")[1]]);
+            setFilterGroups([]);
+          } else {
+            setFilterUsers([]);
+            setFilterGroups([path.split("/")[1]]);
+          }
+          setFilterTags(tags);
         } else {
           setEnvBuildResult({
             title: "Environment build failed",
@@ -73,12 +111,13 @@ export default function CreateEnvironment() {
     },
   );
 
-  if (loading) {
+  if (loading || environmentsQuery.loading) {
     return <div>loading...</div>;
   }
 
-  if (error) {
-    return <div style={{ color: "red" }}>{error.message}</div>;
+  const e = error || environmentsQuery.error;
+  if (e) {
+    return <div style={{ color: "red" }}>{e.message}</div>;
   }
 
   const packages = new Map<string, string[]>();
@@ -95,30 +134,57 @@ export default function CreateEnvironment() {
       spacing={3}
     >
       <Grid item xs={11}>
-        <EnvironmentSettings
-          name={name}
-          setName={setName}
-          description={description}
-          setDescription={setDescription}
-          path={path}
-          setPath={setPath}
-        />
-      </Grid>
-      <Grid item xs={11}>
-        {/* Some stuff is being passed as props, even though I am wrapping
-         component in context, because the thing in context (selected
-         packages) and the props are different; they operate across different
-         components and at different levels, therefore, they warrant different
-         methods of passing, in my opinion. */}
-        <PackageContext.Provider value={{ testPackages, setTestPackages }}>
-          <PackageSettings
-            packages={packages}
-            selectedPackages={selectedPackages}
-            setSelectedPackages={setSelectedPackages}
-            runEnvironmentBuild={runEnvironmentBuild}
-            envBuildInFlight={envBuildInFlight}
-          />
-        </PackageContext.Provider>
+        <Card>
+          <Box p={2}>
+            <Typography variant="h4">Environment Settings</Typography>
+          </Box>
+          <Divider />
+          <CardContent sx={{ p: 4 }}>
+            <Typography variant="subtitle2">
+              <EnvironmentSettings
+                name={name}
+                setName={setName}
+                description={description}
+                setDescription={setDescription}
+                tags={tags}
+                setTags={setTags}
+                path={path}
+                setPath={setPath}
+              />
+              <PackageContext.Provider
+                value={{ testPackages, setTestPackages }}
+              >
+                <PackageMatcher
+                  packages={packages}
+                  selectedPackages={selectedPackages}
+                  setSelectedPackages={setSelectedPackages}
+                  runEnvironmentBuild={runEnvironmentBuild}
+                  envBuildInFlight={envBuildInFlight}
+                />
+              </PackageContext.Provider>
+            </Typography>
+            <Box>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                disabled={
+                  envBuildInFlight ||
+                  name.length === 0 ||
+                  description.length === 0 ||
+                  path.length === 0 ||
+                  selectedPackages.length === 0
+                }
+                onClick={runEnvironmentBuild}
+                sx={{
+                  float: "right",
+                  mb: "2%",
+                }}
+              >
+                Create
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       </Grid>
 
       {envBuildResult.title !== "" && (

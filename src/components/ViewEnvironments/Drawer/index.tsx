@@ -1,4 +1,6 @@
+import { useMutation } from "@apollo/client";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Breadcrumbs,
@@ -6,13 +8,17 @@ import {
   Divider,
   Drawer,
   Icon,
+  Stack,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { Environment } from "../../../queries";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment } from "../../../queries";
+import { TagSelect } from "../../TagSelect";
+import { EnvironmentTags } from "../EnvironmentTags";
 
 type DrawerParams = {
   env: Environment;
@@ -30,6 +36,16 @@ export const breadcrumbs = (path: string) => (
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
+  const [addTag, addTagMutation] = useMutation(ADD_TAG, {
+    refetchQueries: [ALL_ENVIRONMENTS],
+    onCompleted: (data) => {
+      if (data.addTag.__typename === "AddTagSuccess") {
+        setSelectedTag(null);
+      }
+    },
+  });
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
   return (
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
@@ -49,6 +65,30 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
         >
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
+          <EnvironmentTags tags={env.tags} />
+          <Stack mt={1} direction="row" width="100%" spacing={1}>
+            <TagSelect
+              multiple={false}
+              value={selectedTag}
+              onChange={setSelectedTag}
+            />
+            <LoadingButton
+              variant="outlined"
+              disabled={selectedTag == null}
+              loading={addTagMutation.loading}
+              onClick={() => {
+                addTag({
+                  variables: {
+                    name: env.name,
+                    path: env.path,
+                    tag: selectedTag!,
+                  },
+                });
+              }}
+            >
+              Add tag
+            </LoadingButton>
+          </Stack>
         </Box>
         {env.readme ? (
           <>

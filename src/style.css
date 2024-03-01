@@ -65,3 +65,19 @@ summary {
   padding: 0.5em;
   background-color: #eee;
 }
+
+/* Add some additional space around tags and packages */
+.MuiInput-root .MuiChip-root {
+  margin: 3px !important;
+}
+
+/* Make `TagSelect`s tall enough to contain their "x" button without overflow */
+.tag-input .MuiInput-root {
+  min-height: 39px;
+}
+
+/* Add a background to hovered/focused tags in the tag cloud */
+.tag-cloud a:hover,
+.tag-cloud a:focus {
+  background-color: hsl(0 0% 95%);
+}
