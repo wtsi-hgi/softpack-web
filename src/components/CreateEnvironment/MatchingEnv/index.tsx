@@ -11,6 +11,7 @@ import {
 import { Fragment, useState } from "react";
 
 import { Environment, Package } from "../../../queries";
+import EnvironmentDrawer from "../../ViewEnvironments/Drawer";
 
 type EnvRowParams = {
   environment: Environment;
@@ -20,6 +21,7 @@ type EnvRowParams = {
 // MatchingEnv displays a single row of the "matching environments" table.
 function MatchingEnv(props: EnvRowParams) {
   const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const matchingPackages: Package[] = [];
   const nonmatchingPackages: Package[] = [];
@@ -39,7 +41,10 @@ function MatchingEnv(props: EnvRowParams) {
 
   return (
     <Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow
+        sx={{ "& > *": { borderBottom: "unset" } }}
+        onClick={() => setDrawerOpen(true)}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -86,6 +91,12 @@ function MatchingEnv(props: EnvRowParams) {
           </Collapse>
         </TableCell>
       </TableRow>
+      {drawerOpen && (
+        <EnvironmentDrawer
+          env={props.environment}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
     </Fragment>
   );
 }
