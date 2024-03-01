@@ -1,19 +1,8 @@
 import { useQuery } from "@apollo/client";
-import {
-  Box,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
-import MatchingEnv from "../MatchingEnv";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
