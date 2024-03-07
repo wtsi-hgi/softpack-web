@@ -54,7 +54,7 @@ const EnvironmentList = () => {
   const { username, groups } = useContext(UserContext);
 
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (!loading && !error) {
         client.refetchQueries({ include: [ALL_ENVIRONMENTS] });
       }
@@ -228,7 +228,7 @@ const EnvironmentList = () => {
               }
               disableTypography
               checked={ignoreReady}
-              onChange={(e) => setIgnoreReady((e.target as any).checked)}
+              onChange={(_, checked) => setIgnoreReady(checked)}
             />
             {groups.length > 0 && (
               <FormControlLabel

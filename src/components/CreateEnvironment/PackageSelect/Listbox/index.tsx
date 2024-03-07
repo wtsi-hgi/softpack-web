@@ -94,7 +94,7 @@ function renderRow(props: ListChildComponentProps) {
   );
 }
 
-function useResetCache(data: any) {
+function useResetCache<T>(data: T) {
   const ref = useRef<VariableSizeList>(null);
   useEffect(() => {
     if (ref.current != null) {

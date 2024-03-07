@@ -96,7 +96,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <Box style={{ padding: "0 18px 18px 18px" }}>
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code({ inline, className, children, ...props }) {
                     return !inline ? (
                       <div className="readme_copy">
                         <SyntaxHighlighter
