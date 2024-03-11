@@ -11,7 +11,7 @@ interface PackageContextValue {
 
 const defaultPackage: PackageContextValue = {
   testPackages: [""],
-  setTestPackages: function (_value: SetStateAction<string[]>): void {
+  setTestPackages: function (): void {
     throw new Error("Function not implemented.");
   },
 };
