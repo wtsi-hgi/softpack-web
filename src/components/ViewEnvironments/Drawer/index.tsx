@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Breadcrumbs,
+  Button,
   Chip,
   Divider,
   Drawer,
@@ -63,7 +64,25 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
-          <Typography variant="h3">{env.name}</Typography>
+          <Stack mt={1} justifyContent="center" alignItems="center" direction="row" width="100%" spacing={1}> 
+            <Typography variant="h3">{env.name}</Typography>
+            <Button
+                variant="outlined"
+                size="small"
+                style={{maxHeight: '20px'}}
+                onClick={() => {
+                  addTag({
+                    variables: {
+                      name: env.name,
+                      path: env.path,
+                      tag: selectedTag!,
+                    },
+                  });
+                }}
+              >
+                Clone
+              </Button>
+          </Stack>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
           <EnvironmentTags tags={env.tags} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>
@@ -89,24 +108,9 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
               Add tag
             </LoadingButton>
           </Stack>
-          <Stack mt={1} direction="row" width="100%" spacing={1}>
-            <LoadingButton
-              variant="outlined"
-              disabled={selectedTag == null}
-              loading={addTagMutation.loading}
-              onClick={() => {
-                addTag({
-                  variables: {
-                    name: env.name,
-                    path: env.path,
-                    tag: selectedTag!,
-                  },
-                });
-              }}
-            >
-              Clone
-            </LoadingButton>
-          </Stack>
+          {/* <Stack mt={1} direction="row" width="100%" spacing={1}> */}
+            
+          {/* </Stack> */}
         </Box>
         {env.readme ? (
           <>
