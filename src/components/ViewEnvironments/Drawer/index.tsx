@@ -53,7 +53,8 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
       anchor="right"
       open={true}
       onClose={onClose}
-      style={{ zIndex: 2000 }}
+      style={{ zIndex: 2000, position: "relative" }}
+
     >
       <Box padding={"27px"} style={{ width: "40em" }}>
         <Box
@@ -64,25 +65,35 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
-          <Stack mt={1} justifyContent="center" alignItems="center" direction="row" width="100%" spacing={1}> 
-            <Typography variant="h3">{env.name}</Typography>
+          <Box
+            // height={200}
+            // width={200}
+            display="flex"
+            alignItems="left"
+            // gap={4}
+            //p={0.5}
+            sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
+          >
             <Button
-                variant="outlined"
-                size="small"
-                style={{maxHeight: '20px'}}
-                onClick={() => {
-                  addTag({
-                    variables: {
-                      name: env.name,
-                      path: env.path,
-                      tag: selectedTag!,
-                    },
-                  });
-                }}
-              >
-                Clone
-              </Button>
-          </Stack>
+              variant="text"
+              // size="small"
+              // sx={{ position: "fixed", top: 0, right: 10, zIndex: 2000 }}
+              // sx={{ marginRight: 1 }}
+              // style={{ maxHeight: '20px' }}
+              onClick={() => {
+                addTag({
+                  variables: {
+                    name: env.name,
+                    path: env.path,
+                    tag: selectedTag!,
+                  },
+                });
+              }}
+            >
+              Clone
+            </Button>
+          </Box>
+          <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
           <EnvironmentTags tags={env.tags} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>
@@ -109,7 +120,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             </LoadingButton>
           </Stack>
           {/* <Stack mt={1} direction="row" width="100%" spacing={1}> */}
-            
+
           {/* </Stack> */}
         </Box>
         {env.readme ? (
@@ -204,7 +215,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           })}
         </Box>
       </Box>
-    </Drawer>
+    </Drawer >
   );
 }
 
