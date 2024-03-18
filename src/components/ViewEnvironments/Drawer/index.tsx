@@ -89,6 +89,24 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
               Add tag
             </LoadingButton>
           </Stack>
+          <Stack mt={1} direction="row" width="100%" spacing={1}>
+            <LoadingButton
+              variant="outlined"
+              disabled={selectedTag == null}
+              loading={addTagMutation.loading}
+              onClick={() => {
+                addTag({
+                  variables: {
+                    name: env.name,
+                    path: env.path,
+                    tag: selectedTag!,
+                  },
+                });
+              }}
+            >
+              Clone
+            </LoadingButton>
+          </Stack>
         </Box>
         {env.readme ? (
           <>
