@@ -46,7 +46,7 @@ export default function CreateEnvironment() {
   const [description, setDescription] = useState("");
   const [path, setPath] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
+  const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   const runEnvironmentBuild = () => {

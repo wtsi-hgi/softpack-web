@@ -17,13 +17,19 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { ADD_TAG, ALL_ENVIRONMENTS, Environment } from "../../../queries";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package } from "../../../queries";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type DrawerParams = {
   env: Environment;
   onClose: () => void;
+};
+
+type CloneParams = {
+  name: string;
+  packages: Package[];
 };
 
 export const breadcrumbs = (path: string) => (
@@ -47,6 +53,14 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   });
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  const [_, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+
+  function cloneEnv({ name, packages }: CloneParams) {
+    console.log(name)
+    console.log(packages)
+    setSelectedPackages(packages)
+  }
+
   return (
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
@@ -66,27 +80,16 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           alignItems={"center"}
         >
           <Box
-            // height={200}
-            // width={200}
             display="flex"
             alignItems="left"
-            // gap={4}
-            //p={0.5}
             sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
           >
             <Button
               variant="text"
-              // size="small"
-              // sx={{ position: "fixed", top: 0, right: 10, zIndex: 2000 }}
-              // sx={{ marginRight: 1 }}
-              // style={{ maxHeight: '20px' }}
               onClick={() => {
-                addTag({
-                  variables: {
-                    name: env.name,
-                    path: env.path,
-                    tag: selectedTag!,
-                  },
+                cloneEnv({
+                  name: env.name,
+                  packages: env.packages
                 });
               }}
             >
