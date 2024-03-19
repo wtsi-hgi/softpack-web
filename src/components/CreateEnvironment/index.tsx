@@ -42,10 +42,10 @@ export default function CreateEnvironment() {
     [],
   );
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [path, setPath] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [name, setName] = useLocalStorage<string>("environments-selectedname", "");
+  const [description, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
+  const [path, setPath] = useLocalStorage<string>("environments-selectedpath", "");
+  const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 

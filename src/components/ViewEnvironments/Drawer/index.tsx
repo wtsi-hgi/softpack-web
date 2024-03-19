@@ -21,15 +21,11 @@ import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package } from "../../../querie
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { HelpIcon } from "../../HelpIcon";
 
 type DrawerParams = {
   env: Environment;
   onClose: () => void;
-};
-
-type CloneParams = {
-  name: string;
-  packages: Package[];
 };
 
 export const breadcrumbs = (path: string) => (
@@ -53,12 +49,20 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   });
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const [_, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+  const [_n, setName] = useLocalStorage<string>("environments-selectedname", "");
+  const [_d, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
+  const [_p, setPath] = useLocalStorage<string>("environments-selectedpath", "");
+  const [_t, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
+  const [_pck, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
-  function cloneEnv({ name, packages }: CloneParams) {
-    console.log(name)
-    console.log(packages)
-    setSelectedPackages(packages)
+  function cloneEnv() {
+    let envNameParts = env.name.split("-")
+    envNameParts.pop()
+    setName(envNameParts.join("-"))
+    setDescription(env.description)
+    setPath(env.path)
+    setTags(env.tags)
+    setSelectedPackages(env.packages)
   }
 
   return (
@@ -67,7 +71,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
       anchor="right"
       open={true}
       onClose={onClose}
-      style={{ zIndex: 2000, position: "relative" }}
+      style={{ zIndex: 1400, position: "relative" }}
 
     >
       <Box padding={"27px"} style={{ width: "40em" }}>
@@ -87,13 +91,11 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <Button
               variant="text"
               onClick={() => {
-                cloneEnv({
-                  name: env.name,
-                  packages: env.packages
-                });
+                cloneEnv();
               }}
             >
               Clone
+              <HelpIcon title="Create a new environment based on this one" />
             </Button>
           </Box>
           <Typography variant="h3">{env.name}</Typography>

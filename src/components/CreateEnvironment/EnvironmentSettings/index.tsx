@@ -30,7 +30,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
   const { username, groups } = useContext(UserContext);
 
   useEffect(() => {
-    props.setPath("");
+    props.setPath(props.path);
   }, [username]);
 
   return (
@@ -38,7 +38,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
       <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
         <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
           Name:
-          <HelpIcon title="Choose a name for your environment" />
+          <HelpIcon title="Choose a name for your environment, excluding -version" />
         </Box>
       </Grid>
       <Grid item xs={12} sm={8} md={9} pb={3}>
