@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Breadcrumbs,
+  Button,
   Chip,
   Divider,
   Drawer,
@@ -16,9 +17,12 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { ADD_TAG, ALL_ENVIRONMENTS, Environment } from "../../../queries";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package } from "../../../queries";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { HelpIcon } from "../../HelpIcon";
+import { NavLink } from "react-router-dom";
 
 type DrawerParams = {
   env: Environment;
@@ -46,13 +50,30 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   });
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  const [, setName] = useLocalStorage<string>("environments-selectedname", "");
+  const [, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
+  const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
+  const [, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
+  const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+
+  function cloneEnv() {
+    const envNameParts = env.name.split("-")
+    envNameParts.pop()
+    setName(envNameParts.join("-"))
+    setDescription(env.description)
+    setPath(env.path)
+    setTags(env.tags)
+    setSelectedPackages(env.packages)
+  }
+
   return (
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
       anchor="right"
       open={true}
       onClose={onClose}
-      style={{ zIndex: 2000 }}
+      style={{ zIndex: 1400, position: "relative" }}
+
     >
       <Box padding={"27px"} style={{ width: "40em" }}>
         <Box
@@ -63,6 +84,22 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
+          <Box
+            display="flex"
+            alignItems="left"
+            sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
+          >
+            <Button
+              component={NavLink} to={"/create"}
+              variant="text"
+              onClick={() => {
+                cloneEnv();
+              }}
+            >
+              Clone
+              <HelpIcon title="Create a new environment based on this one" />
+            </Button>
+          </Box>
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
           <EnvironmentTags tags={env.tags} />
