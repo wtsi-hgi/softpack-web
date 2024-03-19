@@ -57,7 +57,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
   function cloneEnv() {
-    let envNameParts = env.name.split("-")
+    const envNameParts = env.name.split("-")
     envNameParts.pop()
     setName(envNameParts.join("-"))
     setDescription(env.description)
