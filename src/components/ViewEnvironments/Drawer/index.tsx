@@ -126,9 +126,6 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
               Add tag
             </LoadingButton>
           </Stack>
-          {/* <Stack mt={1} direction="row" width="100%" spacing={1}> */}
-
-          {/* </Stack> */}
         </Box>
         {env.readme ? (
           <>
