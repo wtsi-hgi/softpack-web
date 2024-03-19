@@ -22,6 +22,7 @@ import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { HelpIcon } from "../../HelpIcon";
+import { NavLink } from "react-router-dom";
 
 type DrawerParams = {
   env: Environment;
@@ -89,6 +90,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
           >
             <Button
+              component={NavLink} to={"/create"}
               variant="text"
               onClick={() => {
                 cloneEnv();
