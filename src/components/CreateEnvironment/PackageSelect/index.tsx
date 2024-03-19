@@ -55,6 +55,19 @@ export default function PackageSelect(props: PackageSelectParams) {
         disableCloseOnSelect
         disableListWrap
         options={[...props.packages.keys()]}
+        filterOptions={(options, state) => {
+          let newOptions:string[] = [];
+          options.forEach((element) => {
+            if (
+              element
+                .toLowerCase()
+                .replace("-", "")
+                .includes(state.inputValue.toLowerCase().replace(" ", "").replace(".", "").replace("_", ""))
+            )
+              newOptions.push(element);
+          });
+          return newOptions;
+        }}
         ListboxComponent={Listbox}
         renderTags={renderTags}
         renderInput={(params) => {
