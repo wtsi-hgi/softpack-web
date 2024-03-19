@@ -7,6 +7,7 @@ import {
   CardContent,
   Divider,
   Grid,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -48,6 +49,14 @@ export default function CreateEnvironment() {
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
+
+  function resetEnvironmentSettings() {
+    setName("")
+    setDescription("")
+    setPath("")
+    setTags([])
+    setSelectedPackages([])
+  }
 
   const runEnvironmentBuild = () => {
     createEnvironment({
@@ -136,7 +145,22 @@ export default function CreateEnvironment() {
       <Grid item xs={11}>
         <Card>
           <Box p={2}>
-            <Typography variant="h4">Environment Settings</Typography>
+            <Stack mt={1} direction="row" alignItems="center" width="100%" spacing={1}>
+              <Typography variant="h4">Environment Settings</Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                disabled={!(
+                  name.length > 0 ||
+                  description.length > 0 ||
+                  path.length > 0 ||
+                  selectedPackages.length > 0
+                )}
+                onClick={resetEnvironmentSettings}
+              >
+                Reset
+              </Button>
+            </Stack>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
