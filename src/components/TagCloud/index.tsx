@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { TagCloud as ReactTagCloud, Tag } from "react-tagcloud";
 
-import { compareStrings } from "../../compare";
+import { compareStrings } from "../../strings";
 import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
 
 export const TagCloud = () => {

@@ -6,20 +6,20 @@ import {
 } from "@mui/material";
 import { useContext, useState } from "react";
 
-import { compareStrings } from "../../compare";
+import { compareStrings } from "../../strings";
 import { AvailableTagsContext } from "../AvailableTagsContext";
 
 type TagSelectProps<Multiple extends boolean> = Multiple extends true
   ? {
-      multiple: true;
-      value: string[];
-      onChange: (value: string[]) => void;
-    }
+    multiple: true;
+    value: string[];
+    onChange: (value: string[]) => void;
+  }
   : {
-      multiple: false;
-      value: string | null;
-      onChange: (value: string | null) => void;
-    };
+    multiple: false;
+    value: string | null;
+    onChange: (value: string | null) => void;
+  };
 
 function isValidTag(tag: string): boolean {
   // this logic copied from softpack-core environment.py

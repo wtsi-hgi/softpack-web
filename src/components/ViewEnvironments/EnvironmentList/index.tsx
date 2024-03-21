@@ -14,7 +14,7 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 
-import { compareStrings } from "../../../compare";
+import { compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
@@ -263,7 +263,7 @@ const EnvironmentList = () => {
           </FormGroup>
         </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
-        ignoreReady ? (
+          ignoreReady ? (
           <Alert severity="info">
             There are currently {environmentsInProgress.length} environments in
             the build queue. Average wait time:{" "}
