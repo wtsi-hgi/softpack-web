@@ -37,6 +37,8 @@ export const breadcrumbs = (path: string) => (
   </Breadcrumbs>
 );
 
+const descAddedToPath = "\n\nThe following executables are added to your PATH:"
+
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
@@ -60,7 +62,11 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
     const envNameParts = env.name.split("-")
     envNameParts.pop()
     setName(envNameParts.join("-"))
-    setDescription(env.description)
+
+    const descParts = env.description.split(descAddedToPath)
+    descParts.pop()
+    setDescription(descParts.join(descAddedToPath))
+
     setPath(env.path)
     setTags(env.tags)
     setSelectedPackages(env.packages)
