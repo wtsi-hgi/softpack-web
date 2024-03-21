@@ -48,6 +48,7 @@ export default function CreateEnvironment() {
   const [path, setPath] = useLocalStorage("environments-selectedpath", "");
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+  const [, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   function resetEnvironmentSettings() {
@@ -56,6 +57,7 @@ export default function CreateEnvironment() {
     setPath("")
     setTags([])
     setSelectedPackages([])
+    setClonedPackages([])
   }
 
   const runEnvironmentBuild = () => {

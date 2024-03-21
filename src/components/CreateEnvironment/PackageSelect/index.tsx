@@ -1,10 +1,11 @@
 import { Alert, Autocomplete, Box, TextField } from "@mui/material";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useState } from "react";
 
 import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
 import { stripPackageSearchPunctuation } from "../../../strings";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -15,32 +16,54 @@ type PackageSelectParams = {
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
-  const validSelectedPackages: Package[] = []
+  // const validSelectedPackages: Package[] = []
   const invalidSelectedPackages: Package[] = []
   const invalidSelectedVersionPackages: Package[] = []
 
-  props.selectedPackages.forEach((pkg) => {
-    const envPkgVersions = props.packages.get(pkg.name)
-    const validPkg: Package = { name: pkg.name, version: pkg.version }
+  // const [validSelectedPackages, setValidSelectedPackages] = useState<Package[]>([]);
+  // const [invalidSelectedPackages, setInvalidSelectedPackages] = useState<Package[]>([]);
+  // const [invalidSelectedVersionPackages, setInvalidSelectedVersionPackages] = useState<Package[]>([]);
 
-    // TODO move to function with docstring
-    if (envPkgVersions) {
-      if (pkg.version && !(pkg.version in envPkgVersions)) {
-        invalidSelectedVersionPackages.push(pkg)
-        validPkg.version = envPkgVersions[0]
-      }
-      validSelectedPackages.push(validPkg)
-    } else {
-      invalidSelectedPackages.push(pkg)
-    }
-  })
+  const [clonedPackages, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
+
+  useMemo(
+    () => {
+      // const vsp: Package[] = []
+      // const isp: Package[] = []
+      // const isvp: Package[] = []
+
+      // clonedPackages.forEach((pkg) => {
+      //   const envPkgVersions = props.packages.get(pkg.name)
+      //   const validPkg: Package = { name: pkg.name, version: pkg.version }
+
+      //   // TODO move to function with docstring
+      //   if (envPkgVersions) {
+      //     if (pkg.version && !(pkg.version in envPkgVersions)) {
+      //       isvp.push(pkg)
+      //       validPkg.version = envPkgVersions[0]
+      //     }
+      //     vsp.push(validPkg)
+      //   } else {
+      //     isp.push(pkg)
+      //   }
+      // })
+
+      // props.setSelectedPackages(vsp)
+      // setValidSelectedPackages(vsp)
+      // setInvalidSelectedPackages(isp)
+      // setInvalidSelectedVersionPackages(isvp)
+      console.log("set to cloned")
+      props.setSelectedPackages(clonedPackages)
+    }, [clonedPackages],
+  );
+
 
   const selectedPackageNames = useMemo(
-    () => validSelectedPackages.map(({ name }) => name),
+    () => props.selectedPackages.map(({ name }) => name),
     [props.selectedPackages],
   );
   const selectedPackageVersions = useMemo(
-    () => validSelectedPackages.map(({ version }) => version),
+    () => props.selectedPackages.map(({ version }) => version),
     [props.selectedPackages],
   );
 
