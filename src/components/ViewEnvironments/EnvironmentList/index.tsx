@@ -14,7 +14,7 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 
-import { compareStrings } from "../../../strings";
+import { compareStrings, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
@@ -96,7 +96,10 @@ const EnvironmentList = () => {
         return (
           e.packages.some((pkg) => {
             const match =
-              pkg.name.toLowerCase().includes(name) &&
+              pkg.name
+                .toLowerCase()
+                .replace("-", "")
+                .includes(stripPackageSearchPunctuation(name)) &&
               (!version || pkg.version?.toLowerCase().startsWith(version));
             if (match) {
               highlightPackagesSet.add({
