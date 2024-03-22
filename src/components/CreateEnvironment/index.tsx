@@ -51,8 +51,6 @@ export default function CreateEnvironment() {
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
-  console.log("groups: ", groups)
-  console.log("path: ", path)
 
   function resetEnvironmentSettings() {
     setName("")
@@ -61,12 +59,6 @@ export default function CreateEnvironment() {
     setTags([])
     setSelectedPackages([])
   }
-
-  const runEnvironmentBuild = () => {
-    createEnvironment({
-      variables: { name, description, path, packages: selectedPackages, tags },
-    });
-  };
 
   const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
     CREATE_ENV,
@@ -138,6 +130,26 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
+  const validPackages: Package[] = []
+
+  selectedPackages.forEach(({ name, version }) => {
+    const envPkgVersions = packages.get(name)
+    let finalVersion = version
+
+    if (envPkgVersions) {
+      if (version && !envPkgVersions.includes(version)) {
+        finalVersion = envPkgVersions[0]
+      }
+      validPackages.push({ name: name, version: finalVersion })
+    }
+  })
+
+  const runEnvironmentBuild = () => {
+    createEnvironment({
+      variables: { name, description, path, packages: validPackages, tags },
+    });
+  };
+
   return (
     <Grid
       container
@@ -201,7 +213,7 @@ export default function CreateEnvironment() {
                   description.length === 0 ||
                   path.length === 0 ||
                   (path !== "users/" + username && !groups.includes(path.split("/")[1])) ||
-                  selectedPackages.length === 0
+                  validPackages.length === 0
                 }
                 onClick={runEnvironmentBuild}
                 sx={{

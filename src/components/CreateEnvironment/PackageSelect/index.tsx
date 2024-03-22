@@ -1,5 +1,5 @@
 import { Alert, Autocomplete, Box, TextField } from "@mui/material";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
@@ -16,48 +16,40 @@ type PackageSelectParams = {
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
-  console.log("PackageSelect is being executing")
-  console.log("props.selectedPackages at the start:", props.selectedPackages.map(({ name }) => name))
-
-  const validSelectedPackages: Package[] = []
+  const validPackages: Package[] = []
   const invalidSelectedPackages: Package[] = []
   const invalidSelectedVersionPackages: Package[] = []
-
-  console.log("All packages: ", props.packages)
-
   useMemo(
     () => {
-      props.selectedPackages.forEach((pkg) => {
-        console.log("Loop. Pkg name: ", pkg.name, "; Pkg version: ", pkg.version)
-        const envPkgVersions = props.packages.get(pkg.name)
-        const validPkg: Package = { name: pkg.name, version: pkg.version }
+      validPackages.length = 0
 
-        // TODO move to function with docstring
+      props.selectedPackages.forEach(({ name, version }) => {
+        const envPkgVersions = props.packages.get(name)
+        const pkg: Package = { name: name, version: version }
+        let finalVersion = version
+
         if (envPkgVersions) {
-          if (pkg.version && !envPkgVersions.includes(pkg.version)) {
-            console.log(pkg.version, " not in ", envPkgVersions, " for ", pkg.name)
+          if (version && !envPkgVersions.includes(version)) {
             invalidSelectedVersionPackages.push(pkg)
-            validPkg.version = envPkgVersions[0]
+            finalVersion = envPkgVersions[0]
           }
-          validSelectedPackages.push(validPkg)
+          validPackages.push({ name: name, version: finalVersion })
         } else {
           invalidSelectedPackages.push(pkg)
         }
       })
-    }, [props.selectedPackages])
+    },
+    [props.selectedPackages],
+  );
 
   const selectedPackageNames = useMemo(
-    () => validSelectedPackages.map(({ name }) => name),
-    [props.selectedPackages],
+    () => validPackages.map(({ name }) => name),
+    [validPackages],
   );
   const selectedPackageVersions = useMemo(
-    () => validSelectedPackages.map(({ version }) => version),
-    [props.selectedPackages],
+    () => validPackages.map(({ version }) => version),
+    [validPackages],
   );
-
-  console.log("End:")
-  console.log("validPackages:", validSelectedPackages)
-  console.log("selectedPackages:", props.selectedPackages.map(({ name }) => name))
 
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
@@ -70,14 +62,14 @@ export default function PackageSelect(props: PackageSelectParams) {
         selectedVersion={selectedPackageVersions[index]}
         onChange={(version) =>
           props.setSelectedPackages(
-            validSelectedPackages.toSpliced(index, 1, {
+            validPackages.toSpliced(index, 1, {
               name: packageName,
               version,
             }),
           )
         }
         onDelete={() =>
-          props.setSelectedPackages(validSelectedPackages.toSpliced(index, 1))
+          props.setSelectedPackages(validPackages.toSpliced(index, 1))
         }
       />
     ));
@@ -111,7 +103,7 @@ export default function PackageSelect(props: PackageSelectParams) {
             <TextField
               {...params}
               variant="standard"
-              label={validSelectedPackages.length ? "" : "Search..."}
+              label={props.selectedPackages.length ? "" : "Search..."}
             />
           );
         }}
@@ -122,7 +114,7 @@ export default function PackageSelect(props: PackageSelectParams) {
         value={selectedPackageNames}
         onChange={(_, value) => {
           const prevVersions = new Map<string, string | null | undefined>();
-          validSelectedPackages.forEach(({ name, version }) =>
+          validPackages.forEach(({ name, version }) =>
             prevVersions.set(name, version),
           );
           props.setSelectedPackages(
