@@ -21,6 +21,7 @@ import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 import { UserContext } from "../UserContext";
+import { validatePackages } from "./packageValidation";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -130,19 +131,7 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
-  const validPackages: Package[] = []
-
-  selectedPackages.forEach(({ name, version }) => {
-    const envPkgVersions = packages.get(name)
-    let finalVersion = version
-
-    if (envPkgVersions) {
-      if (version && !envPkgVersions.includes(version)) {
-        finalVersion = envPkgVersions[0]
-      }
-      validPackages.push({ name: name, version: finalVersion })
-    }
-  })
+  const [validPackages, ,] = validatePackages(selectedPackages, packages)
 
   const runEnvironmentBuild = () => {
     createEnvironment({

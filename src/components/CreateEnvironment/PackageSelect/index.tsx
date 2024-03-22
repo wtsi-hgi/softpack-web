@@ -6,6 +6,7 @@ import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
 import { stripPackageSearchPunctuation } from "../../../strings";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { validatePackages } from "../packageValidation";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -19,25 +20,14 @@ export default function PackageSelect(props: PackageSelectParams) {
   const validPackages: Package[] = []
   const invalidSelectedPackages: Package[] = []
   const invalidSelectedVersionPackages: Package[] = []
+
   useMemo(
     () => {
-      validPackages.length = 0
-
-      props.selectedPackages.forEach(({ name, version }) => {
-        const envPkgVersions = props.packages.get(name)
-        const pkg: Package = { name: name, version: version }
-        let finalVersion = version
-
-        if (envPkgVersions) {
-          if (version && !envPkgVersions.includes(version)) {
-            invalidSelectedVersionPackages.push(pkg)
-            finalVersion = envPkgVersions[0]
-          }
-          validPackages.push({ name: name, version: finalVersion })
-        } else {
-          invalidSelectedPackages.push(pkg)
-        }
-      })
+      validPackages.length = 0;
+      const validated = validatePackages(props.selectedPackages, props.packages)
+      validPackages.push(...validated[0])
+      invalidSelectedPackages.push(...validated[1])
+      invalidSelectedVersionPackages.push(...validated[2])
     },
     [props.selectedPackages],
   );
