@@ -56,7 +56,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   const [, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
   const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
   const [, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
-  const [, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
+  const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
   function cloneEnv() {
     const envNameParts = env.name.split("-")
@@ -69,7 +69,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
 
     setPath(env.path)
     setTags(env.tags)
-    setClonedPackages(env.packages)
+    setSelectedPackages(env.packages)
   }
 
   return (
