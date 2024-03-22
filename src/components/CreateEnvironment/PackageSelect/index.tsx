@@ -11,51 +11,52 @@ type PackageSelectParams = {
   packages: Map<string, string[]>;
   selectedPackages: Package[];
   setSelectedPackages: (packages: Package[]) => void;
+  invalidSelectedPackages: Package[];
+  invalidSelectedVersionPackages: Package[];
 };
 
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
+  console.log("PackageSelect started")
   // const validSelectedPackages: Package[] = []
-  const invalidSelectedPackages: Package[] = []
-  const invalidSelectedVersionPackages: Package[] = []
+  // const invalidSelectedPackages: Package[] = []
+  // const invalidSelectedVersionPackages: Package[] = []
 
-  // const [validSelectedPackages, setValidSelectedPackages] = useState<Package[]>([]);
-  // const [invalidSelectedPackages, setInvalidSelectedPackages] = useState<Package[]>([]);
-  // const [invalidSelectedVersionPackages, setInvalidSelectedVersionPackages] = useState<Package[]>([]);
+  // // const [validSelectedPackages, setValidSelectedPackages] = useState<Package[]>([]);
+  // // const [invalidSelectedPackages, setInvalidSelectedPackages] = useState<Package[]>([]);
+  // // const [invalidSelectedVersionPackages, setInvalidSelectedVersionPackages] = useState<Package[]>([]);
 
-  const [clonedPackages, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
+  // useMemo(
+  //   () => {
+  //     const vsp: Package[] = []
+  //     const isp: Package[] = []
+  //     const isvp: Package[] = []
 
-  useMemo(
-    () => {
-      // const vsp: Package[] = []
-      // const isp: Package[] = []
-      // const isvp: Package[] = []
+  //     props.clonedPackages.forEach((pkg) => {
+  //       const envPkgVersions = props.packages.get(pkg.name)
+  //       const validPkg: Package = { name: pkg.name, version: pkg.version }
 
-      // clonedPackages.forEach((pkg) => {
-      //   const envPkgVersions = props.packages.get(pkg.name)
-      //   const validPkg: Package = { name: pkg.name, version: pkg.version }
+  //       // TODO move to function with docstring
+  //       if (envPkgVersions) {
+  //         if (pkg.version && !(pkg.version in envPkgVersions)) {
+  //           isvp.push(pkg)
+  //           validPkg.version = envPkgVersions[0]
+  //         }
+  //         vsp.push(validPkg)
+  //       } else {
+  //         isp.push(pkg)
+  //       }
+  //     })
 
-      //   // TODO move to function with docstring
-      //   if (envPkgVersions) {
-      //     if (pkg.version && !(pkg.version in envPkgVersions)) {
-      //       isvp.push(pkg)
-      //       validPkg.version = envPkgVersions[0]
-      //     }
-      //     vsp.push(validPkg)
-      //   } else {
-      //     isp.push(pkg)
-      //   }
-      // })
-
-      // props.setSelectedPackages(vsp)
-      // setValidSelectedPackages(vsp)
-      // setInvalidSelectedPackages(isp)
-      // setInvalidSelectedVersionPackages(isvp)
-      console.log("set to cloned")
-      props.setSelectedPackages(clonedPackages)
-    }, [clonedPackages],
-  );
+  //     // props.setSelectedPackages(vsp)
+  //     // setValidSelectedPackages(vsp)
+  //     // setInvalidSelectedPackages(isp)
+  //     // setInvalidSelectedVersionPackages(isvp)
+  //     console.log("set to vsp")
+  //     props.setSelectedPackages(vsp)
+  //   }, [props.clonedPackages],
+  // );
 
 
   const selectedPackageNames = useMemo(
@@ -142,16 +143,16 @@ export default function PackageSelect(props: PackageSelectParams) {
         }}
       />
 
-      {invalidSelectedPackages.length > 0 ? (
+      {props.invalidSelectedPackages.length > 0 ? (
         <Alert severity="error">
-          These packages no longer exist: {invalidSelectedPackages.map(x => x.name).join(", ")}
+          These packages no longer exist: {props.invalidSelectedPackages.map(x => x.name).join(", ")}
         </Alert>
       ) : null}
 
       {
-        invalidSelectedVersionPackages.length > 0 ? (
+        props.invalidSelectedVersionPackages.length > 0 ? (
           <Alert severity="warning">
-            These package versions no longer exist (the latest has been used): {invalidSelectedVersionPackages.map(x => x.name + "@" + x.version).join(", ")}
+            These package versions no longer exist (the latest has been used): {props.invalidSelectedVersionPackages.map(x => x.name + "@" + x.version).join(", ")}
           </Alert>
         ) : null
       }

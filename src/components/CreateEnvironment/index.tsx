@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 import type { Package } from "../../queries";
 import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
@@ -48,7 +48,7 @@ export default function CreateEnvironment() {
   const [path, setPath] = useLocalStorage("environments-selectedpath", "");
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
-  const [, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
+  const [clonedPackages, setClonedPackages] = useLocalStorage<Package[]>("environments-clonedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
 
   function resetEnvironmentSettings() {
@@ -136,6 +136,48 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
+  // let invalidSelectedPackages: Package[] = []
+  // let invalidSelectedVersionPackages: Package[] = []
+  const [invalidSelectedPackages, setInvalidSelectedPackages] = useState<Package[]>([]);
+  const [invalidSelectedVersionPackages, setInvalidSelectedVersionPackages] = useState<Package[]>([]);
+
+  // useMemo(
+  //   () => {
+  const vsp: Package[] = []
+  const isp: Package[] = []
+  const isvp: Package[] = []
+
+  console.log(clonedPackages)
+  clonedPackages.forEach((pkg) => {
+    const envPkgVersions = packages.get(pkg.name)
+    const validPkg: Package = { name: pkg.name, version: pkg.version }
+
+    // TODO move to function with docstring
+    if (envPkgVersions) {
+      if (pkg.version && !(pkg.version in envPkgVersions)) {
+        isvp.push(pkg)
+        validPkg.version = envPkgVersions[0]
+      }
+      vsp.push(validPkg)
+    } else {
+      isp.push(pkg)
+    }
+  })
+
+  // props.setSelectedPackages(vsp)
+  // setValidSelectedPackages(vsp)
+  // setInvalidSelectedPackages(isp)
+  // setInvalidSelectedVersionPackages(isvp)
+  console.log("set to vsp")
+  if (vsp.length > 0) {
+    setSelectedPackages(vsp)
+    setClonedPackages([])
+    setInvalidSelectedPackages(isp)
+    setInvalidSelectedVersionPackages(isvp)
+  }
+  //   }, [clonedPackages],
+  // );
+
   return (
     <Grid
       container
@@ -184,6 +226,8 @@ export default function CreateEnvironment() {
                   packages={packages}
                   selectedPackages={selectedPackages}
                   setSelectedPackages={setSelectedPackages}
+                  invalidSelectedPackages={invalidSelectedPackages}
+                  invalidSelectedVersionPackages={invalidSelectedVersionPackages}
                   runEnvironmentBuild={runEnvironmentBuild}
                   envBuildInFlight={envBuildInFlight}
                 />
