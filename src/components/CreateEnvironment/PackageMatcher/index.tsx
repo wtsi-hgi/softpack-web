@@ -9,8 +9,6 @@ type PackageMatcherParams = {
   packages: Map<string, string[]>;
   selectedPackages: Package[];
   setSelectedPackages: (packages: Package[]) => void;
-  invalidSelectedPackages: Package[];
-  invalidSelectedVersionPackages: Package[];
   runEnvironmentBuild: () => void;
   envBuildInFlight: boolean;
 };
@@ -34,8 +32,6 @@ function PackageMatcher(props: PackageMatcherParams) {
               packages={props.packages}
               selectedPackages={props.selectedPackages}
               setSelectedPackages={props.setSelectedPackages}
-              invalidSelectedPackages={props.invalidSelectedPackages}
-              invalidSelectedVersionPackages={props.invalidSelectedVersionPackages}
             />
           </Box>
         </Grid>
