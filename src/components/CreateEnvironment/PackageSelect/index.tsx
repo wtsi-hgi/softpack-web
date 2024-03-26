@@ -5,7 +5,6 @@ import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
 import { stripPackageSearchPunctuation } from "../../../strings";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { validatePackages } from "../packageValidation";
 
 type PackageSelectParams = {
@@ -74,7 +73,7 @@ export default function PackageSelect(props: PackageSelectParams) {
         disableListWrap
         options={[...props.packages.keys()]}
         filterOptions={(options, state) => {
-          let newOptions: string[] = [];
+          const newOptions: string[] = [];
           options.forEach((element) => {
             if (
               element
