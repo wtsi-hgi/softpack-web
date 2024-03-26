@@ -3,5 +3,5 @@ export function compareStrings(a: string, b: string) {
 }
 
 export function stripPackageSearchPunctuation(name: string) {
-  return name.toLowerCase().replace(" ", "").replace(".", "").replace("_", "")
+  return name.toLowerCase().replaceAll(/\p{P}/ug, "")
 }
