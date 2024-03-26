@@ -4,6 +4,7 @@ import { ReactNode, useMemo } from "react";
 import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
+import { stripPackageSearchPunctuation } from "../../../strings";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -55,6 +56,19 @@ export default function PackageSelect(props: PackageSelectParams) {
         disableCloseOnSelect
         disableListWrap
         options={[...props.packages.keys()]}
+        filterOptions={(options, state) => {
+          let newOptions: string[] = [];
+          options.forEach((element) => {
+            if (
+              element
+                .toLowerCase()
+                .replace("-", "")
+                .includes(stripPackageSearchPunctuation(state.inputValue))
+            )
+              newOptions.push(element);
+          });
+          return newOptions;
+        }}
         ListboxComponent={Listbox}
         renderTags={renderTags}
         renderInput={(params) => {
