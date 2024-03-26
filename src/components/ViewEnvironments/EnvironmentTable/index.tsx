@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Fragment, useState } from "react";
 
-import { compareStrings } from "../../../compare";
+import { compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
 import type { Environments, Package, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
