@@ -22,6 +22,7 @@ import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 import { UserContext } from "../UserContext";
 import { validatePackages } from "./packageValidation";
+import { useNavigate } from "react-router-dom"
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -139,6 +140,8 @@ export default function CreateEnvironment() {
     });
   };
 
+  const navigate = useNavigate()
+
   return (
     <Grid
       container
@@ -221,7 +224,11 @@ export default function CreateEnvironment() {
         <PopUpDialog
           title={envBuildResult.title}
           message={envBuildResult.message}
-          onClose={() => setEnvBuildResult({ title: "", message: "" })}
+          onClose={() => {
+            setEnvBuildResult({ title: "", message: "" })
+            resetEnvironmentSettings()
+            navigate("/environments")
+          }}
         />
       )}
     </Grid>
