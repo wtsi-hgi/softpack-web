@@ -20,6 +20,9 @@ import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
+import { UserContext } from "../UserContext";
+import { validatePackages } from "./packageValidation";
+import { useNavigate } from "react-router-dom"
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -49,6 +52,7 @@ export default function CreateEnvironment() {
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
+  const { username, groups } = useContext(UserContext);
 
   function resetEnvironmentSettings() {
     setName("")
@@ -57,12 +61,6 @@ export default function CreateEnvironment() {
     setTags([])
     setSelectedPackages([])
   }
-
-  const runEnvironmentBuild = () => {
-    createEnvironment({
-      variables: { name, description, path, packages: selectedPackages, tags },
-    });
-  };
 
   const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
     CREATE_ENV,
@@ -134,6 +132,16 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
+  const [validPackages] = validatePackages(selectedPackages, packages)
+
+  const runEnvironmentBuild = () => {
+    createEnvironment({
+      variables: { name, description, path, packages: validPackages, tags },
+    });
+  };
+
+  const navigate = useNavigate()
+
   return (
     <Grid
       container
@@ -196,7 +204,8 @@ export default function CreateEnvironment() {
                   name.length === 0 ||
                   description.length === 0 ||
                   path.length === 0 ||
-                  selectedPackages.length === 0
+                  (path !== "users/" + username && !groups.includes(path.split("/")[1])) ||
+                  validPackages.length === 0
                 }
                 onClick={runEnvironmentBuild}
                 sx={{
@@ -215,7 +224,11 @@ export default function CreateEnvironment() {
         <PopUpDialog
           title={envBuildResult.title}
           message={envBuildResult.message}
-          onClose={() => setEnvBuildResult({ title: "", message: "" })}
+          onClose={() => {
+            setEnvBuildResult({ title: "", message: "" })
+            resetEnvironmentSettings()
+            navigate("/environments")
+          }}
         />
       )}
     </Grid>
