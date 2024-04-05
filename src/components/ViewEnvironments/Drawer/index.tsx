@@ -64,7 +64,9 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
     setName(envNameParts.join("-"))
 
     const descParts = env.description.split(descAddedToPath)
-    descParts.pop()
+    if (descParts.length > 1) {
+      descParts.pop()
+    }
     setDescription(descParts.join(descAddedToPath))
 
     setPath(env.path)
