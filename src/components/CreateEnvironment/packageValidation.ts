@@ -11,13 +11,13 @@ export function validatePackages(selectedPackages: Package[], allPackages: Map<s
         let finalVersion = version
 
         if (envPkgVersions) {
-        if (version && !envPkgVersions.includes(version)) {
-            invalidSelectedVersionPackages.push(pkg)
-            finalVersion = envPkgVersions[0]
-        }
-        validPackages.push({ name: name, version: finalVersion })
+            if (version && !envPkgVersions.includes(version)) {
+                invalidSelectedVersionPackages.push(pkg)
+                finalVersion = envPkgVersions[0]
+            }
+            validPackages.push({ name: name, version: finalVersion })
         } else {
-        invalidSelectedPackages.push(pkg)
+            invalidSelectedPackages.push(pkg)
         }
     })
 

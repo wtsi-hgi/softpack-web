@@ -132,7 +132,7 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
-  const [validPackages, ,] = validatePackages(selectedPackages, packages)
+  const [validPackages] = validatePackages(selectedPackages, packages)
 
   const runEnvironmentBuild = () => {
     createEnvironment({
