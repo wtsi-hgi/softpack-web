@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -53,6 +54,8 @@ export default function CreateEnvironment() {
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
+
+  const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
 
   const navigate = useNavigate()
 
@@ -171,6 +174,22 @@ export default function CreateEnvironment() {
             </Stack>
           </Box>
           <Divider />
+
+          {hideInstructions ? null : (
+            <Stack justifyContent="center" direction="row">
+              <Alert
+                severity="info"
+                sx={{ maxWidth: "40em" }}
+                onClose={() => { setHideInstructions(true) }}
+              >
+                To create an environment similar to an existing one, find it on
+                the environments page, click on it and then click the "clone"
+                button in the top right corner, which will fill out the form
+                below for you. Then make your desired changes.
+              </Alert>
+            </Stack>
+          )}
+
           <CardContent sx={{ p: 4 }}>
             <Typography variant="subtitle2">
               <EnvironmentSettings
@@ -220,17 +239,19 @@ export default function CreateEnvironment() {
         </Card>
       </Grid>
 
-      {envBuildResult.title !== "" && (
-        <PopUpDialog
-          title={envBuildResult.title}
-          message={envBuildResult.message}
-          onClose={() => {
-            setEnvBuildResult({ title: "", message: "" })
-            resetEnvironmentSettings()
-            navigate("/environments")
-          }}
-        />
-      )}
+      {
+        envBuildResult.title !== "" && (
+          <PopUpDialog
+            title={envBuildResult.title}
+            message={envBuildResult.message}
+            onClose={() => {
+              setEnvBuildResult({ title: "", message: "" })
+              resetEnvironmentSettings()
+              navigate("/environments")
+            }}
+          />
+        )
+      }
     </Grid>
   );
 }
