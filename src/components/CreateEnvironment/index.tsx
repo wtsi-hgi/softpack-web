@@ -54,6 +54,8 @@ export default function CreateEnvironment() {
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
 
+  const navigate = useNavigate()
+
   function resetEnvironmentSettings() {
     setName("")
     setDescription("")
@@ -139,8 +141,6 @@ export default function CreateEnvironment() {
       variables: { name, description, path, packages: validPackages, tags },
     });
   };
-
-  const navigate = useNavigate()
 
   return (
     <Grid
