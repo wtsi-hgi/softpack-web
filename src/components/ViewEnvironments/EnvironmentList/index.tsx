@@ -138,32 +138,23 @@ const EnvironmentList = () => {
     );
   }
 
-  const latestEnvVersion = new Map<string, string>();
+  const envsGroupedOnNamePath = new Map<string, [semver.SemVer, typeof filteredEnvironments[0]]>();
+  const zero = semver.coerce("0")!;
 
-  filteredEnvironments.forEach(
-    e => {
-      let [name, version] = splitEnvironmentNameToNameAndVersion(e.name)
-      const semVer = semver.coerce(version)
-      if (!semVer) {
-        return;
-      }
-      const key: string = name + e.path
-      const seenVersion: string = latestEnvVersion.get(key) || ""
-      if (!seenVersion || semver.gte(semVer, seenVersion)) {
-        latestEnvVersion.set(key, semVer.version)
-      }
-    }
-  );
+  for (const env of filteredEnvironments) {
+    let [name, version] = splitEnvironmentNameToNameAndVersion(env.name);
 
-  filteredEnvironments = filteredEnvironments.filter(
-    e => {
-      const [name, version] = splitEnvironmentNameToNameAndVersion(e.name)
-      const key: string = name + e.path
-      const latest = latestEnvVersion.get(key)
-      const semVer = semver.coerce(version)
-      return !semVer || semVer.version == latest
+    name += env.path;
+
+    const semVer = semver.coerce(version) ?? zero;
+    const existing = envsGroupedOnNamePath.get(name);
+
+    if (!existing || semver.gte(semVer, existing[0])) {
+      envsGroupedOnNamePath.set(name, [semVer, env]);
     }
-  );
+  }
+
+  filteredEnvironments = Array.from(envsGroupedOnNamePath.values()).map(e => e[1])
 
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
