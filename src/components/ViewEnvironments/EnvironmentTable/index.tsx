@@ -172,10 +172,10 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   </Typography>
                   <Box sx={{ maxHeight: "90px", overflowY: "auto" }}>
                     {highlightPackages.map((pkg) => (
-                      <PackageChip key={pkg.name} pkg={pkg} highlight />
+                      <PackageChip key={pkg.name + pkg.version} pkg={pkg} highlight />
                     ))}
                     {normalPackages.map((pkg) => (
-                      <PackageChip key={pkg.name} pkg={pkg} />
+                      <PackageChip key={pkg.name + pkg.version} pkg={pkg} />
                     ))}
                   </Box>
                   {env.state === "queued" && (
