@@ -78,7 +78,7 @@ export default function PackageSelect(props: PackageSelectParams) {
             if (
               element
                 .toLowerCase()
-                .replace("-", "")
+                .replaceAll("-", "")
                 .includes(stripPackageSearchPunctuation(state.inputValue))
             )
               newOptions.push(element);

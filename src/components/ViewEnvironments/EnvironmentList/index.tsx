@@ -99,7 +99,7 @@ const EnvironmentList = () => {
           const match =
             pkg.name
               .toLowerCase()
-              .replace("-", "")
+              .replaceAll("-", "")
               .includes(stripPackageSearchPunctuation(name)) &&
             (!version || pkg.version?.toLowerCase().startsWith(version));
           if (match) {
