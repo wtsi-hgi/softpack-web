@@ -93,24 +93,29 @@ const EnvironmentList = () => {
       parts.every((part) => {
         const [name, version] = part.split("@");
 
+        let aPackageMatched: boolean = false;
+
+        e.packages.forEach((pkg) => {
+          const match =
+            pkg.name
+              .toLowerCase()
+              .replaceAll("-", "")
+              .includes(stripPackageSearchPunctuation(name)) &&
+            (!version || pkg.version?.toLowerCase().startsWith(version));
+          if (match) {
+            highlightPackagesSet.add({
+              name: pkg.name,
+              version: pkg.version,
+            });
+
+            aPackageMatched = true;
+          }
+        })
+
         return (
-          e.packages.some((pkg) => {
-            const match =
-              pkg.name
-                .toLowerCase()
-                .replace("-", "")
-                .includes(stripPackageSearchPunctuation(name)) &&
-              (!version || pkg.version?.toLowerCase().startsWith(version));
-            if (match) {
-              highlightPackagesSet.add({
-                name: pkg.name,
-                version: pkg.version,
-              });
-            }
-            return match;
-          }) || e.name.toLocaleLowerCase().includes(part)
+          aPackageMatched || e.name.toLocaleLowerCase().includes(part)
         );
-      }),
+      })
     );
   }
   const highlightPackages = [...highlightPackagesSet];
