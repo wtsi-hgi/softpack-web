@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
+import * as semver from "semver";
 
-import { compareStrings, stripPackageSearchPunctuation } from "../../../strings";
+import { compareStrings, splitEnvironmentNameToNameAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
@@ -136,6 +137,33 @@ const EnvironmentList = () => {
       (e) => e.state !== "ready",
     );
   }
+
+  const latestEnvVersion = new Map<string, string>();
+
+  filteredEnvironments.forEach(
+    e => {
+      let [name, version] = splitEnvironmentNameToNameAndVersion(e.name)
+      const semVer = semver.coerce(version)
+      if (!semVer) {
+        return;
+      }
+      const key: string = name + e.path
+      const seenVersion: string = latestEnvVersion.get(key) || ""
+      if (!seenVersion || semver.gte(semVer, seenVersion)) {
+        latestEnvVersion.set(key, semVer.version)
+      }
+    }
+  );
+
+  filteredEnvironments = filteredEnvironments.filter(
+    e => {
+      const [name, version] = splitEnvironmentNameToNameAndVersion(e.name)
+      const key: string = name + e.path
+      const latest = latestEnvVersion.get(key)
+      const semVer = semver.coerce(version)
+      return !semVer || semVer.version == latest
+    }
+  );
 
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
