@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Fragment, useState } from "react";
 
-import { compareEnvironmentNames, compareStrings } from "../../../strings";
+import { compareEnvironments, compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
 import type { Environments, Package, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
@@ -62,7 +62,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
   const [selectedEnv, setSelectedEnv] = useState<string | null>(null);
 
   const environments = props.environments.toSorted((a, b) =>
-    compareEnvironmentNames(a.name, b.name),
+    compareEnvironments(a, b),
   );
 
   const allHighlightedPackages = new Set<string>();
