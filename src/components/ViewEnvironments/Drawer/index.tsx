@@ -23,7 +23,7 @@ import { EnvironmentTags } from "../EnvironmentTags";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { HelpIcon } from "../../HelpIcon";
 import { NavLink } from "react-router-dom";
-import { splitEnvironmentNameToNameAndVersion } from "../../../strings";
+import { parseEnvironmentToNamePathAndVersion } from "../../../strings";
 
 type DrawerParams = {
   env: Environment;
@@ -60,7 +60,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
   function cloneEnv() {
-    const [name] = splitEnvironmentNameToNameAndVersion(env.name)
+    const [name] = parseEnvironmentToNamePathAndVersion(env)
     setName(name)
 
     const descParts = env.description.split(descAddedToPath)

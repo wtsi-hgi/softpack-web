@@ -15,7 +15,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 import * as semver from "semver";
 
-import { compareStrings, splitEnvironmentNameToNameAndVersion, stripPackageSearchPunctuation } from "../../../strings";
+import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
@@ -144,12 +144,9 @@ const EnvironmentList = () => {
 
   if (!showOldVersions) {
     const envsGroupedOnNamePath = new Map<string, [semver.SemVer, typeof filteredEnvironments[0]]>();
-    const zero = semver.coerce("0")!;
 
     for (const env of filteredEnvironments) {
-      const [name, version] = splitEnvironmentNameToNameAndVersion(env.name);
-      const namePath = name + "." + env.path;
-      const semVer = semver.coerce(version) ?? zero;
+      const [, namePath, semVer] = parseEnvironmentToNamePathAndVersion(env);
       const existing = envsGroupedOnNamePath.get(namePath);
 
       if (!existing || semver.gte(semVer, existing[0])) {
