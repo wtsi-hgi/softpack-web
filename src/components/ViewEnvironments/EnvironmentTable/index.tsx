@@ -60,10 +60,9 @@ function PackageChip({ pkg, highlight }: PackageChipProps) {
   );
 }
 
-// TODO be able to open drawer for env from URL that is not in props.environments
 function EnvironmentTable(props: EnvironmentTableProps) {
   let [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const modifyUrl = props.modifyUrl ?? false
   const environments = props.environments.toSorted((a, b) =>

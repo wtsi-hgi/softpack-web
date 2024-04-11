@@ -22,6 +22,7 @@ import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
+import { useSearchParams } from "react-router-dom";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -57,6 +58,8 @@ const EnvironmentList = () => {
     false,
   );
   const { username, groups } = useContext(UserContext);
+
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -160,6 +163,13 @@ const EnvironmentList = () => {
     }
 
     filteredEnvironments = Array.from(envsGroupedOnNamePath.values()).map(e => e[1])
+  }
+
+  const searchEnv = searchParams.get("envId")
+  if (searchEnv) {
+    const extraEnv = data.environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+    if (extraEnv && !filteredEnvironments.includes(extraEnv))
+      filteredEnvironments.push(extraEnv)
   }
 
   const allGroupsSet = new Set<string>();
