@@ -11,9 +11,10 @@ import { Fragment, useState } from "react";
 
 import { compareEnvironments, compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
-import type { Environments, Package, States } from "../../../queries";
+import type { Environment, Environments, Package, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 import { EnvironmentTags } from "../EnvironmentTags";
+import { useSearchParams } from "react-router-dom";
 
 type State = {
   colour: string;
@@ -58,8 +59,10 @@ function PackageChip({ pkg, highlight }: PackageChipProps) {
   );
 }
 
+// FIXME do not edit URL on create page
+// TODO add flag to add functionality to edit URL params
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const [selectedEnv, setSelectedEnv] = useState<string | null>(null);
+  let [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
 
   const environments = props.environments.toSorted((a, b) =>
     compareEnvironments(a, b),
@@ -69,6 +72,11 @@ function EnvironmentTable(props: EnvironmentTableProps) {
   props.highlightPackages?.forEach(({ name, version }) => {
     allHighlightedPackages.add(version ? `${name}@${version}` : name);
   });
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  let searchEnv = searchParams.get("envId")
+
+  selectedEnv = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
 
   return (
     <>
@@ -93,7 +101,12 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           return (
             <Fragment key={`${env.path}/${env.name}`}>
               <Box
-                onClick={() => setSelectedEnv(`${env.path}/${env.name}`)}
+                onClick={() => {
+                  let envKey = `${env.path}/${env.name}`
+                  setSelectedEnv(env)
+                  searchParams.set('envId', envKey)
+                  setSearchParams(searchParams)
+                }}
                 sx={{
                   borderRadius: "10px",
                   backgroundColor: "rgba(34, 51, 84, 0.02)",
@@ -203,16 +216,20 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   )}
                 </Box>
               </Box>
-              {selectedEnv === `${env.path}/${env.name}` && (
-                <EnvironmentDrawer
-                  env={env}
-                  onClose={() => setSelectedEnv(null)}
-                />
-              )}
             </Fragment>
           );
         })}
       </Masonry>
+      {(selectedEnv) && (
+        <EnvironmentDrawer
+          env={selectedEnv}
+          onClose={() => {
+            setSelectedEnv(null)
+            searchParams.delete('envId')
+            setSearchParams(searchParams)
+          }}
+        />
+      )}
     </>
   );
 }
