@@ -39,6 +39,7 @@ const states: Record<States, State> = {
 type EnvironmentTableProps = {
   environments: Environments;
   highlightPackages?: Package[];
+  modifyUrl?: boolean;
 };
 
 type PackageChipProps = { pkg: Package; highlight?: boolean };
@@ -59,11 +60,12 @@ function PackageChip({ pkg, highlight }: PackageChipProps) {
   );
 }
 
-// FIXME do not edit URL on create page
-// TODO add flag to add functionality to edit URL params
+// TODO be able to open drawer for env from URL that is not in props.environments
 function EnvironmentTable(props: EnvironmentTableProps) {
   let [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
+  let [searchParams, setSearchParams] = useSearchParams();
 
+  const modifyUrl = props.modifyUrl ?? false
   const environments = props.environments.toSorted((a, b) =>
     compareEnvironments(a, b),
   );
@@ -73,10 +75,10 @@ function EnvironmentTable(props: EnvironmentTableProps) {
     allHighlightedPackages.add(version ? `${name}@${version}` : name);
   });
 
-  let [searchParams, setSearchParams] = useSearchParams();
-  let searchEnv = searchParams.get("envId")
-
-  selectedEnv = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+  if (modifyUrl) {
+    const searchEnv = searchParams.get("envId")
+    selectedEnv = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+  }
 
   return (
     <>
@@ -102,10 +104,11 @@ function EnvironmentTable(props: EnvironmentTableProps) {
             <Fragment key={`${env.path}/${env.name}`}>
               <Box
                 onClick={() => {
-                  let envKey = `${env.path}/${env.name}`
                   setSelectedEnv(env)
-                  searchParams.set('envId', envKey)
-                  setSearchParams(searchParams)
+                  if (modifyUrl) {
+                    searchParams.set('envId', `${env.path}/${env.name}`)
+                    setSearchParams(searchParams)
+                  }
                 }}
                 sx={{
                   borderRadius: "10px",

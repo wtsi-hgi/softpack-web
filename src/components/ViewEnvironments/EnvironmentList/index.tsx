@@ -315,6 +315,7 @@ const EnvironmentList = () => {
         <EnvironmentTable
           environments={filteredEnvironments}
           highlightPackages={highlightPackages}
+          modifyUrl={true}
         />
       </Container>
     </>
