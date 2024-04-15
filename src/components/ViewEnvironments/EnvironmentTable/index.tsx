@@ -11,9 +11,10 @@ import { Fragment, useState } from "react";
 
 import { compareEnvironments, compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
-import type { Environments, Package, States } from "../../../queries";
+import type { Environment, Environments, Package, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
 import { EnvironmentTags } from "../EnvironmentTags";
+import { useSearchParams } from "react-router-dom";
 
 type State = {
   colour: string;
@@ -38,6 +39,7 @@ const states: Record<States, State> = {
 type EnvironmentTableProps = {
   environments: Environments;
   highlightPackages?: Package[];
+  modifyUrl?: boolean;
 };
 
 type PackageChipProps = { pkg: Package; highlight?: boolean };
@@ -59,8 +61,10 @@ function PackageChip({ pkg, highlight }: PackageChipProps) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const [selectedEnv, setSelectedEnv] = useState<string | null>(null);
+  let [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const modifyUrl = props.modifyUrl ?? false
   const environments = props.environments.toSorted((a, b) =>
     compareEnvironments(a, b),
   );
@@ -69,6 +73,13 @@ function EnvironmentTable(props: EnvironmentTableProps) {
   props.highlightPackages?.forEach(({ name, version }) => {
     allHighlightedPackages.add(version ? `${name}@${version}` : name);
   });
+
+  if (modifyUrl) {
+    const searchEnv = searchParams.get("envId")
+    const env = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+    if (selectedEnv != env)
+      setSelectedEnv(env)
+  }
 
   return (
     <>
@@ -93,7 +104,13 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           return (
             <Fragment key={`${env.path}/${env.name}`}>
               <Box
-                onClick={() => setSelectedEnv(`${env.path}/${env.name}`)}
+                onClick={() => {
+                  setSelectedEnv(env)
+                  if (modifyUrl) {
+                    searchParams.set('envId', `${env.path}/${env.name}`)
+                    setSearchParams(searchParams)
+                  }
+                }}
                 sx={{
                   borderRadius: "10px",
                   backgroundColor: "rgba(34, 51, 84, 0.02)",
@@ -203,16 +220,20 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   )}
                 </Box>
               </Box>
-              {selectedEnv === `${env.path}/${env.name}` && (
-                <EnvironmentDrawer
-                  env={env}
-                  onClose={() => setSelectedEnv(null)}
-                />
-              )}
             </Fragment>
           );
         })}
       </Masonry>
+      {(selectedEnv) && (
+        <EnvironmentDrawer
+          env={selectedEnv}
+          onClose={() => {
+            setSelectedEnv(null)
+            searchParams.delete('envId')
+            setSearchParams(searchParams)
+          }}
+        />
+      )}
     </>
   );
 }
