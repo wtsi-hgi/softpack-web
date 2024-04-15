@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
+import * as semver from "semver";
 
-import { compareStrings, stripPackageSearchPunctuation } from "../../../strings";
+import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
@@ -49,6 +50,10 @@ const EnvironmentList = () => {
   );
   const [ignoreReady, setIgnoreReady] = useLocalStorage(
     "environments-ignoreready",
+    false,
+  );
+  const [showOldVersions, setShowOldVersions] = useLocalStorage(
+    "environments-showoldversions",
     false,
   );
   const { username, groups } = useContext(UserContext);
@@ -140,6 +145,21 @@ const EnvironmentList = () => {
     filteredEnvironments = filteredEnvironments.filter(
       (e) => e.state !== "ready",
     );
+  }
+
+  if (!showOldVersions) {
+    const envsGroupedOnNamePath = new Map<string, [semver.SemVer, typeof filteredEnvironments[0]]>();
+
+    for (const env of filteredEnvironments) {
+      const [, namePath, semVer] = parseEnvironmentToNamePathAndVersion(env);
+      const existing = envsGroupedOnNamePath.get(namePath);
+
+      if (!existing || semver.gte(semVer, existing[0])) {
+        envsGroupedOnNamePath.set(namePath, [semVer, env]);
+      }
+    }
+
+    filteredEnvironments = Array.from(envsGroupedOnNamePath.values()).map(e => e[1])
   }
 
   const allGroupsSet = new Set<string>();
@@ -237,6 +257,18 @@ const EnvironmentList = () => {
               disableTypography
               checked={ignoreReady}
               onChange={(_, checked) => setIgnoreReady(checked)}
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              label={
+                <>
+                  All versions{" "}
+                  <HelpIcon title="Show all versions of each environment, not just the latest" />
+                </>
+              }
+              disableTypography
+              checked={showOldVersions}
+              onChange={(_, checked) => setShowOldVersions(checked)}
             />
             {groups.length > 0 && (
               <FormControlLabel

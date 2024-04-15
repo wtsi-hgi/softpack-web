@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Fragment, useState } from "react";
 
-import { compareStrings } from "../../../strings";
+import { compareEnvironments, compareStrings } from "../../../strings";
 import { humanize } from "../../../humanize";
 import type { Environments, Package, States } from "../../../queries";
 import EnvironmentDrawer, { breadcrumbs } from "../Drawer";
@@ -62,7 +62,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
   const [selectedEnv, setSelectedEnv] = useState<string | null>(null);
 
   const environments = props.environments.toSorted((a, b) =>
-    compareStrings(a.name, b.name),
+    compareEnvironments(a, b),
   );
 
   const allHighlightedPackages = new Set<string>();
@@ -172,10 +172,10 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   </Typography>
                   <Box sx={{ maxHeight: "90px", overflowY: "auto" }}>
                     {highlightPackages.map((pkg) => (
-                      <PackageChip key={pkg.name} pkg={pkg} highlight />
+                      <PackageChip key={pkg.name + pkg.version} pkg={pkg} highlight />
                     ))}
                     {normalPackages.map((pkg) => (
-                      <PackageChip key={pkg.name} pkg={pkg} />
+                      <PackageChip key={pkg.name + pkg.version} pkg={pkg} />
                     ))}
                   </Box>
                   {env.state === "queued" && (
