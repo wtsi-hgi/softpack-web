@@ -76,7 +76,9 @@ function EnvironmentTable(props: EnvironmentTableProps) {
 
   if (modifyUrl) {
     const searchEnv = searchParams.get("envId")
-    selectedEnv = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+    const env = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+    if (selectedEnv != env)
+      setSelectedEnv(env)
   }
 
   return (
