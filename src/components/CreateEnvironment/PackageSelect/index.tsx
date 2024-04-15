@@ -109,7 +109,7 @@ export default function PackageSelect(props: PackageSelectParams) {
           props.setSelectedPackages(
             value.map((name) => ({
               name,
-              version: prevVersions.get(name) ?? null,
+              version: prevVersions.get(name) ?? props.packages.get(name)![0]
             })),
           );
         }}

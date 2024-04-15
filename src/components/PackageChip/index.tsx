@@ -21,15 +21,8 @@ function DropdownChip(props: DropdownChipParams) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-  const handleClose = (target: HTMLElement, index: number) => {
-    // Check if index is 0 (as this refers to the latest version of the
-    // package) to decide whether or not to update label name; no need to
-    // update if user has selected latest version, as all packages are
-    // implicitly their latest version.
-
-    if (index == 0) {
-      props.onChange(null);
-    } else if (index > 0) {
+  const handleClose = (target: HTMLElement) => {
+    if (target.textContent != "") {
       props.onChange(target.textContent);
     }
 
@@ -56,7 +49,7 @@ function DropdownChip(props: DropdownChipParams) {
       <Menu
         anchorEl={anchorEl}
         open={!!anchorEl}
-        onClose={(e: { target: HTMLElement }) => handleClose(e.target, -1)}
+        onClose={(e: { target: HTMLElement }) => handleClose(e.target)}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -73,7 +66,7 @@ function DropdownChip(props: DropdownChipParams) {
               component="a"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => handleClose(e.target as HTMLElement, index)}
+              onClick={(e) => handleClose(e.target as HTMLElement)}
             >
               {version}
             </MenuItem>
