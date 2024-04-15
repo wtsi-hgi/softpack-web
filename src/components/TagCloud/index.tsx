@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { TagCloud as ReactTagCloud, Tag } from "react-tagcloud";
 
-import { compareStrings } from "../../compare";
+import { compareStrings } from "../../strings";
 import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
 
 export const TagCloud = () => {
@@ -59,7 +59,7 @@ export const TagCloud = () => {
         minSize={16}
         maxSize={160 / 2}
         tags={tags}
-        // @ts-ignore
+        // @ts-expect-error https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/68862
         style={{ textWrap: "wrap", wordBreak: "break-all" }}
         renderer={(tag, size, color) => {
           return (

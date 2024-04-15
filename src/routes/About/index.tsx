@@ -29,9 +29,12 @@ const About = () => {
       <p>
         You can also search for environments by entering one or more search
         terms in the "Search for Environments" box at the top of the
-        Environments screen. You can enter names of software packages, the name
-        of an environment, and the name of the user or group the environment was
-        created for.
+        Environments screen. You can enter names of software packages or the name
+        of an environment. You can also filter by the name of the user or group
+        environments were created for, and by tag to get environments in certain
+        categories. Finally, you can filter by your own environemnts by entering
+        your username in the top right "Username" field and selecting "mine",
+        and for environements that are currently building by ticking "building".
       </p>
 
       <h2>Using Environments</h2>
@@ -86,6 +89,15 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
       <h2>Creation</h2>
 
       <p>
+        You can create environments from scratch, or based on a pre-existing
+        environment ("clone"). To clone an environment, discover it in the
+        usual way, click on it and then click the "clone" button in the top
+        right of the information panel that appears. This will fill out the
+        "Environment Settings" form described below, and you can alter the
+        fields as desired.
+      </p>
+
+      <p>
         If recipes already exist for all your desired software, you'll be able
         to use the web frontend to create software environments for yourself. If
         recipes don't exist, you'll have to contact the admin and have them
@@ -100,8 +112,14 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
       <ul>
         <li>Click the "Create Environment" link in the left-hand side-bar.</li>
         <li>
-          Enter a name for this environment, a description, your username and
-          then click on the folder dropdown and select users/[your username]
+          If you haven't already, enter your username in the top right
+          "Username" field.
+        </li>
+        <li>
+          Enter a name for this environment, a description, optional tags and
+          then click on the folder dropdown and select users/[your username] or
+          a group to indicate the environment is useful to other members of that
+          group.
         </li>
         <li>
           In the "Package Settings" section, start typing "xxhash" in to the
@@ -127,10 +145,9 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
       </p>
 
       <p>
-        You can click the "Environments" link in the left-hand side-bar and find
-        your environment by searching for "tutorial [your username]". It will
-        start with a blue "queued" status and turn green when it is ready to use
-        (no need to refresh the page).
+        You will have been taken to the "Environments" page and it will show your
+        building environments. Once it finishes building it will disappear from
+        that view, so uncheck "building" to find it.
       </p>
 
       <p>

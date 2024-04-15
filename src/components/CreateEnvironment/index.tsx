@@ -1,12 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import {
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
   Divider,
   Grid,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -19,6 +21,9 @@ import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
+import { UserContext } from "../UserContext";
+import { validatePackages } from "./packageValidation";
+import { useNavigate } from "react-router-dom"
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -42,18 +47,25 @@ export default function CreateEnvironment() {
     [],
   );
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [path, setPath] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [selectedPackages, setSelectedPackages] = useState<Package[]>([]);
+  const [name, setName] = useLocalStorage("environments-selectedname", "");
+  const [description, setDescription] = useLocalStorage("environments-selecteddesc", "");
+  const [path, setPath] = useLocalStorage("environments-selectedpath", "");
+  const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
+  const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
+  const { username, groups } = useContext(UserContext);
 
-  const runEnvironmentBuild = () => {
-    createEnvironment({
-      variables: { name, description, path, packages: selectedPackages, tags },
-    });
-  };
+  const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
+
+  const navigate = useNavigate()
+
+  function resetEnvironmentSettings() {
+    setName("")
+    setDescription("")
+    setPath("")
+    setTags([])
+    setSelectedPackages([])
+  }
 
   const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
     CREATE_ENV,
@@ -125,6 +137,14 @@ export default function CreateEnvironment() {
     packages.set(name, versions);
   });
 
+  const [validPackages] = validatePackages(selectedPackages, packages)
+
+  const runEnvironmentBuild = () => {
+    createEnvironment({
+      variables: { name, description, path, packages: validPackages, tags },
+    });
+  };
+
   return (
     <Grid
       container
@@ -136,9 +156,40 @@ export default function CreateEnvironment() {
       <Grid item xs={11}>
         <Card>
           <Box p={2}>
-            <Typography variant="h4">Environment Settings</Typography>
+            <Stack mt={1} direction="row" alignItems="center" width="100%" spacing={1}>
+              <Typography variant="h4">Environment Settings</Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                disabled={!(
+                  name.length > 0 ||
+                  description.length > 0 ||
+                  path.length > 0 ||
+                  selectedPackages.length > 0
+                )}
+                onClick={resetEnvironmentSettings}
+              >
+                Reset
+              </Button>
+            </Stack>
           </Box>
           <Divider />
+
+          {hideInstructions ? null : (
+            <Stack justifyContent="center" direction="row">
+              <Alert
+                severity="info"
+                sx={{ maxWidth: "40em" }}
+                onClose={() => { setHideInstructions(true) }}
+              >
+                To create an environment similar to an existing one, find it on
+                the environments page, click on it and then click the "clone"
+                button in the top right corner, which will fill out the form
+                below for you. Then make your desired changes.
+              </Alert>
+            </Stack>
+          )}
+
           <CardContent sx={{ p: 4 }}>
             <Typography variant="subtitle2">
               <EnvironmentSettings
@@ -172,7 +223,8 @@ export default function CreateEnvironment() {
                   name.length === 0 ||
                   description.length === 0 ||
                   path.length === 0 ||
-                  selectedPackages.length === 0
+                  (path !== "users/" + username && !groups.includes(path.split("/")[1])) ||
+                  validPackages.length === 0
                 }
                 onClick={runEnvironmentBuild}
                 sx={{
@@ -187,13 +239,19 @@ export default function CreateEnvironment() {
         </Card>
       </Grid>
 
-      {envBuildResult.title !== "" && (
-        <PopUpDialog
-          title={envBuildResult.title}
-          message={envBuildResult.message}
-          onClose={() => setEnvBuildResult({ title: "", message: "" })}
-        />
-      )}
+      {
+        envBuildResult.title !== "" && (
+          <PopUpDialog
+            title={envBuildResult.title}
+            message={envBuildResult.message}
+            onClose={() => {
+              setEnvBuildResult({ title: "", message: "" })
+              resetEnvironmentSettings()
+              navigate("/environments")
+            }}
+          />
+        )
+      }
     </Grid>
   );
 }

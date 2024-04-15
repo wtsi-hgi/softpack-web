@@ -13,14 +13,16 @@ import {
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
+import * as semver from "semver";
 
-import { compareStrings } from "../../../compare";
+import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
+import { useSearchParams } from "react-router-dom";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -51,10 +53,16 @@ const EnvironmentList = () => {
     "environments-ignoreready",
     false,
   );
+  const [showOldVersions, setShowOldVersions] = useLocalStorage(
+    "environments-showoldversions",
+    false,
+  );
   const { username, groups } = useContext(UserContext);
 
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (!loading && !error) {
         client.refetchQueries({ include: [ALL_ENVIRONMENTS] });
       }
@@ -93,21 +101,29 @@ const EnvironmentList = () => {
       parts.every((part) => {
         const [name, version] = part.split("@");
 
+        let aPackageMatched: boolean = false;
+
+        e.packages.forEach((pkg) => {
+          const match =
+            pkg.name
+              .toLowerCase()
+              .replaceAll("-", "")
+              .includes(stripPackageSearchPunctuation(name)) &&
+            (!version || pkg.version?.toLowerCase().startsWith(version));
+          if (match) {
+            highlightPackagesSet.add({
+              name: pkg.name,
+              version: pkg.version,
+            });
+
+            aPackageMatched = true;
+          }
+        })
+
         return (
-          e.packages.some((pkg) => {
-            const match =
-              pkg.name.toLowerCase().includes(name) &&
-              (!version || pkg.version?.toLowerCase().startsWith(version));
-            if (match) {
-              highlightPackagesSet.add({
-                name: pkg.name,
-                version: pkg.version,
-              });
-            }
-            return match;
-          }) || e.name.toLocaleLowerCase().includes(part)
+          aPackageMatched || e.name.toLocaleLowerCase().includes(part)
         );
-      }),
+      })
     );
   }
   const highlightPackages = [...highlightPackagesSet];
@@ -132,6 +148,28 @@ const EnvironmentList = () => {
     filteredEnvironments = filteredEnvironments.filter(
       (e) => e.state !== "ready",
     );
+  }
+
+  if (!showOldVersions) {
+    const envsGroupedOnNamePath = new Map<string, [semver.SemVer, typeof filteredEnvironments[0]]>();
+
+    for (const env of filteredEnvironments) {
+      const [, namePath, semVer] = parseEnvironmentToNamePathAndVersion(env);
+      const existing = envsGroupedOnNamePath.get(namePath);
+
+      if (!existing || semver.gte(semVer, existing[0])) {
+        envsGroupedOnNamePath.set(namePath, [semVer, env]);
+      }
+    }
+
+    filteredEnvironments = Array.from(envsGroupedOnNamePath.values()).map(e => e[1])
+  }
+
+  const searchEnv = searchParams.get("envId")
+  if (searchEnv) {
+    const extraEnv = data.environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+    if (extraEnv && !filteredEnvironments.includes(extraEnv))
+      filteredEnvironments.push(extraEnv)
   }
 
   const allGroupsSet = new Set<string>();
@@ -228,7 +266,19 @@ const EnvironmentList = () => {
               }
               disableTypography
               checked={ignoreReady}
-              onChange={(e) => setIgnoreReady((e.target as any).checked)}
+              onChange={(_, checked) => setIgnoreReady(checked)}
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              label={
+                <>
+                  All versions{" "}
+                  <HelpIcon title="Show all versions of each environment, not just the latest" />
+                </>
+              }
+              disableTypography
+              checked={showOldVersions}
+              onChange={(_, checked) => setShowOldVersions(checked)}
             />
             {groups.length > 0 && (
               <FormControlLabel
@@ -263,7 +313,7 @@ const EnvironmentList = () => {
           </FormGroup>
         </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
-        ignoreReady ? (
+          ignoreReady ? (
           <Alert severity="info">
             There are currently {environmentsInProgress.length} environments in
             the build queue. Average wait time:{" "}
@@ -275,6 +325,7 @@ const EnvironmentList = () => {
         <EnvironmentTable
           environments={filteredEnvironments}
           highlightPackages={highlightPackages}
+          modifyUrl={true}
         />
       </Container>
     </>

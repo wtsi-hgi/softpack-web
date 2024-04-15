@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Breadcrumbs,
+  Button,
   Chip,
   Divider,
   Drawer,
@@ -16,9 +17,13 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { ADD_TAG, ALL_ENVIRONMENTS, Environment } from "../../../queries";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package } from "../../../queries";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { HelpIcon } from "../../HelpIcon";
+import { NavLink } from "react-router-dom";
+import { parseEnvironmentToNamePathAndVersion } from "../../../strings";
 
 type DrawerParams = {
   env: Environment;
@@ -33,6 +38,8 @@ export const breadcrumbs = (path: string) => (
   </Breadcrumbs>
 );
 
+const descAddedToPath = "\n\nThe following executables are added to your PATH:"
+
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, onClose }: DrawerParams) {
@@ -46,13 +53,35 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   });
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  const [, setName] = useLocalStorage<string>("environments-selectedname", "");
+  const [, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
+  const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
+  const [, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
+  const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+
+  function cloneEnv() {
+    const [name] = parseEnvironmentToNamePathAndVersion(env)
+    setName(name)
+
+    const descParts = env.description.split(descAddedToPath)
+    if (descParts.length > 1) {
+      descParts.pop()
+    }
+    setDescription(descParts.join(descAddedToPath))
+
+    setPath(env.path)
+    setTags(env.tags)
+    setSelectedPackages(env.packages)
+  }
+
   return (
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
       anchor="right"
       open={true}
       onClose={onClose}
-      style={{ zIndex: 2000 }}
+      style={{ zIndex: 1400, position: "relative" }}
+
     >
       <Box padding={"27px"} style={{ width: "40em" }}>
         <Box
@@ -63,6 +92,22 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
+          <Box
+            display="flex"
+            alignItems="left"
+            sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
+          >
+            <Button
+              component={NavLink} to={"/create"}
+              variant="text"
+              onClick={() => {
+                cloneEnv();
+              }}
+            >
+              Clone
+              <HelpIcon title="Create a new environment based on this one" />
+            </Button>
+          </Box>
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
           <EnvironmentTags tags={env.tags} />
@@ -96,7 +141,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <Box style={{ padding: "0 18px 18px 18px" }}>
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code({ inline, className, children, ...props }) {
                     return !inline ? (
                       <div className="readme_copy">
                         <SyntaxHighlighter
