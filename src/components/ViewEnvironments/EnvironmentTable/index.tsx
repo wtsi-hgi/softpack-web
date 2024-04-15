@@ -61,7 +61,7 @@ function PackageChip({ pkg, highlight }: PackageChipProps) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  let [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
+  const [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const modifyUrl = props.modifyUrl ?? false
