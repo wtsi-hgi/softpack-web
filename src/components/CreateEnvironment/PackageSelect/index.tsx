@@ -48,12 +48,12 @@ export default function PackageSelect(props: PackageSelectParams) {
         key={packageName}
         name={packageName}
         versions={props.packages.get(packageName) ?? []}
-        selectedVersion={selectedPackageVersions[index]}
+        selectedVersion={selectedPackageVersions[index] || null}
         onChange={(version) =>
           props.setSelectedPackages(
             validPackages.toSpliced(index, 1, {
               name: packageName,
-              version,
+              version: version || null,
             }),
           )
         }

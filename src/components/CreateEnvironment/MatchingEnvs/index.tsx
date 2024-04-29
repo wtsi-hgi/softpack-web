@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
+import { anyPackageVersion } from "../packageValidation";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
@@ -28,7 +29,7 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
       e.packages.some(
         (envPkg) =>
           pkg.name === envPkg.name &&
-          (!pkg.version || pkg.version === envPkg.version),
+          (!pkg.version || pkg.version === envPkg.version || pkg.version === anyPackageVersion),
       ),
     ),
   );

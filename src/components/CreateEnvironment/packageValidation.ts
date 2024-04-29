@@ -1,11 +1,17 @@
 import { Package } from "../../queries"
 
+export const anyPackageVersion = "[any]";
+
 export function validatePackages(selectedPackages: Package[], allPackages: Map<string, string[]>) {
     const validPackages: Package[] = []
     const invalidSelectedPackages: Package[] = []
     const invalidSelectedVersionPackages: Package[] = []
 
     selectedPackages.forEach(({ name, version }) => {
+        if (version === anyPackageVersion) {
+          version = "";
+        }
+
         const envPkgVersions = allPackages.get(name)
         const pkg: Package = { name: name, version: version }
         let finalVersion = version
