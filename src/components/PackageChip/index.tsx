@@ -4,6 +4,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Chip, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { anyPackageVersion } from "../CreateEnvironment/packageValidation";
 
 //import { PackageContext } from "../CreateEnvironment/PackageContext";
 
@@ -68,7 +69,7 @@ function DropdownChip(props: DropdownChipParams) {
               rel="noopener noreferrer"
               onClick={(e) => handleClose(e.target as HTMLElement)}
             >
-              {version}
+              {version || anyPackageVersion}
             </MenuItem>
           );
         })}

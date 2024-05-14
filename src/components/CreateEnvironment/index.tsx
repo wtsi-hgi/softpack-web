@@ -134,7 +134,7 @@ export default function CreateEnvironment() {
 
   const packages = new Map<string, string[]>();
   data?.packageCollections.forEach(({ name, versions }) => {
-    packages.set(name, versions);
+    packages.set(name, [""].concat(versions));
   });
 
   const [validPackages] = validatePackages(selectedPackages, packages)
