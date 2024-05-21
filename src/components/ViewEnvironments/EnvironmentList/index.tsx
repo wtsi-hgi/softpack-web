@@ -98,12 +98,12 @@ const EnvironmentList = () => {
     const parts = filter.toLowerCase().split(" ");
 
     filteredEnvironments = filteredEnvironments.filter((e) =>
-      parts.every((part) => {
+      parts.every(part => {
         const [name, version] = part.split("@");
 
-        let aPackageMatched: boolean = false;
+        let aPackageMatched = false;
 
-        e.packages.forEach((pkg) => {
+        e.packages.forEach(pkg => {
           const match =
             pkg.name
               .toLowerCase()
@@ -197,7 +197,7 @@ const EnvironmentList = () => {
           variant="standard"
           placeholder="Search for Environments by name or package[@version]"
           style={{ width: "100%" }}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={e => setFilter(e.target.value.trim().replaceAll(/  +/g, " "))}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
