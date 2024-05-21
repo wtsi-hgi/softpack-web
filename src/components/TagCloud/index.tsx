@@ -23,7 +23,7 @@ export const TagCloud = () => {
   );
 
   if (environmentsQuery.loading) {
-    return "todo loading spinner";
+    return <></>;
   }
 
   if (environmentsQuery.error) {
