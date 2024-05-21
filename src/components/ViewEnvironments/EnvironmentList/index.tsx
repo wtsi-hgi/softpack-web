@@ -197,7 +197,7 @@ const EnvironmentList = () => {
           variant="standard"
           placeholder="Search for Environments by name or package[@version]"
           style={{ width: "100%" }}
-          onChange={e => setFilter(e.target.value.trim().replaceAll(/  +/g, " "))}
+          onChange={e => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " "))}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
