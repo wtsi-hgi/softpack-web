@@ -11,15 +11,15 @@ export function stripPackageSearchPunctuation(name: string) {
   return name.toLowerCase().replaceAll(/[\p{P}\s]/ug, "")
 }
 
-export function parseEnvironmentToNamePathAndVersion(env: Environment) : [string, string, semver.SemVer] {
+export function parseEnvironmentToNamePathAndVersion(env: Environment): [string, string, semver.SemVer] {
   const envNameParts = env.name.split("-")
 
-  const version = envNameParts.pop()
+  const version = envNameParts.length > 1 ? envNameParts.pop() : 0;
   const semVer = semver.coerce(version) ?? zero
 
   const envName = envNameParts.join("-")
   const namePath = envName + "." + env.path
-  
+
   return [envName, namePath, semVer]
 }
 
