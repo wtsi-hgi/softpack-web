@@ -24,6 +24,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { HelpIcon } from "../../HelpIcon";
 import { NavLink } from "react-router-dom";
 import { parseEnvironmentToNamePathAndVersion } from "../../../strings";
+import { Type } from "../../../__generated__/graphql";
 
 type DrawerParams = {
   env: Environment;
@@ -57,7 +58,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   const [, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
   const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
   const [, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
-  const [, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+  const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
   function cloneEnv() {
     const [name] = parseEnvironmentToNamePathAndVersion(env)
@@ -72,6 +73,18 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
     setPath(env.path)
     setTags(env.tags)
     setSelectedPackages(env.packages)
+  }
+
+  function mergeEnv() {
+    const names = new Set(packages.map(e => e.name));
+
+    for (const pkg of env.packages) {
+      if (!names.has(pkg.name)) {
+        packages.push(pkg);
+      }
+    };
+
+    setSelectedPackages(packages);
   }
 
   return (
@@ -92,22 +105,30 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
-          <Box
-            display="flex"
-            alignItems="left"
-            sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
-          >
-            <Button
-              component={NavLink} to={"/create"}
-              variant="text"
-              onClick={() => {
-                cloneEnv();
-              }}
+          {env.type === Type.Softpack &&
+            <Box
+              display="flex"
+              alignItems="left"
+              sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
             >
-              Clone
-              <HelpIcon title="Create a new environment based on this one" />
-            </Button>
-          </Box>
+              <Button
+                component={NavLink} to={"/create"}
+                variant="text"
+                onClick={cloneEnv}
+              >
+                Clone
+                <HelpIcon title="Create a new environment based on this one" />
+              </Button>
+              {packages.length ? <Button
+                component={NavLink} to={"/create"}
+                variant="text"
+                onClick={mergeEnv}
+              >
+                Merge
+                <HelpIcon title="Add packages in this environment to existing selection if they're not already selected.'" />
+              </Button> : <></>}
+            </Box>
+          }
           <Typography variant="h3">{env.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
           <EnvironmentTags tags={env.tags} />
