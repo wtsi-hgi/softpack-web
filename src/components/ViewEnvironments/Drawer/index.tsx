@@ -54,25 +54,29 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
   });
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const [, setName] = useLocalStorage<string>("environments-selectedname", "");
-  const [, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
+  const [name, setName] = useLocalStorage<string>("environments-selectedname", "");
+  const [description, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
   const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
-  const [, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
+  const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
 
-  function cloneEnv() {
-    const [name] = parseEnvironmentToNamePathAndVersion(env)
-    setName(name)
-
-    const descParts = env.description.split(descAddedToPath)
+  function removeExesFromDescription(description: string) {
+    const descParts = description.split(descAddedToPath);
     if (descParts.length > 1) {
-      descParts.pop()
+      descParts.pop();
     }
-    setDescription(descParts.join(descAddedToPath))
 
-    setPath(env.path)
-    setTags(env.tags)
-    setSelectedPackages(env.packages)
+    return descParts.join(descAddedToPath);
+  }
+
+  function cloneEnv() {
+    const [name] = parseEnvironmentToNamePathAndVersion(env);
+
+    setName(name);
+    setDescription(removeExesFromDescription(env.description));
+    setPath(env.path);
+    setTags(env.tags);
+    setSelectedPackages(env.packages);
   }
 
   function mergeEnv() {
@@ -84,6 +88,19 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
       }
     };
 
+    if (name) {
+      setName(name + "-" + env.name);
+    } else {
+      setName(env.name);
+    }
+
+    if (description) {
+      setDescription(description + "\n\n&\n\n" + removeExesFromDescription(env.description));
+    } else {
+      setDescription(removeExesFromDescription(env.description));
+    }
+
+    setTags(Array.from(new Set(tags.concat(env.tags))));
     setSelectedPackages(packages);
   }
 
