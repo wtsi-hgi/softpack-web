@@ -109,9 +109,10 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <Box
               display="flex"
               alignItems="left"
-              sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
+              sx={{ position: "absolute", top: 0, right: 0 }}
             >
               <Button
+                style={{ backgroundColor: "#eeeeee" }}
                 component={NavLink} to={"/create"}
                 variant="text"
                 onClick={cloneEnv}
@@ -120,6 +121,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
                 <HelpIcon title="Create a new environment based on this one" />
               </Button>
               {packages.length ? <Button
+                style={{ backgroundColor: "#eeeeee", marginLeft: "0.2em" }}
                 component={NavLink} to={"/create"}
                 variant="text"
                 onClick={mergeEnv}
