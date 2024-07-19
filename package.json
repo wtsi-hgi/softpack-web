@@ -19,7 +19,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "gen": "graphql-codegen",
-    "watch:gen": "graphql-codegen -w"
+    "watch:gen": "graphql-codegen -w",
+    "buildrun": "npm run build && go build server.go && mv server ./dist && cd ./dist && ./server"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
