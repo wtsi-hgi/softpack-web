@@ -5,6 +5,8 @@ import { compareEnvironments, compareStrings } from "../../../strings";
 import type { Environment, Environments, Package } from "../../../queries";
 import EnvironmentDrawer from "../Drawer";
 import { useSearchParams } from "react-router-dom";
+import { Masonry } from "@mui/lab";
+import { Tooltip } from "@mui/material";
 
 
 type EnvironmentTableProps = {
@@ -13,6 +15,9 @@ type EnvironmentTableProps = {
   modifyUrl?: boolean;
 };
 
+function toTitle(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 function EnvironmentTable(props: EnvironmentTableProps) {
   const [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
@@ -37,7 +42,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
 
   return (
     <>
-      <li id="environments">
+      <Masonry id="environments" columns={{ sm: 1, md: 2, lg: 2, xl: 3 }} spacing={2}>
         {environments.map((env) => {
           const highlightPackages: Package[] = [];
           const normalPackages: Package[] = [];
@@ -56,7 +61,9 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               }
             });
           return (
-            <li key={`${env.path}/${env.name}`} className={env.type + " " + env.state ?? "queued"}
+            <li
+              key={`${env.path}/${env.name}`}
+              className={env.type + " " + env.state ?? "queued"}
               onClick={() => {
                 setSelectedEnv(env)
                 if (modifyUrl) {
@@ -65,6 +72,9 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                 }
               }}
             >
+              <Tooltip title={toTitle(String(env.state)) ?? "Queued"} placement="top">
+                <span className={"colourBar " + env.state ?? "queued"} />
+              </Tooltip>
               <h2>{env.name}</h2>
               <ul>
                 {env.path.split("/").map((p, i) => (
@@ -79,7 +89,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               <div>{env.description.split("\n")[0]}</div>
               <ul>
                 {highlightPackages.map((pkg) => (
-                  <li key={pkg.name}>
+                  <li key={pkg.name} className="selected">
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
                 ))}
@@ -92,7 +102,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
             </li>
           );
         })}
-      </li>
+      </Masonry>
       {(selectedEnv) && (
         <EnvironmentDrawer
           env={selectedEnv}

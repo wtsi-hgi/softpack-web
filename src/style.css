@@ -85,13 +85,11 @@ summary {
 #environments {
   list-style: none;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
 }
 
 #environments > li {
   position: relative;
-  padding: 1em;
+  padding: 1em 2em 0 3em;
   margin: 0 0 1em 1em;
   background-color: rgba(34, 51, 84, 0.02);
   box-shadow:
@@ -99,6 +97,7 @@ summary {
     rgba(159, 162, 191, 0.32) 0px 2px 2px;
   border-radius: 10px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 #environments > li:after {
@@ -107,8 +106,9 @@ summary {
   right: 0.1em;
   border: 1px solid #000;
   border-radius: 50%;
-  width: 1.25em;
-  height: 1.25em;
+  width: 2em;
+  height: 2em;
+  line-height: 1.8em;
   text-align: center;
   border-radius: 50%;
 }
@@ -121,40 +121,42 @@ summary {
   content: "S";
 }
 
-#environments > li:before {
+#environments > li > span.colourBar {
   position: absolute;
   content: " ";
   top: 0;
   bottom: 0;
   left: 0;
-  border-radius: 0.25em;
-  width: 0.5em;
+  border-radius: 0.5em;
+  width: 0.7em;
 }
 
-#environments > li.ready:before {
+#environments > li > span.colourBar.ready {
   background-color: #57ca22;
 }
 
-#environments > li.queued:before {
+#environments > li > span.colourBar.queued {
   background-color: #33c2ff;
 }
 
-#environments > li.failed:before {
+#environments > li > span.colourBar.failed {
   background-color: #ff1943;
 }
 
 #environments > li > h2 {
   display: inline-block;
   margin: 0;
+  font-size: 25px;
 }
 
 #environments > li > div {
-  margin: 1em 0;
+  margin-bottom: 0.8em;
 }
 
 #environments > li > ul {
   list-style: none;
   padding: 0;
+  margin-top: 0;
 }
 
 #environments > li > ul li {
@@ -164,6 +166,7 @@ summary {
 #environments > li > ul:first-of-type {
   display: inline-block;
   margin-left: 1em;
+  margin-bottom: 0;
 }
 
 #environments > li > ul:first-of-type li:not(:first-child):before {
@@ -171,8 +174,11 @@ summary {
   padding: 0 0.5em;
 }
 
+#environments > li > ul:nth-of-type(2):empty {
+  margin-top: 0.5em;
+}
 #environments > li > ul:nth-of-type(2):not(:empty) {
-  margin-top: 1em;
+  margin-bottom: 0.5em;
 }
 
 #environments > li > ul:nth-of-type(2) li {
@@ -180,8 +186,9 @@ summary {
   background-color: rgba(0, 0, 0, 0.08);
   font-size: 0.8125rem;
   border-radius: 16px;
-  padding: 0.5em;
-  margin: 0 0 0.25em 0.25em;
+  padding: 2px 8px;
+  margin: 4px 4px 4px 0;
+  line-height: 1.5;
 }
 
 #environments > li > ul:nth-of-type(3) {
@@ -191,9 +198,15 @@ summary {
 
 #environments > li > ul:nth-of-type(3) li {
   font-size: 0.8125rem;
-  color: rgba(85, 105, 255, 0.7);
+  color: #5569ff;
   border: 1px solid rgba(85, 105, 255, 0.7);
+  background-color: transparent;
   border-radius: 16px;
-  padding: 0.5em;
-  margin: 0 0 0.25em 0.25em;
+  padding: 4px 12px;
+  margin: 4px;
+}
+
+#environments > li > ul:nth-of-type(3) li.selected {
+  background-color: rgba(85, 105, 255, 0.7);
+  color: white;
 }
