@@ -89,8 +89,8 @@ summary {
 
 #environments > li {
   position: relative;
-  padding: 1em 2em 0 3em;
-  margin: 0 0 1em 1em;
+  padding: 1em 2em 0 2.5em;
+  margin: 8px;
   background-color: rgba(34, 51, 84, 0.02);
   box-shadow:
     rgba(159, 162, 191, 0.18) 0px 9px 16px,
@@ -100,24 +100,23 @@ summary {
   box-sizing: border-box;
 }
 
-#environments > li:after {
+#environments > li > span.type {
   position: absolute;
   top: 0.1em;
   right: 0.1em;
   border: 1px solid #000;
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
-  line-height: 1.8em;
+  width: 1.75em;
+  height: 1.75em;
   text-align: center;
   border-radius: 50%;
 }
 
-#environments > li.module:after {
+#environments > li > span.type.module {
   content: "M";
 }
 
-#environments > li.softpack:after {
+#environments > li > span.type.softpack {
   content: "S";
 }
 
@@ -167,10 +166,11 @@ summary {
   display: inline-block;
   margin-left: 1em;
   margin-bottom: 0;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 #environments > li > ul:first-of-type li:not(:first-child):before {
-  content: "/";
+  content: "›";
   padding: 0 0.5em;
 }
 
@@ -202,11 +202,11 @@ summary {
   border: 1px solid rgba(85, 105, 255, 0.7);
   background-color: transparent;
   border-radius: 16px;
-  padding: 4px 12px;
+  padding: 5px 12px;
   margin: 4px;
 }
 
 #environments > li > ul:nth-of-type(3) li.selected {
-  background-color: rgba(85, 105, 255, 0.7);
+  background-color: rgb(85, 105, 255);
   color: white;
 }
