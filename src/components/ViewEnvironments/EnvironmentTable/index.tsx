@@ -75,6 +75,14 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               <Tooltip title={toTitle(String(env.state)) ?? "Queued"} placement="top">
                 <span className={"colourBar " + env.state ?? "queued"} />
               </Tooltip>
+              <Tooltip title={
+                env.type === "softpack"
+                  ? "Built with Softpack"
+                  : "Generated from Module (not reproducable)"
+              }
+                placement="left">
+                <span className="type">{env.type === "softpack" ? "S" : "M"}</span>
+              </Tooltip>
               <h2>{env.name}</h2>
               <ul>
                 {env.path.split("/").map((p, i) => (
