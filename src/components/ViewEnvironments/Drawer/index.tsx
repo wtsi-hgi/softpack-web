@@ -28,6 +28,7 @@ import { Type } from "../../../__generated__/graphql";
 
 type DrawerParams = {
   env: Environment;
+  open: boolean;
   onClose: () => void;
 };
 
@@ -43,7 +44,10 @@ const descAddedToPath = "\n\nThe following executables are added to your PATH:"
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
-function EnvironmentDrawer({ env, onClose }: DrawerParams) {
+function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
+  if (env == undefined) {
+    env = {} as Environment;
+  }
   const [addTag, addTagMutation] = useMutation(ADD_TAG, {
     refetchQueries: [ALL_ENVIRONMENTS],
     onCompleted: (data) => {
@@ -69,7 +73,7 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
     return descParts.join(descAddedToPath);
   }
 
-  function cloneEnv() {
+  function cloneEnv(env: Environment) {
     const [name] = parseEnvironmentToNamePathAndVersion(env);
 
     setName(name);
@@ -103,12 +107,11 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
     setTags(Array.from(new Set(tags.concat(env.tags))));
     setSelectedPackages(packages);
   }
-
   return (
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
       anchor="right"
-      open={true}
+      open={open}
       onClose={onClose}
       style={{ zIndex: 1400, position: "relative" }}
 
@@ -126,13 +129,15 @@ function EnvironmentDrawer({ env, onClose }: DrawerParams) {
             <Box
               display="flex"
               alignItems="left"
-              sx={{ position: "absolute", top: 0, right: 0 }}
+              sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
             >
               <Button
                 style={{ backgroundColor: "#eeeeee" }}
                 component={NavLink} to={"/create"}
                 variant="text"
-                onClick={cloneEnv}
+                onClick={() => {
+                  cloneEnv(env);
+                }}
               >
                 Clone
                 <HelpIcon title="Create a new environment based on this one" />

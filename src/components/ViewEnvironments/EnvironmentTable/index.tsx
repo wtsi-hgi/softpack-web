@@ -20,8 +20,9 @@ function toTitle(s: string) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const [selectedEnv, setSelectedEnv] = useState<Environment | null | undefined>(null);
+  const [selectedEnv, setSelectedEnv] = useState<Environment>(props.environments[0]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
 
   const modifyUrl = props.modifyUrl ?? false
   const environments = props.environments.toSorted((a, b) =>
@@ -36,8 +37,10 @@ function EnvironmentTable(props: EnvironmentTableProps) {
   if (modifyUrl) {
     const searchEnv = searchParams.get("envId")
     const env = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
-    if (selectedEnv != env)
+    if (selectedEnv != env && env != undefined) {
       setSelectedEnv(env)
+      setOpen(true)
+    }
   }
 
   return (
@@ -66,6 +69,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               className={env.type + " " + env.state ?? "queued"}
               onClick={() => {
                 setSelectedEnv(env)
+                setOpen(true)
                 if (modifyUrl) {
                   searchParams.set('envId', `${env.path}/${env.name}`)
                   setSearchParams(searchParams)
@@ -111,16 +115,15 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           );
         })}
       </Masonry>
-      {(selectedEnv) && (
-        <EnvironmentDrawer
-          env={selectedEnv}
-          onClose={() => {
-            setSelectedEnv(null)
-            searchParams.delete('envId')
-            setSearchParams(searchParams)
-          }}
-        />
-      )}
+      <EnvironmentDrawer
+        env={selectedEnv!}
+        open={open}
+        onClose={() => {
+          setOpen(false)
+          searchParams.delete('envId')
+          setSearchParams(searchParams)
+        }}
+      />
     </>
   );
 }
