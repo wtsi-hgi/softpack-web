@@ -146,6 +146,7 @@ summary {
   display: inline-block;
   margin: 0;
   font-size: 25px;
+  color: rgb(34, 51, 84);
 }
 
 #environments > li > div {
