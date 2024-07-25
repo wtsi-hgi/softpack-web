@@ -193,7 +193,7 @@ const EnvironmentList = () => {
       >
         <Stack direction="row">
           <input
-            id="name-field"
+            id="search"
             placeholder="Search for Environments by name or package[@version]"
             style={{ width: "100%", display: "inline-block" }}
             onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")))}
