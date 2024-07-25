@@ -196,7 +196,7 @@ const EnvironmentList = () => {
             id="search"
             placeholder="Search for Environments by name or package[@version]"
             style={{ width: "100%", display: "inline-block" }}
-            onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")))}
+            onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
           >
           </input>
           <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
