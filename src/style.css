@@ -237,3 +237,32 @@ summary {
   padding: 14px 16px;
   color: rgb(51, 194, 255);
 }
+
+#search {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentcolor;
+  padding: 4px 0px 5px;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 1px;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  border-bottom: 1px solid black;
+  border-radius: 1px;
+}
+
+#search:hover {
+  border-bottom: 2px solid black;
+  margin-bottom: 0px;
+}
+
+#search:focus {
+  border-bottom: 2px solid rgb(25, 118, 210);
+  margin-bottom: 0px;
+}
