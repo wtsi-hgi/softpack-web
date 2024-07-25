@@ -6,7 +6,8 @@ import type { Environment, Environments, Package } from "../../../queries";
 import EnvironmentDrawer from "../Drawer";
 import { useSearchParams } from "react-router-dom";
 import { Masonry } from "@mui/lab";
-import { Tooltip } from "@mui/material";
+import { LinearProgress, Tooltip } from "@mui/material";
+import { humanize } from "../../../humanize";
 
 
 type EnvironmentTableProps = {
@@ -111,6 +112,29 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   </li>
                 ))}
               </ul>
+              {env.state === "queued" && (
+                <>
+                  <LinearProgress style={{ borderTopRightRadius: "4px", borderTopLeftRadius: "4px" }} />
+                  <div className="queue">
+                    Queued:{" "}
+                    {humanize(
+                      (env.buildStart
+                        ? Date.parse(env.buildStart)
+                        : Date.now()) - Date.parse(env.requested),
+                    )}
+                    {env.buildStart ? (
+                      <>
+                        ; Building:{" "}
+                        {humanize(
+                          (env.buildDone
+                            ? Date.parse(env.buildDone)
+                            : Date.now()) - Date.parse(env.buildStart),
+                        )}
+                      </>
+                    ) : null}
+                  </div>
+                </>
+              )}
             </li>
           );
         })}
