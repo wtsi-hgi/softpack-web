@@ -7,7 +7,6 @@ import {
   Container,
   FormControlLabel,
   FormGroup,
-  InputAdornment,
   Stack,
   TextField,
 } from "@mui/material";
@@ -192,20 +191,16 @@ const EnvironmentList = () => {
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
-        <TextField
-          id="name-field"
-          variant="standard"
-          placeholder="Search for Environments by name or package[@version]"
-          style={{ width: "100%" }}
-          onChange={e => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " "))}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
-              </InputAdornment>
-            ),
-          }}
-        ></TextField>
+        <Stack direction="row">
+          <input
+            id="name-field"
+            placeholder="Search for Environments by name or package[@version]"
+            style={{ width: "100%", display: "inline-block" }}
+            onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")))}
+          >
+          </input>
+          <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
+        </Stack>
         <Stack direction="row" spacing={1} py={0.5} alignItems="center">
           <Autocomplete
             openOnFocus
