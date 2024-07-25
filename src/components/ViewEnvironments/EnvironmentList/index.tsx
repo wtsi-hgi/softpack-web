@@ -191,14 +191,13 @@ const EnvironmentList = () => {
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
-        <Stack direction="row">
+        <Stack direction="row" id="search">
           <input
-            id="search"
+            id="search-bar"
             placeholder="Search for Environments by name or package[@version]"
             style={{ width: "100%", display: "inline-block" }}
             onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
-          >
-          </input>
+          />
           <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
         </Stack>
         <Stack direction="row" spacing={1} py={0.5} alignItems="center">

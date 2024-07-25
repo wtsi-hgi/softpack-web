@@ -41,6 +41,8 @@ function EnvironmentTable(props: EnvironmentTableProps) {
     if (selectedEnv != env && env != undefined) {
       setSelectedEnv(env)
       setOpen(true)
+    } else if (env == undefined && open) {
+      setOpen(false)
     }
   }
 
