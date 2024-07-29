@@ -27,14 +27,14 @@ import { parseEnvironmentToNamePathAndVersion } from "../../../strings";
 import { Type } from "../../../__generated__/graphql";
 
 type DrawerParams = {
-  env: Environment;
+  env?: Environment;
   open: boolean;
   onClose: () => void;
 };
 
 export const breadcrumbs = (path: string) => (
   <Breadcrumbs separator="›" aria-label="breadcrumb">
-    {path.split("/").map((p, i) => (
+    {(path ?? "").split("/").map((p, i) => (
       <span key={i}>{p}</span>
     ))}
   </Breadcrumbs>
@@ -45,9 +45,6 @@ const descAddedToPath = "\n\nThe following executables are added to your PATH:"
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
-  if (env == undefined) {
-    env = {} as Environment;
-  }
   const [addTag, addTagMutation] = useMutation(ADD_TAG, {
     refetchQueries: [ALL_ENVIRONMENTS],
     onCompleted: (data) => {
@@ -84,27 +81,27 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
   }
 
   function mergeEnv() {
-    const names = new Set(packages.map(e => e.name));
+    const names = new Set((packages ?? []).map(e => e.name));
 
-    for (const pkg of env.packages) {
+    for (const pkg of env?.packages ?? []) {
       if (!names.has(pkg.name)) {
         packages.push(pkg);
       }
     };
 
     if (name) {
-      setName(name + "-" + env.name);
+      setName(name + "-" + (env?.name ?? ""));
     } else {
-      setName(env.name);
+      setName(env?.name ?? "");
     }
 
     if (description) {
-      setDescription(description + "\n\n&\n\n" + removeExesFromDescription(env.description));
+      setDescription(description + "\n\n&\n\n" + removeExesFromDescription(env?.description ?? ""));
     } else {
-      setDescription(removeExesFromDescription(env.description));
+      setDescription(removeExesFromDescription(env?.description ?? ""));
     }
 
-    setTags(Array.from(new Set(tags.concat(env.tags))));
+    setTags(Array.from(new Set(tags.concat(env?.tags ?? []))));
     setSelectedPackages(packages);
   }
   return (
@@ -125,7 +122,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           flexDirection={"column"}
           alignItems={"center"}
         >
-          {env.type === Type.Softpack &&
+          {env?.type === Type.Softpack &&
             <Box
               display="flex"
               alignItems="left"
@@ -136,7 +133,9 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
                 component={NavLink} to={"/create"}
                 variant="text"
                 onClick={() => {
-                  cloneEnv(env);
+                  if (env) {
+                    cloneEnv(env);
+                  }
                 }}
               >
                 Clone
@@ -153,9 +152,9 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
               </Button> : <></>}
             </Box>
           }
-          <Typography variant="h3">{env.name}</Typography>
-          <Typography variant="h4">{breadcrumbs(env.path)}</Typography>
-          <EnvironmentTags tags={env.tags} />
+          <Typography variant="h3">{env?.name}</Typography>
+          <Typography variant="h4">{breadcrumbs(env?.path ?? "")}</Typography>
+          <EnvironmentTags tags={env?.tags ?? []} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>
             <TagSelect
               multiple={false}
@@ -167,20 +166,22 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
               disabled={selectedTag == null}
               loading={addTagMutation.loading}
               onClick={() => {
-                addTag({
-                  variables: {
-                    name: env.name,
-                    path: env.path,
-                    tag: selectedTag!,
-                  },
-                });
+                if (env) {
+                  addTag({
+                    variables: {
+                      name: env.name,
+                      path: env.path,
+                      tag: selectedTag!,
+                    },
+                  });
+                }
               }}
             >
               Add tag
             </LoadingButton>
           </Stack>
         </Box>
-        {env.readme ? (
+        {env?.readme ? (
           <>
             <Divider />
             <Box style={{ padding: "0 18px 18px 18px" }}>
@@ -236,7 +237,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
                   },
                 }}
               >
-                {env.readme}
+                {env?.readme}
               </ReactMarkdown>
             </Box>
           </>
@@ -249,13 +250,13 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           <Typography
             style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
           >
-            {env.description}
+            {env?.description}
           </Typography>
         </Box>
         <Divider />
         <Box style={{ padding: "0 18px" }}>
           <h1>Packages</h1>
-          {env.packages.map((pkg, i) => {
+          {(env?.packages ?? []).map((pkg, i) => {
             return (
               <Box key={i} sx={{ float: "left" }}>
                 <Chip

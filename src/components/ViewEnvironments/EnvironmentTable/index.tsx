@@ -21,7 +21,7 @@ function toTitle(s: string) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const [selectedEnv, setSelectedEnv] = useState<Environment>(props.environments[0]);
+  const [selectedEnv, setSelectedEnv] = useState<Environment | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
 
@@ -42,6 +42,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
       setSelectedEnv(env)
       setOpen(true)
     } else if (env == undefined && open) {
+      setSelectedEnv(null)
       setOpen(false)
     }
   }
@@ -145,6 +146,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
         env={selectedEnv!}
         open={open}
         onClose={() => {
+          setSelectedEnv(null)
           setOpen(false)
           searchParams.delete('envId')
           setSearchParams(searchParams)
