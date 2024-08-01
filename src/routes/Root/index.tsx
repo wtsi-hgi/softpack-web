@@ -8,6 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Outlet } from "react-router-dom";
+import Logo from '../../../softpack.svg';
 
 import { AvailableTagsContext } from "../../components/AvailableTagsContext";
 import { EnvironmentsQueryContext } from "../../components/EnvironmentsQueryContext";
@@ -48,13 +49,13 @@ const Root = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         color="inherit"
       >
-        <Toolbar>
+        <Toolbar style={{ paddingLeft: "10px" }}>
           <img
             alt="SoftPack"
-            src={"/softpack.svg"}
-            style={{ height: "3em", marginRight: "0.5em" }}
+            src={Logo}
+            style={{ height: "3em", marginRight: "1em" }}
           />
-          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+          <Typography variant="h3" sx={{ flexGrow: 1 }}>
             SoftPack
           </Typography>
           <Typography pr={1}>Username:</Typography>
