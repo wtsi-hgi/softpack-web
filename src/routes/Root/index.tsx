@@ -49,6 +49,11 @@ const Root = () => {
         color="inherit"
       >
         <Toolbar>
+          <img
+            alt="SoftPack"
+            src={"/softpack.svg"}
+            style={{ height: "3em", marginRight: "0.5em" }}
+          />
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
             SoftPack
           </Typography>

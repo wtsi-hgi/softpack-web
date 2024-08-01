@@ -104,7 +104,7 @@ summary {
   position: absolute;
   top: 0.1em;
   right: 0.1em;
-  border: 1px solid #000;
+  border: 1px solid;
   border-radius: 50%;
   width: 1.75em;
   height: 1.75em;
@@ -263,7 +263,7 @@ summary {
 }
 
 #search:hover {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.87);
   margin-bottom: 0px;
 }
 

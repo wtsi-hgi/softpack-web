@@ -85,8 +85,8 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               </Tooltip>
               <Tooltip title={
                 env.type === "softpack"
-                  ? "Built with Softpack"
-                  : "Generated from Module (not reproducable)"
+                  ? "Built with SoftPack"
+                  : "Generated from module (not reproducible)"
               }
                 placement="left">
                 <span className="type">{env.type === "softpack" ? "S" : "M"}</span>
