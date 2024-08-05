@@ -22,6 +22,7 @@ export const ALL_ENVIRONMENTS = gql(`
         version
       }
       tags
+      hidden
       readme
       type
       state
@@ -79,6 +80,21 @@ export const ADD_TAG = gql(`
       name: $name,
       path: $path,
       tag: $tag,
+    ) {
+      __typename
+      ... on Error {
+        message
+      }
+    }
+  }
+`);
+
+export const SET_HIDDEN = gql(`
+  mutation SetHidden($name: String!, $path: String!, $hidden: Boolean!) {
+    setHidden(
+      name: $name,
+      path: $path,
+      hidden: $hidden,
     ) {
       __typename
       ... on Error {

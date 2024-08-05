@@ -17,7 +17,7 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package } from "../../../queries";
+import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package, SET_HIDDEN } from "../../../queries";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -53,6 +53,14 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
       }
     },
   });
+  const [hideButtonDisable, setHideButtonDisable] = useState(false);
+  const [setHidden] = useMutation(SET_HIDDEN, {
+    refetchQueries: [ALL_ENVIRONMENTS],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      setHideButtonDisable(false)
+    }
+  })
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const [name, setName] = useLocalStorage<string>("environments-selectedname", "");
@@ -273,6 +281,26 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           })}
         </Box>
       </Box>
+      {env?.type === Type.Softpack &&
+        <Button
+          variant="outlined"
+          color={env?.hidden ? "info" : "error"}
+          disabled={hideButtonDisable}
+          style={{ width: "calc(100% - 2em)", margin: "0 auto" }}
+          onClick={() => {
+            if (env) {
+              setHidden({
+                variables: {
+                  path: env.path,
+                  name: env.name,
+                  hidden: !env.hidden
+                }
+              });
+              setHideButtonDisable(true);
+            }
+          }}
+        >{env?.hidden ? "Unhide" : "Hide"}</Button>
+      }
     </Drawer>
   );
 }
