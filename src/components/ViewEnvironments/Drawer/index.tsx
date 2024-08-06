@@ -134,10 +134,10 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
             <Box
               display="flex"
               alignItems="left"
-              sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#eeeeee" }}
+              sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "#dddddd77" }}
             >
               <Button
-                style={{ backgroundColor: "#eeeeee" }}
+                style={{ backgroundColor: "transparent" }}
                 component={NavLink} to={"/create"}
                 variant="text"
                 onClick={() => {
@@ -150,7 +150,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
                 <HelpIcon title="Create a new environment based on this one" />
               </Button>
               {packages.length ? <Button
-                style={{ backgroundColor: "#eeeeee", marginLeft: "0.2em" }}
+                style={{ backgroundColor: "transparent", marginLeft: "0.2em" }}
                 component={NavLink} to={"/create"}
                 variant="text"
                 onClick={mergeEnv}
@@ -160,7 +160,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
               </Button> : <></>}
             </Box>
           }
-          <Typography variant="h3">{env?.name}</Typography>
+          <Typography variant="h3" marginTop="0.5em">{env?.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env?.path ?? "")}</Typography>
           <EnvironmentTags tags={env?.tags ?? []} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>

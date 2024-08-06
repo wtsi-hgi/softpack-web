@@ -2,7 +2,6 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import TagIcon from "@mui/icons-material/LocalOffer";
 import WidgetsIcon from "@mui/icons-material/Widgets";
-import { Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -24,15 +23,7 @@ const Sidebar = () => {
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
       }}
     >
-      <Toolbar>
-        <Typography
-          variant="h2"
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
-          SoftPack
-        </Typography>
-      </Toolbar>
-
+      <Toolbar />
       <List component="nav" sx={{ p: 0 }}>
         <ListItemButton component={NavLink} to={"/about"}>
           <ListItemIcon>
