@@ -99,9 +99,9 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
 
       <p>
         You can also merge a pre-existing environment with what's already in
-        your "Create Environment" form. To do this, click the "merge" button
-        in the top right of the information panel that appears when you click
-        on an environment. This will add the packages and settings of the
+        your "Create Environment" form. To do this, click on a SoftPack
+        environment and click the "merge" button in the top right of the
+        information panel. This will add the packages and settings of the
         existing environment to the form.
       </p>
 
