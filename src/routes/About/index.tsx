@@ -21,20 +21,20 @@ const About = () => {
         someone has already made an environment that you can use.
       </p>
       <p>
-        Click on the "Environments" link in the sidebar to the left. This will
-        show you a list of existing environments. Ones with a green "ready" bar
+        Click on the 'Environments' link in the sidebar to the left. This will
+        show you a list of existing environments. Ones with a green 'ready' bar
         on their left can be used. Click on it for instructions on how to use
         it.
       </p>
       <p>
         You can also search for environments by entering one or more search
-        terms in the "Search for Environments" box at the top of the
+        terms in the 'Search for Environments' box at the top of the
         Environments screen. You can enter names of software packages or the name
         of an environment. You can also filter by the name of the user or group
         environments were created for, and by tag to get environments in certain
         categories. Finally, you can filter by your own environemnts by entering
-        your username in the top right "Username" field and selecting "mine",
-        and for environements that are currently building by ticking "building".
+        your username in the top right 'Username' field and selecting 'Mine',
+        and for environments that are currently building by ticking 'Building'.
       </p>
 
       <h2>Using Environments</h2>
@@ -90,16 +90,16 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
 
       <p>
         You can create environments from scratch, or based on a pre-existing
-        environment ("clone"). To clone an environment, discover it in the
-        usual way, click on it and then click the "clone" button in the top
+        environment ('clone'). To clone an environment, discover it in the
+        usual way, click on it and then click the 'clone' button in the top
         right of the information panel that appears. This will fill out the
-        "Environment Settings" form described below, and you can alter the
+        'Environment Settings' form described below, and you can alter the
         fields as desired.
       </p>
 
       <p>
         You can also merge a pre-existing environment with what's already in
-        your "Create Environment" form. To do this, click on a SoftPack
+        your 'Create Environment' form. To do this, click on a SoftPack
         environment and click the 'Merge' button in the top right of the
         information panel. This will add the packages and settings of the
         existing environment to the form.
@@ -114,14 +114,14 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
 
       <p>
         Following is an example of creating an environment of your own for the
-        "xxhash" software.
+        'xxhash' software.
       </p>
 
       <ul>
-        <li>Click the "Create Environment" link in the left-hand side-bar.</li>
+        <li>Click the 'Create Environment' link in the left-hand side-bar.</li>
         <li>
           If you haven't already, enter your username in the top right
-          "Username" field.
+          'Username' field.
         </li>
         <li>
           Enter a name for this environment, a description, optional tags and
@@ -130,9 +130,9 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
           group.
         </li>
         <li>
-          In the "Package Settings" section, start typing "xxhash" in to the
-          "Packages" field. A selection of matching packages will pop up; select
-          the "xxhash" result.
+          In the 'Package Settings' section, start typing 'xxhash' in to the
+          'Packages' field. A selection of matching packages will pop up; select
+          the 'xxhash' result.
         </li>
         <li>
           Without changing anything else you'd install the latest version (that
@@ -140,9 +140,9 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
           xxhash entry and select 0.7.4 to install an older version.
         </li>
         <li>
-          Now click the "CREATE" button, which should result in a pop-up message
-          saying your request has been scheduled. (If you see a "Environment
-          build failed" message instead, contact the admin to investigate.)
+          Now click the 'CREATE' button, which should result in a pop-up message
+          saying your request has been scheduled. (If you see a 'Environment
+          build failed' message instead, contact the admin to investigate.)
         </li>
       </ul>
 
@@ -153,21 +153,38 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
       </p>
 
       <p>
-        You will have been taken to the "Environments" page and it will show your
+        You will have been taken to the 'Environments' page and it will show your
         building environments. Once it finishes building it will disappear from
-        that view, so uncheck "building" to find it.
+        that view, so uncheck 'Building' to find it.
       </p>
 
       <p>
         If it turns red to indicate a failure, contact your admin and they'll
         investigate. Otherwise, you can click it to get its module load command
-        similar to the "Usage" section above.
+        similar to the 'Usage' section above.
       </p>
 
       <p>
         If you no longer want this tutorial environment, please contact the
-        admin and we'll delete it for you (deletion isn't currently available
-        from the frontend).
+        admin and we'll delete it for you (deletion isn't available from the
+        frontend).
+      </p>
+
+      <h2>Hiding Environments</h2>
+
+      <p>
+        While we don't allow deletion of environments, we do allow them to be
+        hidden.
+      </p>
+
+      <p>
+        To hide an environment, you can click on an environment, scroll to the
+        bottom, and click the 'Hide' button.
+      </p>
+
+      <p>
+        Hidden environments can be seen by selecting the 'Show Hidden' option in
+        the filter at the top of the environments list.
       </p>
     </div>
   );

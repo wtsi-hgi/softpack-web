@@ -56,6 +56,10 @@ const EnvironmentList = () => {
     "environments-showoldversions",
     false,
   );
+  const [showHidden, setShowHidden] = useLocalStorage(
+    "environments-showhidden",
+    false,
+  );
   const { username, groups } = useContext(UserContext);
 
   const [searchParams] = useSearchParams();
@@ -162,6 +166,10 @@ const EnvironmentList = () => {
     }
 
     filteredEnvironments = Array.from(envsGroupedOnNamePath.values()).map(e => e[1])
+  }
+
+  if (!showHidden) {
+    filteredEnvironments = filteredEnvironments.filter(e => !e.hidden);
   }
 
   const searchEnv = searchParams.get("envId")
@@ -304,6 +312,18 @@ const EnvironmentList = () => {
                 }}
               />
             )}
+            <FormControlLabel
+              control={<Checkbox />}
+              label={
+                <>
+                  Show Hidden{" "}
+                  <HelpIcon title="Show all hidden environments" />
+                </>
+              }
+              disableTypography
+              checked={showHidden}
+              onChange={(_, checked) => setShowHidden(checked)}
+            />
           </FormGroup>
         </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
