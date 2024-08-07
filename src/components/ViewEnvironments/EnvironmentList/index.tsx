@@ -316,7 +316,7 @@ const EnvironmentList = () => {
               control={<Checkbox />}
               label={
                 <>
-                  Show Hidden{" "}
+                  Show hidden{" "}
                   <HelpIcon title="Show all hidden environments" />
                 </>
               }

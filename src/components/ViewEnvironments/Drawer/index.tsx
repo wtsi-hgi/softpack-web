@@ -6,6 +6,10 @@ import {
   Breadcrumbs,
   Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Drawer,
   Icon,
@@ -62,6 +66,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
     }
   })
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const [name, setName] = useLocalStorage<string>("environments-selectedname", "");
   const [description, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
@@ -112,7 +117,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
     setTags(Array.from(new Set(tags.concat(env?.tags ?? []))));
     setSelectedPackages(packages);
   }
-  return (
+  return <>
     <Drawer
       ModalProps={{ slotProps: { backdrop: { style: { cursor: "pointer" } } } }}
       anchor="right"
@@ -286,14 +291,30 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           variant="outlined"
           color={env?.hidden ? "info" : "error"}
           disabled={hideButtonDisable}
-          style={{ width: "calc(100% - 2em)", margin: "0 auto" }}
+          style={{ width: "calc(100% - 2em)", margin: "1em auto" }}
           onClick={() => {
-            if (
-              env &&
-              confirm(
-                `Are you sure you wish to ${env.hidden ? "unhide" : "hide"} this environment?`
-              )
-            ) {
+            !env?.hidden &&
+              onClose();
+            setAlertOpen(true);
+          }
+          }
+        >{env?.hidden ? "Unhide" : "Hide"}</Button>
+      }
+    </Drawer>
+    <Dialog open={alertOpen}>
+      <DialogTitle fontSize={20}>Confirm hide</DialogTitle>
+      <DialogContent>
+        <Typography lineHeight={2}>Are you sure you want to hide this environment?<br />
+          This will affect all users and they won't be able to see it in the list.<br />
+          You can find it again by clicking 'Show hidden'.</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="outlined"
+          color="error"
+          disabled={hideButtonDisable}
+          onClick={() => {
+            env &&
               setHidden({
                 variables: {
                   path: env.path,
@@ -301,13 +322,15 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
                   hidden: !env.hidden
                 }
               });
-              setHideButtonDisable(true);
-            }
-          }}
-        >{env?.hidden ? "Unhide" : "Hide"}</Button>
-      }
-    </Drawer>
-  );
+            setHideButtonDisable(true);
+            setAlertOpen(false);
+          }
+          }
+        >Hide</Button>
+        <Button onClick={() => setAlertOpen(false)}>Cancel</Button>
+      </DialogActions>
+    </Dialog>
+  </>
 }
 
 export default EnvironmentDrawer;
