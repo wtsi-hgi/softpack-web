@@ -293,16 +293,25 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           disabled={hideButtonDisable}
           style={{ width: "calc(100% - 2em)", margin: "1em auto" }}
           onClick={() => {
-            !env?.hidden &&
-              onClose();
-            setAlertOpen(true);
-          }
-          }
+            if (!env?.hidden) {
+              setAlertOpen(true);
+            } else {
+              setHidden({
+                variables: {
+                  path: env.path,
+                  name: env.name,
+                  hidden: !env.hidden
+                }
+              });
+              setHideButtonDisable(true);
+              setAlertOpen(false);
+            }
+          }}
         >{env?.hidden ? "Unhide" : "Hide"}</Button>
       }
     </Drawer>
-    <Dialog open={alertOpen}>
-      <DialogTitle fontSize={20}>Confirm hide</DialogTitle>
+    <Dialog style={{ zIndex: 1400 }} open={alertOpen}>
+      <DialogTitle fontSize={20}>Confirm Hide</DialogTitle>
       <DialogContent>
         <Typography lineHeight={2}>Are you sure you want to hide this environment?<br />
           This will affect all users and they won't be able to see it in the list.<br />
@@ -326,7 +335,9 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
             setAlertOpen(false);
           }
           }
-        >Hide</Button>
+        >
+          Hide
+        </Button>
         <Button onClick={() => setAlertOpen(false)}>Cancel</Button>
       </DialogActions>
     </Dialog>
