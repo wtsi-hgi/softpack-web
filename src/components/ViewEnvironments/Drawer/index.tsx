@@ -288,7 +288,12 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
           disabled={hideButtonDisable}
           style={{ width: "calc(100% - 2em)", margin: "0 auto" }}
           onClick={() => {
-            if (env) {
+            if (
+              env &&
+              confirm(
+                `Are you sure you wish to ${env.hidden ? "unhide" : "hide"} this environment?`
+              )
+            ) {
               setHidden({
                 variables: {
                   path: env.path,
