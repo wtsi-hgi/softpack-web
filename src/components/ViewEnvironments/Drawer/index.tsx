@@ -16,7 +16,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -73,6 +73,10 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
   const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+
+  useEffect(() => {
+    setAlertOpen(false);
+  }, [open]);
 
   function removeExesFromDescription(description: string) {
     const descParts = description.split(descAddedToPath);
@@ -310,7 +314,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
         >{env?.hidden ? "Unhide" : "Hide"}</Button>
       }
     </Drawer>
-    <Dialog style={{ zIndex: 1400 }} open={alertOpen}>
+    <Dialog style={{ zIndex: 1400 }} open={alertOpen && !!env}>
       <DialogTitle fontSize={20}>Confirm Hide</DialogTitle>
       <DialogContent>
         <Typography lineHeight={2}>Are you sure you want to hide this environment?<br />
