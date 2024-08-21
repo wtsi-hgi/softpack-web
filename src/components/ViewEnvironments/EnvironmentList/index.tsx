@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
   Alert,
   Autocomplete,
@@ -16,12 +16,13 @@ import * as semver from "semver";
 
 import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
-import { ALL_ENVIRONMENTS, Package } from "../../../queries";
+import { ALL_ENVIRONMENTS, ALL_PACKAGES, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
+import CreateEnvPrompt from "../CreateEnvPrompt";
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -63,6 +64,23 @@ const EnvironmentList = () => {
   const { username, groups } = useContext(UserContext);
 
   const [searchParams] = useSearchParams();
+
+  const [packages, setPackages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const pkgs: string[] = [];
+      const result = await client.query({ query: ALL_PACKAGES });
+      if (result.error) {
+        pkgs.push("errorpackage");
+      }
+      result.data?.packageCollections.forEach(({ name }: { name: string }) => {
+        pkgs.push(name);
+      });
+      setPackages(pkgs);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -336,11 +354,18 @@ const EnvironmentList = () => {
         ) : null}
       </Box>
       <Container id="environment_table">
-        <EnvironmentTable
-          environments={filteredEnvironments}
-          highlightPackages={highlightPackages}
-          modifyUrl={true}
-        />
+        {filteredEnvironments.length > 0 ? (
+          <EnvironmentTable
+            environments={filteredEnvironments}
+            highlightPackages={highlightPackages}
+            modifyUrl={true}
+          />
+        ) : (
+          <CreateEnvPrompt
+            name={filter}
+            pkgs={packages}
+          />
+        )}
       </Container>
     </>
   );
