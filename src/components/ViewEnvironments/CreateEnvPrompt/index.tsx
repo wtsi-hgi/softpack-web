@@ -14,8 +14,11 @@ export default function CreateEnvPrompt({ name, pkgs }: { name: string, pkgs: st
 
 	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		const p = packages;
+		const names = new Set((packages ?? []).map(e => e.name));
 		const newPackage: Package = { name: e.currentTarget.textContent as string };
-		p.push(newPackage);
+		if (!names.has(newPackage.name)) {
+			p.push(newPackage);
+		}
 		setSelectedPackages(p);
 	};
 
