@@ -98,6 +98,12 @@ summary {
   border-radius: 10px;
   cursor: pointer;
   box-sizing: border-box;
+  transition: box-shadow 100ms;
+}
+
+#environments > li:hover {
+  box-shadow: rgba(159, 162, 191, 0.90) 0 0 20px;
+  transition: box-shadow 50ms ease-out;
 }
 
 #environments > li > span.type {
