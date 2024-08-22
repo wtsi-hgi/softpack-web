@@ -1,6 +1,6 @@
 const About = () => {
   return (
-    <div id="about">
+    <div id="about" style={{ padding: "20px", paddingTop: "0" }}>
       <h1>About</h1>
 
       <p>

@@ -3,13 +3,21 @@ import {
   Alert,
   Autocomplete,
   Box,
+  Button,
   Checkbox,
   Container,
+  Dialog,
   FormControlLabel,
   FormGroup,
+  IconButton,
   Stack,
   TextField,
+  Tooltip,
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 import * as semver from "semver";
@@ -21,7 +29,7 @@ import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
-import { useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams, useNavigate } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
 
 const SECOND = 1000;
@@ -32,10 +40,11 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 }
 
 // EnvironmentList displays the 'view environments' page of the program.
-const EnvironmentList = () => {
+const EnvironmentList = ({ popup }: { popup: JSX.Element | null }) => {
   const { loading, data, error } = useContext(EnvironmentsQueryContext);
   const [filter, setFilter] = useState("");
   const client = useApolloClient();
+  const navigate = useNavigate();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);
   const [filterUsers, setFilterUsers] = useLocalStorage<string[]>(
     "environments-filterusers",
@@ -69,6 +78,7 @@ const EnvironmentList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("fetching packages");
       const pkgs: string[] = [];
       const result = await client.query({ query: ALL_PACKAGES });
       if (result.error) {
@@ -95,7 +105,7 @@ const EnvironmentList = () => {
   }, [loading, error, refetchInterval]);
 
   if (loading) {
-    return <div>loading...</div>;
+    return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
   if (error || !data) {
@@ -212,19 +222,36 @@ const EnvironmentList = () => {
   const allUsers = [...allUsersSet].sort(compareStrings);
   const allTags = [...allTagsSet].sort(compareStrings);
 
+  const handleClose = () => {
+    navigate("/");
+  }
+
   return (
     <>
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
-        <Stack direction="row" id="search">
-          <input
-            id="search-bar"
-            placeholder="Search for Environments by name or package[@version]"
-            style={{ width: "100%", display: "inline-block" }}
-            onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
-          />
-          <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
+        <Stack direction="row" display="flex" alignItems="center">
+          <Stack direction="row" id="search" flexGrow={1} mr="10px" height={1} >
+            <input
+              id="search-bar"
+              placeholder="Search for Environments by name or package[@version]"
+              style={{ width: "100%", display: "inline-block" }}
+              onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
+            />
+            <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
+          </Stack>
+          <Tooltip title="Create Environment">
+            <Button
+              variant="contained"
+              color="success"
+              component={NavLink}
+              to="/create"
+            >
+              <InventoryIcon />
+              <AddIcon />
+            </Button>
+          </Tooltip>
         </Stack>
         <Stack direction="row" spacing={1} py={0.5} alignItems="center">
           <Autocomplete
@@ -367,6 +394,22 @@ const EnvironmentList = () => {
           />
         )}
       </Container>
+
+      <Dialog open={popup ? true : false} onClose={handleClose} maxWidth="xl">
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        {popup}
+      </Dialog>
     </>
   );
 };

@@ -19,7 +19,7 @@ export default function CreateEnvPrompt({ name, pkgs }: { name: string, pkgs: st
 
 	return (
 		<Box textAlign="center">
-			<Typography variant="h2">No environments found...</Typography>
+			<Typography variant="h4">No environments found...</Typography>
 			{packageMatch.length > 0 &&
 				<>
 					<Typography variant="body1">Create one by selecting from the following packages:</Typography>

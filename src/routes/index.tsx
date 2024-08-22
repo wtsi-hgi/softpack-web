@@ -11,7 +11,7 @@ export const routes = [
     children: [
       {
         path: "about",
-        element: <About />,
+        element: <Environments popup={<About />} />,
       },
       {
         index: true,
@@ -20,11 +20,11 @@ export const routes = [
       },
       {
         path: "tags",
-        element: <Tags />,
+        element: <Environments popup={<Tags />} />,
       },
       {
         path: "create",
-        element: <CreateEnvironment />,
+        element: <Environments popup={<CreateEnvironment />} />,
       },
       {
         path: "",
