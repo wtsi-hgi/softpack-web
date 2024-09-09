@@ -15,6 +15,16 @@ const client = new ApolloClient({
     window.location.hostname +
     `:${import.meta.env.VITE_CORE_PORT ?? 8000}/graphql`,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  }
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
