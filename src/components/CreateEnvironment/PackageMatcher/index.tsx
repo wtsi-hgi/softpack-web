@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 
 import { Package } from "../../../queries";
 import { HelpIcon } from "../../HelpIcon";
@@ -34,6 +34,7 @@ function PackageMatcher(props: PackageMatcherParams) {
               setSelectedPackages={props.setSelectedPackages}
             />
           </Box>
+          <Button disabled={!props.selectedPackages.some(p => p.version)} onClick={() => props.setSelectedPackages(props.selectedPackages.map(p => (p.version = null, p)))}>Reset Versions</Button>
         </Grid>
       </Grid>
 
