@@ -281,3 +281,27 @@ summary {
 #search > svg {
   margin-top: 2px;
 }
+
+button:disabled[data-reason]:not([data-reason=""]) {
+	pointer-events: auto !important;
+	position: relative;
+}
+
+button:disabled[data-reason]:not([data-reason=""]):hover:after {
+	content: attr(data-reason);
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: rgba(34, 51, 84, 0.7);
+	transform: translateX(-100%) translateY(-100%);
+	text-transform: none;
+	min-width: 20em;
+	text-align: left;
+	white-space: pre-wrap;
+	padding: 1em 2em;
+	margin: 8px;
+	background-color: #fbfbfc;
+	box-shadow: rgba(159, 162, 191, 0.18) 0px 9px 16px, rgba(159, 162, 191, 0.32) 0px 2px 2px;
+	border-radius: 10px;
+	z-index: 100;
+}
