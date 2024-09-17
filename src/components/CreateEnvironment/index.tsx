@@ -220,7 +220,7 @@ export default function CreateEnvironment() {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-	        data-reason={disabled ? [
+	        data-reason={envBuildInFlight ? "Build is running" : disabled ? [
 			[name.length === 0, "Name"],
 			[description.length === 0, "Description"],
 			[(path !== "users/" + username && !groups.includes(path.split("/")[1])), "Folder"],
