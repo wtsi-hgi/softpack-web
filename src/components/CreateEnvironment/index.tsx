@@ -133,24 +133,11 @@ export default function CreateEnvironment() {
   }
 
   const packages = new Map<string, string[]>();
-  packages.set("python", []);
-  packages.set("r", []);
-  packages.set("perl", []);
 
   data?.packageCollections.forEach(({ name, versions }) => {
     packages.set(name, [""].concat(versions));
   });
 
-  // in case they don't exist
-  if (packages.get("python")?.length === 0) {
-    packages.delete("python");
-  }
-  if (packages.get("r")?.length === 0) {
-    packages.delete("r");
-  }
-  if (packages.get("perl")?.length === 0) {
-    packages.delete("perl");
-  }
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 

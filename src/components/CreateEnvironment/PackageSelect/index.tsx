@@ -73,20 +73,16 @@ export default function PackageSelect(props: PackageSelectParams) {
         disableListWrap
         options={[...props.packages.keys()]}
         filterOptions={(options, state) => {
-          const newOptions: string[] = [];
-          options.forEach((element) => {
-            if (
-              element
-                .toLowerCase()
-                .replaceAll("-", "")
-                .includes(stripPackageSearchPunctuation(state.inputValue))
+          const inputValue = stripPackageSearchPunctuation(state.inputValue.toLowerCase().replaceAll("-", ""));
+          return [
+            ...options.filter(element =>
+              element.toLowerCase().replaceAll("-", "").startsWith(inputValue)
+            ),
+            ...options.filter(element =>
+              element.toLowerCase().replaceAll("-", "").includes(inputValue) &&
+              !element.toLowerCase().replaceAll("-", "").startsWith(inputValue)
             )
-              newOptions.push(element);
-          });
-          if (state.inputValue.length === 0) {
-            newOptions.sort();
-          }
-          return newOptions;
+          ];
         }}
         ListboxComponent={Listbox}
         renderTags={renderTags}
