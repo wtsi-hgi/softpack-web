@@ -83,6 +83,9 @@ export default function PackageSelect(props: PackageSelectParams) {
             )
               newOptions.push(element);
           });
+          if (state.inputValue.length === 0) {
+            newOptions.sort();
+          }
           return newOptions;
         }}
         ListboxComponent={Listbox}
