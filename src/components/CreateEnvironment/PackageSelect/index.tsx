@@ -73,7 +73,7 @@ export default function PackageSelect(props: PackageSelectParams) {
         disableListWrap
         options={[...props.packages.keys()]}
         filterOptions={(options, state) => {
-          const inputValue = stripPackageSearchPunctuation(state.inputValue.toLowerCase().replaceAll("-", ""));
+          const inputValue = stripPackageSearchPunctuation(state.inputValue);
           return [
             ...options.filter(element =>
               element.toLowerCase().replaceAll("-", "").startsWith(inputValue)
