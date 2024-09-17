@@ -145,6 +145,8 @@ export default function CreateEnvironment() {
     });
   };
 
+  const disabled = envBuildInFlight || name.length === 0 || description.length === 0 || path.length === 0 || (path !== "users/" + username && !groups.includes(path.split("/")[1])) || validPackages.length === 0;
+
   return (
     <Grid
       container
@@ -218,14 +220,13 @@ export default function CreateEnvironment() {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                disabled={
-                  envBuildInFlight ||
-                  name.length === 0 ||
-                  description.length === 0 ||
-                  path.length === 0 ||
-                  (path !== "users/" + username && !groups.includes(path.split("/")[1])) ||
-                  validPackages.length === 0
-                }
+	        data-reason={envBuildInFlight ? "Build is running" : disabled ? [
+			[name.length === 0, "Name"],
+			[description.length === 0, "Description"],
+			[(path !== "users/" + username && !groups.includes(path.split("/")[1])), "Folder"],
+			[validPackages.length === 0, "Packages"]
+		].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
+                disabled={disabled}
                 onClick={runEnvironmentBuild}
                 sx={{
                   float: "right",
