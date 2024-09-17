@@ -5,12 +5,7 @@ import { Package } from "../../../queries";
 
 export default function CreateEnvPrompt({ name, pkgs }: { name: string, pkgs: string[] }) {
 	const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
-	const packageMatch: string[] = [];
-	pkgs.forEach((p: string) => {
-		if (p.includes(name)) {
-			packageMatch.push(p);
-		}
-	});
+	const packageMatch = name ? pkgs.filter(p => p.includes(name)).slice(0, 50) : [];
 
 	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		const p = packages;
