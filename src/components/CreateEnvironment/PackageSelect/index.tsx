@@ -75,12 +75,15 @@ export default function PackageSelect(props: PackageSelectParams) {
         filterOptions={(options, state) => {
           const inputValue = stripPackageSearchPunctuation(state.inputValue);
           return [
+            ...inputValue.length >= 2 && "python".startsWith(inputValue) ? ["python"] : [],
             ...options.filter(element =>
-              element.toLowerCase().replaceAll("-", "").startsWith(inputValue)
+              element.toLowerCase().replaceAll("-", "").startsWith(inputValue) &&
+              element !== "python"
             ),
             ...options.filter(element =>
               element.toLowerCase().replaceAll("-", "").includes(inputValue) &&
-              !element.toLowerCase().replaceAll("-", "").startsWith(inputValue)
+              !element.toLowerCase().replaceAll("-", "").startsWith(inputValue) &&
+              element !== "python"
             )
           ];
         }}
