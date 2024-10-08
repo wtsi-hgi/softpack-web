@@ -10,16 +10,16 @@ import { NavLink } from "react-router-dom";
 const Menu = () => {
   return (
     <ButtonGroup aria-label="sidebar buttons" sx={{ marginLeft: 2, flexGrow: 1 }}>
-      <Button component={NavLink} to="/about" startIcon={<HelpCenterIcon />}>
+      <Button component={NavLink} to="about" startIcon={<HelpCenterIcon />}>
         About
       </Button>
-      <Button component={NavLink} to="/environments" startIcon={<WidgetsIcon />}>
+      <Button component={NavLink} to="environments" startIcon={<WidgetsIcon />}>
         Environments
       </Button>
-      <Button component={NavLink} to="/tags" startIcon={<TagIcon />}>
+      <Button component={NavLink} to="tags" startIcon={<TagIcon />}>
         Tags
       </Button>
-      <Button component={NavLink} to="/create" startIcon={<ConstructionIcon />}>
+      <Button component={NavLink} to="create" startIcon={<ConstructionIcon />}>
         Create Environment
       </Button>
     </ButtonGroup>
