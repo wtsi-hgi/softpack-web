@@ -1,6 +1,6 @@
 import CreateEnvironment from "../components/CreateEnvironment";
+import EnvironmentList from "../components/ViewEnvironments/EnvironmentList";
 import About from "./About";
-import Environments from "./Environments";
 import Root from "./Root";
 import Tags from "./Tags";
 
@@ -11,24 +11,24 @@ export const routes = [
     children: [
       {
         path: "about",
-        element: <Environments popup={<About />} />,
+        element: <About />,
       },
       {
         index: true,
         path: "environments",
-        element: <Environments />,
+        element: <EnvironmentList />,
       },
       {
         path: "tags",
-        element: <Environments popup={<Tags />} />,
+        element: <Tags />,
       },
       {
         path: "create",
-        element: <Environments popup={<CreateEnvironment />} />,
+        element: <CreateEnvironment />,
       },
       {
         path: "",
-        element: <Environments />,
+        element: <EnvironmentList />,
       },
     ],
   },
