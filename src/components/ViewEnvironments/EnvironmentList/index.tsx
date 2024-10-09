@@ -10,6 +10,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useEffect, useState } from "react";
 import * as semver from "semver";
@@ -95,7 +96,7 @@ const EnvironmentList = () => {
   }, [loading, error, refetchInterval]);
 
   if (loading) {
-    return <div>loading...</div>;
+    return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
   if (error || !data) {
@@ -217,14 +218,16 @@ const EnvironmentList = () => {
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
-        <Stack direction="row" id="search">
-          <input
-            id="search-bar"
-            placeholder="Search for Environments by name or package[@version]"
-            style={{ width: "100%", display: "inline-block" }}
-            onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
-          />
-          <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
+        <Stack direction="row" display="flex" alignItems="center">
+          <Stack direction="row" id="search" flexGrow={1} mr="10px" height={1} >
+            <input
+              id="search-bar"
+              placeholder="Search for Environments by name or package[@version]"
+              style={{ width: "100%", display: "inline-block" }}
+              onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
+            />
+            <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
+          </Stack>
         </Stack>
         <Stack direction="row" spacing={1} py={0.5} alignItems="center">
           <Autocomplete

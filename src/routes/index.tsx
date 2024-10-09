@@ -1,6 +1,6 @@
 import CreateEnvironment from "../components/CreateEnvironment";
+import EnvironmentList from "../components/ViewEnvironments/EnvironmentList";
 import About from "./About";
-import Environments from "./Environments";
 import Root from "./Root";
 import Tags from "./Tags";
 
@@ -16,7 +16,7 @@ export const routes = [
       {
         index: true,
         path: "environments",
-        element: <Environments />,
+        element: <EnvironmentList />,
       },
       {
         path: "tags",
@@ -28,7 +28,7 @@ export const routes = [
       },
       {
         path: "",
-        element: <Environments />,
+        element: <EnvironmentList />,
       },
     ],
   },

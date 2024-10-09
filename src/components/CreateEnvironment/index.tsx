@@ -4,7 +4,6 @@ import {
   Alert,
   Box,
   Button,
-  Card,
   CardContent,
   Divider,
   Grid,
@@ -114,7 +113,7 @@ export default function CreateEnvironment() {
       // onError looks at GraphQL errors specifically.
       onError: (error) => {
         const messages = error.graphQLErrors[0].message;
-        console.log("GraphQL ERROR: ", messages);
+        console.error("GraphQL ERROR: ", messages);
         setEnvBuildResult({
           title: "Environment build failed",
           message: messages,
@@ -158,88 +157,86 @@ export default function CreateEnvironment() {
       spacing={3}
     >
       <Grid item xs={11}>
-        <Card>
-          <Box p={2}>
-            <Stack mt={1} direction="row" alignItems="center" width="100%" spacing={1}>
-              <Typography variant="h4">Environment Settings</Typography>
-              <Button
-                variant="outlined"
-                size="small"
-                disabled={!(
-                  name.length > 0 ||
-                  description.length > 0 ||
-                  path.length > 0 ||
-                  selectedPackages.length > 0
-                )}
-                onClick={resetEnvironmentSettings}
-              >
-                Reset
-              </Button>
-            </Stack>
-          </Box>
-          <Divider />
+        <Box p={2}>
+          <Stack mt={1} direction="row" alignItems="center" width="100%" spacing={1}>
+            <Typography variant="h4">Environment Settings</Typography>
+            <Button
+              variant="outlined"
+              size="small"
+              disabled={!(
+                name.length > 0 ||
+                description.length > 0 ||
+                path.length > 0 ||
+                selectedPackages.length > 0
+              )}
+              onClick={resetEnvironmentSettings}
+            >
+              Reset
+            </Button>
+          </Stack>
+        </Box>
+        <Divider />
 
-          {hideInstructions ? null : (
-            <Stack justifyContent="center" direction="row">
-              <Alert
-                severity="info"
-                sx={{ maxWidth: "40em" }}
-                onClose={() => { setHideInstructions(true) }}
-              >
-                To create an environment similar to an existing one, find it on
-                the environments page, click on it and then click the "clone"
-                button in the top right corner, which will fill out the form
-                below for you. Then make your desired changes.
-              </Alert>
-            </Stack>
-          )}
+        {hideInstructions ? null : (
+          <Stack justifyContent="center" direction="row">
+            <Alert
+              severity="info"
+              sx={{ maxWidth: "40em" }}
+              onClose={() => { setHideInstructions(true) }}
+            >
+              To create an environment similar to an existing one, find it on
+              the environments page, click on it and then click the "clone"
+              button in the top right corner, which will fill out the form
+              below for you. Then make your desired changes.
+            </Alert>
+          </Stack>
+        )}
 
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="subtitle2">
-              <EnvironmentSettings
-                name={name}
-                setName={setName}
-                description={description}
-                setDescription={setDescription}
-                tags={tags}
-                setTags={setTags}
-                path={path}
-                setPath={setPath}
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="subtitle2">
+            <EnvironmentSettings
+              name={name}
+              setName={setName}
+              description={description}
+              setDescription={setDescription}
+              tags={tags}
+              setTags={setTags}
+              path={path}
+              setPath={setPath}
+            />
+            <PackageContext.Provider
+              value={{ testPackages, setTestPackages }}
+            >
+              <PackageMatcher
+                packages={packages}
+                selectedPackages={selectedPackages}
+                setSelectedPackages={setSelectedPackages}
+                runEnvironmentBuild={runEnvironmentBuild}
+                envBuildInFlight={envBuildInFlight}
               />
-              <PackageContext.Provider
-                value={{ testPackages, setTestPackages }}
-              >
-                <PackageMatcher
-                  packages={packages}
-                  selectedPackages={selectedPackages}
-                  setSelectedPackages={setSelectedPackages}
-                  runEnvironmentBuild={runEnvironmentBuild}
-                  envBuildInFlight={envBuildInFlight}
-                />
-              </PackageContext.Provider>
-            </Typography>
-            <Box>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                data-reason={envBuildInFlight ? "Build is running" : disabled ? [
-                  [name.length === 0, "Name"],
-                  [description.length === 0, "Description"],
-                  [(path !== "users/" + username && !groups.includes(path.split("/")[1])), "Folder"],
-                  [validPackages.length === 0, "Packages"]
-                ].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
-                disabled={disabled}
-                onClick={runEnvironmentBuild}
-                sx={{
-                  float: "right",
-                  mb: "2%",
-                }}
-              >
-                Create
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
+            </PackageContext.Provider>
+          </Typography>
+          <Box>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              data-reason={envBuildInFlight ? "Build is running" : disabled ? [
+                [name.length === 0, "Name"],
+                [description.length === 0, "Description"],
+                [(path !== "users/" + username && !groups.includes(path.split("/")[1])), "Folder"],
+                [validPackages.length === 0, "Packages"]
+              ].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
+              disabled={disabled}
+              onClick={runEnvironmentBuild}
+              sx={{
+                float: "right",
+                mb: "2%",
+              }}
+            >
+              Create
+            </Button>
+          </Box>
+        </CardContent>
       </Grid>
 
       {

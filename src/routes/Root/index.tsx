@@ -7,13 +7,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Logo from '../../../softpack.svg';
 
 import { AvailableTagsContext } from "../../components/AvailableTagsContext";
 import { EnvironmentsQueryContext } from "../../components/EnvironmentsQueryContext";
 import { HelpIcon } from "../../components/HelpIcon";
-import Sidebar from "../../components/Sidebar";
+import Menu from "../../components/Menu";
 import { UserContext } from "../../components/UserContext";
 import { ALL_ENVIRONMENTS, Environments, GROUPS } from "../../queries";
 
@@ -49,16 +49,19 @@ const Root = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         color="inherit"
       >
-        <Toolbar style={{ paddingLeft: "10px" }}>
-          <img
-            alt="SoftPack"
-            src={Logo}
-            style={{ height: "3em", marginRight: "1em" }}
-          />
-          <Typography variant="h3" sx={{ flexGrow: 1 }}>
-            SoftPack
-          </Typography>
-          <Typography pr={1}>Username:</Typography>
+        <Toolbar style={{ paddingLeft: "20px" }}>
+          <Box display="contents" component={NavLink} to="/">
+            <img
+              alt="SoftPack"
+              src={Logo}
+              style={{ height: "3em", paddingRight: "1em" }}
+            />
+            <Typography variant="h3">
+              SoftPack
+            </Typography>
+          </Box>
+          <Menu />
+          <Typography pr={1} ml={2}>Username:</Typography>
           <TextField
             variant="standard"
             value={username}
@@ -88,7 +91,6 @@ const Root = () => {
       <UserContext.Provider value={{ username, groups }}>
         <EnvironmentsQueryContext.Provider value={environmentsQuery}>
           <AvailableTagsContext.Provider value={availableTags}>
-            <Sidebar />
             <Box component="main" sx={{ mx: 2, width: "100%" }}>
               <Toolbar />
               <Outlet />
