@@ -113,7 +113,7 @@ export default function CreateEnvironment() {
       // onError looks at GraphQL errors specifically.
       onError: (error) => {
         const messages = error.graphQLErrors[0].message;
-        console.log("GraphQL ERROR: ", messages);
+        console.error("GraphQL ERROR: ", messages);
         setEnvBuildResult({
           title: "Environment build failed",
           message: messages,

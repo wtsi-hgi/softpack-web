@@ -70,7 +70,6 @@ const EnvironmentList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetching packages");
       const pkgs: string[] = [];
       const result = await client.query({ query: ALL_PACKAGES });
       if (result.error) {
