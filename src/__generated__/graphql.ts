@@ -50,6 +50,7 @@ export type Environment = {
   avgWaitSecs?: Maybe<Scalars['Float']['output']>;
   buildDone?: Maybe<Scalars['DateTime']['output']>;
   buildStart?: Maybe<Scalars['DateTime']['output']>;
+  cachedEnvs: Array<Environment>;
   description: Scalars['String']['output'];
   hidden: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
@@ -187,7 +188,8 @@ export type SchemaQueryGroupsArgs = {
 export enum State {
   Failed = 'failed',
   Queued = 'queued',
-  Ready = 'ready'
+  Ready = 'ready',
+  Waiting = 'waiting'
 }
 
 export type Success = {

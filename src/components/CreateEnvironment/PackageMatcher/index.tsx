@@ -34,10 +34,15 @@ function PackageMatcher(props: PackageMatcherParams) {
               setSelectedPackages={props.setSelectedPackages}
             />
           </Box>
-          <Button disabled={!props.selectedPackages.some(p => p.version)} onClick={() => props.setSelectedPackages(props.selectedPackages.map(p => (p.version = null, p)))}>Reset Versions</Button>
+          <Button disabled={!props.selectedPackages.some(p => p.version)} onClick={() => props.setSelectedPackages(props.selectedPackages.map(p => {
+		if (!p.name.startsWith("*")) {
+			p.version = null;
+		}
+
+		return  p;
+	  }))}>Reset Versions</Button>
         </Grid>
       </Grid>
-
       {props.selectedPackages.length > 0 && (
         <MatchingEnvs
           selectedPackages={props.selectedPackages}

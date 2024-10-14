@@ -7,13 +7,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { routes } from "./routes";
 import "./style.css";
 import Theme from "./theme";
+import CoreURL from './core';
 
 const client = new ApolloClient({
-  uri:
-    window.location.protocol +
-    "//" +
-    window.location.hostname +
-    `:${import.meta.env.VITE_CORE_PORT ?? 8000}/graphql`,
+  uri: CoreURL+"graphql",
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
