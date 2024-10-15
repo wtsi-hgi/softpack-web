@@ -210,7 +210,7 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
         second method.
       </p>
       <p>
-        To upload to DockerHub, first you'll need and account and to generate a
+        To upload to DockerHub, first you'll need an account and to generate a
         <a href="https://app.docker.com/settings/personal-access-tokens">Personal Access Token</a>
         (Account Settings -&gt; Security -&gt; Personal Access Tokens) that has both Read &amp;
         Write scopes.
