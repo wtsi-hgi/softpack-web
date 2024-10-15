@@ -99,15 +99,15 @@ export default function RequestRecipe() {
 	    </Grid>
 	    <Grid item xs={12} sm={4} md={3} textAlign={{ sm: "right" }}>
 	      <Box pr={3} pb={3} display="flex" justifyContent="flex-end">
-	        Description:
-	        <HelpIcon title="Describe the purpose of your recipe" />
+	        Details:
+	        <HelpIcon title="Please let us know as much as you can about this including any test data you're aware of, the command you expect to be able to run, and anything else you think might be useful." />
 	      </Box>
 	    </Grid>
 	    <Grid item xs={12} sm={8} md={9} pb={3}>
 	      <TextField
 	        id="description-field"
 	        multiline
-	        sx={{ width: "75%" }}
+		rows={3}
 	        value={description}
 	        onChange={(e) =>
 	          setDescription((e.target as HTMLInputElement).value)
@@ -126,7 +126,7 @@ export default function RequestRecipe() {
 	      [name === "", "Name"],
 	      [version === "", "Version"],
 	      [url === "", "URL"],
-	      [description === "", "Description"],
+	      [description === "", "Details"],
 	    ].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 	    onClick={() => {
 		setInFlight(true);
