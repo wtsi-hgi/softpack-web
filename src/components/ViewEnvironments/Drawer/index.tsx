@@ -46,6 +46,14 @@ export const breadcrumbs = (path: string) => (
 
 const descAddedToPath = "\n\nThe following executables are added to your PATH:"
 
+export function isInterpreter(env: Environment, pkg: Package) {
+	return pkg.name === "r" && env.interpreters.r || pkg.name === "python" && env.interpreters.python;
+}
+
+function packagesWithoutInterpreters(env: Environment) {
+	return env.packages.filter(pkg => !isInterpreter(env, pkg));
+}
+
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
@@ -94,13 +102,13 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
     setDescription(removeExesFromDescription(env.description));
     setPath(env.path);
     setTags(env.tags);
-    setSelectedPackages(env.packages);
+    setSelectedPackages(packagesWithoutInterpreters(env));
   }
 
   function mergeEnv() {
     const names = new Set((packages ?? []).map(e => e.name));
 
-    for (const pkg of env?.packages ?? []) {
+    for (const pkg of env ? packagesWithoutInterpreters(env) : []) {
       if (!names.has(pkg.name)) {
         packages.push(pkg);
       }

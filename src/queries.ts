@@ -30,6 +30,10 @@ export const ALL_ENVIRONMENTS = gql(`
       buildStart
       buildDone
       avgWaitSecs
+      interpreters {
+        python
+        r
+      }
     }
   }
 `);

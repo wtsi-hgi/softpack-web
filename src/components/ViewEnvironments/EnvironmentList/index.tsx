@@ -112,7 +112,12 @@ const EnvironmentList = () => {
   const avgWaitSecs = data.environments.find((e) => e.avgWaitSecs != null)
     ?.avgWaitSecs;
 
-  let filteredEnvironments = [...data.environments];
+  let filteredEnvironments = data.environments.slice().map(env => Object.assign(
+    Object.assign({}, env),
+    {"packages": env.packages.toSpliced(0, 0, ...[
+      (env.interpreters.python ? {"name": "python", "version": env.interpreters.python} : null) as any,
+      (env.interpreters.r ? {"name": "r", "version": env.interpreters.r} : null) as any
+    ].filter(e => e))}));
 
   // filter by name/package
   const highlightPackagesSet = new Set<Package>();
