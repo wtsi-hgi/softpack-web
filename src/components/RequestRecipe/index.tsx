@@ -151,6 +151,7 @@ export default function RequestRecipe() {
 	      </Stack>
 	    </Box>
 	    <Divider />
+	    <p>The following recipes have been requested, but can still be used to create an environment. They will be at the bottom of the Packages list and begin with an asterisk (*). Any environment that requires one of the recipes below will be put on hold until the recipe is created, at which time the environment will start building.</p>
 	    <Table>
 	      <TableHead>
 	        <TableRow>
