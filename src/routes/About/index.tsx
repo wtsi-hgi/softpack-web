@@ -186,6 +186,82 @@ export MODULEPATH=$MODULEPATH:/software/modules/`}</pre>
         Hidden environments can be seen by selecting the 'Show Hidden' option in
         the filter at the top of the environments list.
       </p>
+
+      <h2>Reproducing Environments</h2>
+
+      <p>
+        One of the multitude of benefits of provisioning software this way is the ease
+        of reproducing the environment elsewhere.
+      </p>
+      <p>
+        We currently have two ways of copying and allowing external third-parties to use
+        your SoftPack environments.
+      </p>
+
+      <h3>Upload to DockerHub</h3>
+
+      <p>
+        The first, and simplest, is to upload it to <a href="https://hub.docker.com/">DockerHub</a>
+        so that anyone can clone it as either a Docker image or a Singularity image.
+      </p>
+      <p>
+        NB: This method will only be reproducable on x86_64 machines (that is to say,
+        AMD and Intel based machines); for other architectures, you'll need to use the
+        second method.
+      </p>
+      <p>
+        To upload to DockerHub, first you'll need and account and to generate a
+        <a href="https://app.docker.com/settings/personal-access-tokens">Personal Access Token</a>
+        (Account Settings -&gt; Security -&gt; Personal Access Tokens) that has both Read &amp;
+        Write scopes.
+      </p>
+      <p>
+        Then, on the farm run the following:
+      </p>
+      <pre>{`module load HGI/common/softpack2docker
+module load HGI/softpack/path/to/myEnv/1
+softpack2docker --username DOCKER_USERNAME`}</pre>
+      <p>
+        You will be prompted to copy in your token, after which you're environment will
+        be converted to the appropriate container artefacts and upload to DockerHub.
+      </p>
+      <p>
+        There are additional options that can be found by running:
+      </p>
+      <pre>{`softpack2docker --help`}</pre>
+      <p>
+        …including the ability to provide a different name for the uploaded environment
+        and to add in a copy of RStudio (assuming that R is in the environment).
+      </p>
+
+      <h3>Get the Definition File</h3>
+
+      <p>
+        The environment should be reproducible from scratch using only the definition
+        file that created it initially.
+      </p>
+      <p>
+        To get a copy of the definition file, you can use the following:
+      </p>
+      <pre>{`module load HGI/common/softpackdef
+module load HGI/softpack/path/to/myEnv/1
+softpackdef`}</pre>
+      <p>
+        This will produce a Singularity definition file that can be used to with the
+        Singularity tool to recreate the environment.
+      </p>
+      <p>
+        If you want to build with Docker as opposed to Singularity, you can add the
+        `--docker` flag to get a Dockerfile.
+      </p>
+      <pre>{`module load HGI/common/softpackdef
+module load HGI/softpack/path/to/myEnv/1
+softpackdef --docker`}</pre>
+      <p>
+        NB: While more likely to be compatible with different architectures, we do
+        not guarantee that it will work on all architectures. In addition, this
+        method may take many hours to compile all of the required software.
+      </p>
     </div>
   );
 };
