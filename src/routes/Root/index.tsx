@@ -1,4 +1,6 @@
+import type {RequestedRecipe} from "../../components/RequestRecipe";
 import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { InputAdornment, TextField, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -9,9 +11,11 @@ import Typography from "@mui/material/Typography";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { NavLink, Outlet } from "react-router-dom";
 import Logo from '../../../softpack.svg';
+import CoreURL from "../../core";
 
 import { AvailableTagsContext } from "../../components/AvailableTagsContext";
 import { EnvironmentsQueryContext } from "../../components/EnvironmentsQueryContext";
+import { RequestedRecipesContext } from "../../components/RequestRecipe";
 import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../components/UserContext";
@@ -22,6 +26,8 @@ import { ALL_ENVIRONMENTS, Environments, GROUPS } from "../../queries";
 function getAvailableTags(environments: Environments): string[] {
   return environments.flatMap((e) => e.tags);
 }
+
+let recipesTimer = -1 as unknown as NodeJS.Timeout;
 
 const Root = () => {
   const [username, setUsername] = useLocalStorage("username", "");
@@ -40,6 +46,22 @@ const Root = () => {
   const availableTags = [
     ...new Set(getAvailableTags(environmentsQuery.data?.environments ?? [])),
   ];
+
+  const [requested, setRequested] = useState<RequestedRecipe[]>([]),
+	[getRequestedRecipes, setGetRequestRecipes] = useState({}),
+	updateRequestedRecipes = () => setGetRequestRecipes({}),
+	requestedRecipes = () => [requested, updateRequestedRecipes] as const;
+
+  useEffect(() => {
+	clearTimeout(recipesTimer);
+
+	fetch(CoreURL + "requestedRecipes")
+	.then(r => r.json())
+	.then(rr => {
+		setRequested(rr);
+		recipesTimer = setTimeout(updateRequestedRecipes, 10000);
+	});
+  }, [getRequestedRecipes]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -90,12 +112,14 @@ const Root = () => {
       </AppBar>
       <UserContext.Provider value={{ username, groups }}>
         <EnvironmentsQueryContext.Provider value={environmentsQuery}>
-          <AvailableTagsContext.Provider value={availableTags}>
-            <Box component="main" sx={{ mx: 2, width: "100%" }}>
-              <Toolbar />
-              <Outlet />
-            </Box>
-          </AvailableTagsContext.Provider>
+          <RequestedRecipesContext.Provider value={requestedRecipes()}>
+            <AvailableTagsContext.Provider value={availableTags}>
+              <Box component="main" sx={{ mx: 2, width: "100%" }}>
+                <Toolbar />
+                <Outlet />
+              </Box>
+            </AvailableTagsContext.Provider>
+          </RequestedRecipesContext.Provider>
         </EnvironmentsQueryContext.Provider>
       </UserContext.Provider>
     </Box>

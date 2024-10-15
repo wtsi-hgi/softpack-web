@@ -1,5 +1,5 @@
 import { Alert, Autocomplete, Box, TextField } from "@mui/material";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useState } from "react";
 
 import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
@@ -19,6 +19,7 @@ export default function PackageSelect(props: PackageSelectParams) {
   const validPackages: Package[] = []
   const invalidSelectedPackages: Package[] = []
   const invalidSelectedVersionPackages: Package[] = []
+  const [recipeFilter, setRecipeFilter] = useState("");
 
   useMemo(
     () => {
@@ -67,6 +68,7 @@ export default function PackageSelect(props: PackageSelectParams) {
   return (
     <Box>
       <Autocomplete
+	key="def"
         multiple
         openOnFocus
         disableCloseOnSelect
@@ -89,12 +91,16 @@ export default function PackageSelect(props: PackageSelectParams) {
             )
           ];
         }}
+	inputValue={recipeFilter}
+	onInputChange={(e, value) => e && setRecipeFilter(value)}
         ListboxComponent={Listbox}
         renderTags={renderTags}
         renderInput={(params) => {
           return (
             <TextField
+	      key="abc"
               {...params}
+	      value={params.inputProps.value}
               variant="standard"
               label={props.selectedPackages.length ? "" : "Search..."}
             />

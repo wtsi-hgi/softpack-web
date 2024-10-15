@@ -1,5 +1,6 @@
-import CreateEnvironment from "../components/CreateEnvironment";
 import EnvironmentList from "../components/ViewEnvironments/EnvironmentList";
+import CreateEnvironment from "../components/CreateEnvironment";
+import RequestRecipes from "../components/RequestRecipe";
 import About from "./About";
 import Root from "./Root";
 import Tags from "./Tags";
@@ -25,6 +26,10 @@ export const routes = [
       {
         path: "create",
         element: <CreateEnvironment />,
+      },
+      {
+        path: "request",
+        element: <RequestRecipes />,
       },
       {
         path: "",

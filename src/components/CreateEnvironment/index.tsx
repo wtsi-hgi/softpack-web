@@ -23,6 +23,7 @@ import { PopUpDialog } from "./PopUpDialog";
 import { UserContext } from "../UserContext";
 import { validatePackages } from "./packageValidation";
 import { useNavigate } from "react-router-dom"
+import { RequestedRecipesContext } from "../RequestRecipe";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -53,6 +54,7 @@ export default function CreateEnvironment() {
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
+  const [ requestedRecipes ] = useContext(RequestedRecipesContext);
 
   const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
 
@@ -137,6 +139,14 @@ export default function CreateEnvironment() {
     packages.set(name, [""].concat(versions));
   });
 
+  requestedRecipes.forEach(({ name, version }) => {
+    const rname = "*"+name,
+	  rr = packages.get(rname) ?? [];
+
+    rr.push(version);
+
+    packages.set(rname, rr);
+  });
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 
@@ -238,7 +248,6 @@ export default function CreateEnvironment() {
           </Box>
         </CardContent>
       </Grid>
-
       {
         envBuildResult.title !== "" && (
           <PopUpDialog

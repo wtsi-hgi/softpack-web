@@ -140,6 +140,10 @@ summary {
   background-color: #57ca22;
 }
 
+#environments > li > span.colourBar.waiting {
+  background-color: #d4db0d;
+}
+
 #environments > li > span.colourBar.queued {
   background-color: #33c2ff;
 }
