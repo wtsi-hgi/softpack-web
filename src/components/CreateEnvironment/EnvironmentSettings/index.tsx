@@ -45,6 +45,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
         <TextField
           id="name-field"
           variant="standard"
+	  helperText={/[-_][0-9][.\-0-9]*$/.test(props.name) ? "Version not required" : ""}
           value={props.name}
           onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
         />
