@@ -3,6 +3,7 @@ import {
   Alert,
   Autocomplete,
   Box,
+  Button,
   Checkbox,
   Container,
   FormControlLabel,
@@ -36,6 +37,7 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 const EnvironmentList = () => {
   const { loading, data, error } = useContext(EnvironmentsQueryContext);
   const [filter, setFilter] = useState("");
+  const [filterText, setFilterText] = useState("");
   const client = useApolloClient();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);
   const [filterUsers, setFilterUsers] = useLocalStorage<string[]>(
@@ -224,7 +226,8 @@ const EnvironmentList = () => {
               id="search-bar"
               placeholder="Search for Environments by name or package[@version]"
               style={{ width: "100%", display: "inline-block" }}
-              onChange={e => setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " ")), 500)}
+              value={filterText}
+              onChange={e => (setFilterText(e.target.value), setTimeout(() => setFilter(e.target.value.trim().replaceAll(/\s\s+/g, " "))), 500)}
             />
             <HelpIcon title="Filter by space-delimited list of package@version or environment name" />
           </Stack>
@@ -346,6 +349,16 @@ const EnvironmentList = () => {
               onChange={(_, checked) => setShowHidden(checked)}
             />
           </FormGroup>
+	  <Button disabled={filterUsers.length === 0 && filterGroups.length === 0 && filterTags.length === 0 && filterText.length === 0 && !showOldVersions && !showHidden && !ignoreReady} variant="outlined" onClick={() => {
+		setFilterUsers([]);
+		setFilterGroups([]);
+		setFilterTags([]);
+		setFilterText("");
+		setFilter("");
+		setShowOldVersions(false);
+		setShowHidden(false);
+		setIgnoreReady(false);
+	  }}>Reset</Button>
         </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
           ignoreReady ? (
