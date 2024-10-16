@@ -45,7 +45,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
         <TextField
           id="name-field"
           variant="standard"
-	  helperText={/[-_][0-9][.\-0-9]*$/.test(props.name) ? "Version not required" : ""}
+	  helperText={/[-_][0-9][.\-0-9]*$/.test(props.name) ? <>Version not required <HelpIcon style={{paddingTop:"0.5em", paddingLeft: "0"}} title="Versions are automatically managed by SoftPack" /></> : ""}
           value={props.name}
           onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
         />
