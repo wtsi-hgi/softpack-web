@@ -44,6 +44,14 @@
   max-width: unset;
 }
 
+.interpreter.selected {
+  background: repeating-linear-gradient(45deg, #5569ff, #5569ff 10px, #5559ee 10px, #5559ee 20px);
+}
+
+.interpreter {
+  background: repeating-linear-gradient(45deg, #fff, #fff 10px, #eee 10px, #eee 20px);
+}
+
 #about {
   max-width: 40em;
 }

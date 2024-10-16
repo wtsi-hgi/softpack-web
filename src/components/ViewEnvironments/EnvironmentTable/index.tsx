@@ -3,7 +3,7 @@ import { useState } from "react";
 import { compareEnvironments, compareStrings } from "../../../strings";
 
 import type { Environment, Environments, Package } from "../../../queries";
-import EnvironmentDrawer from "../Drawer";
+import EnvironmentDrawer, { isInterpreter } from "../Drawer";
 import { useSearchParams } from "react-router-dom";
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
@@ -18,6 +18,14 @@ type EnvironmentTableProps = {
 
 function toTitle(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Element) {
+	if (isInterpreter(env, pkg)) {
+		return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
+	}
+
+	return node;
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
@@ -104,13 +112,13 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               </ul>
               <div>{env.description.split("\n")[0]}</div>
               <ul>
-                {highlightPackages.map((pkg) => (
-                  <li key={pkg.name} className="selected">
+                {highlightPackages.map((pkg) => wrapIfInterpreted(env, pkg,
+                  <li key={pkg.name} className={"selected" + (isInterpreter(env, pkg) ? " interpreter" : "")}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
                 ))}
-                {normalPackages.map((pkg) => (
-                  <li key={pkg.name}>
+                {normalPackages.map((pkg) => wrapIfInterpreted(env, pkg,
+                  <li className={isInterpreter(env, pkg) ? "interpreter" : ""} key={pkg.name}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
                 ))}
