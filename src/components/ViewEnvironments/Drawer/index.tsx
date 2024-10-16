@@ -285,6 +285,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
             return (
               <Box key={i} sx={{ float: "left" }}>
                 <Chip
+		  className={isInterpreter(env!, pkg) ? " interpreter" : ""}
                   label={pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   sx={{
                     m: "4px",
