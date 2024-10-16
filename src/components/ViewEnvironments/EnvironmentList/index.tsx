@@ -40,6 +40,9 @@ const EnvironmentList = () => {
   const [filterText, setFilterText] = useState("");
   const client = useApolloClient();
   const [refetchInterval, setRefetchInterval] = useState(SECOND);
+  const [filterUserText, setFilterUserText] = useState("");
+  const [filterGroupText, setFilterGroupText] = useState("");
+  const [filterTagText, setFilterTagText] = useState("");
   const [filterUsers, setFilterUsers] = useLocalStorage<string[]>(
     "environments-filterusers",
     [],
@@ -243,6 +246,8 @@ const EnvironmentList = () => {
             size="small"
             options={allUsers}
             multiple
+            inputValue={filterUserText}
+            onInputChange={(e, value) => e && setFilterUserText(value)}
             value={filterUsers}
             onChange={(_, value) => setFilterUsers(value)}
             renderInput={(params) => (
@@ -259,6 +264,8 @@ const EnvironmentList = () => {
             size="small"
             options={allGroups}
             multiple
+            inputValue={filterGroupText}
+            onInputChange={(e, value) => e && setFilterGroupText(value)}
             value={filterGroups}
             onChange={(_, value) => setFilterGroups(value)}
             renderInput={(params) => (
@@ -275,6 +282,8 @@ const EnvironmentList = () => {
             size="small"
             options={allTags}
             multiple
+            inputValue={filterTagText}
+            onInputChange={(e, value) => e && setFilterTagText(value)}
             value={filterTags}
             onChange={(_, value) => setFilterTags(value)}
             renderInput={(params) => (
