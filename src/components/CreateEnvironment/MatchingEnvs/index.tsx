@@ -4,11 +4,13 @@ import { Box, Typography } from "@mui/material";
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
 import { anyPackageVersion } from "../packageValidation";
+import type { Environment as EnvironmentType } from "../../../queries";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
   envBuildInFlight: boolean;
   runEnvironmentBuild: () => void;
+  setSelectedEnv: (v: EnvironmentType) => void;
 };
 
 // matchingEnvs is a hardcoded table that shows an illustration of what the
@@ -46,6 +48,7 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
           <EnvironmentTable
             environments={matchingEnvironments}
             highlightPackages={props.selectedPackages}
+	    setSelectedEnv={props.setSelectedEnv}
           />
           <Typography variant="subtitle1" gutterBottom align="right">
             Or, create a new environment:
