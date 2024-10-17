@@ -16,54 +16,33 @@ type PackageSelectParams = {
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
-  const validPackages: Package[] = []
-  const invalidSelectedPackages: Package[] = []
-  const invalidSelectedVersionPackages: Package[] = []
-  const [recipeFilter, setRecipeFilter] = useState("");
-
-  useMemo(
-    () => {
-      validPackages.length = 0;
-      const validated = validatePackages(props.selectedPackages, props.packages)
-      validPackages.push(...validated[0])
-      invalidSelectedPackages.push(...validated[1])
-      invalidSelectedVersionPackages.push(...validated[2])
-    },
-    [props.selectedPackages],
-  );
-
-  const selectedPackageNames = useMemo(
-    () => validPackages.map(({ name }) => name),
-    [validPackages],
-  );
-  const selectedPackageVersions = useMemo(
-    () => validPackages.map(({ version }) => version),
-    [validPackages],
-  );
-
+  const [recipeFilter, setRecipeFilter] = useState(""),
+        [validPackages, invalidSelectedPackages, invalidSelectedVersionPackages] = useMemo(() => validatePackages(props.selectedPackages, props.packages), [props.selectedPackages]),
+        selectedPackageNames = useMemo(() => validPackages.map(({ name }) => name), [validPackages]),
+        selectedPackageVersions = useMemo(() => validPackages.map(({ version }) => version), [validPackages]),
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
-  const renderTags = (tags: string[]) => {
-    return tags.map((packageName, index) => (
-      <DropdownChip
-        key={packageName}
-        name={packageName}
-        versions={props.packages.get(packageName) ?? []}
-        selectedVersion={selectedPackageVersions[index] || null}
-        onChange={(version) =>
-          props.setSelectedPackages(
-            validPackages.toSpliced(index, 1, {
-              name: packageName,
-              version: version || null,
-            }),
-          )
-        }
-        onDelete={() =>
-          props.setSelectedPackages(validPackages.toSpliced(index, 1))
-        }
-      />
-    ));
-  };
+        renderTags = (tags: string[]) => {
+          return tags.map((packageName, index) => (
+            <DropdownChip
+              key={packageName}
+              name={packageName}
+              versions={props.packages.get(packageName) ?? []}
+              selectedVersion={selectedPackageVersions[index] || null}
+              onChange={(version) =>
+                props.setSelectedPackages(
+                  validPackages.toSpliced(index, 1, {
+                    name: packageName,
+                    version: version || null,
+                  }),
+                )
+              }
+              onDelete={() =>
+                props.setSelectedPackages(validPackages.toSpliced(index, 1))
+              }
+            />
+          ));
+        };
 
   return (
     <Box>
@@ -91,8 +70,6 @@ export default function PackageSelect(props: PackageSelectParams) {
             )
           ];
         }}
-	inputValue={recipeFilter}
-	onInputChange={(e, value) => e && setRecipeFilter(value)}
         ListboxComponent={Listbox}
         renderTags={renderTags}
         renderInput={(params) => {
@@ -110,6 +87,8 @@ export default function PackageSelect(props: PackageSelectParams) {
           // this gets passed to Listbox's renderRow, but we have to lie about the type...
           ({ props, option, state }) as unknown as ReactNode
         }
+        inputValue={recipeFilter}
+        onInputChange={(e, value) => e && setRecipeFilter(value)}
         value={selectedPackageNames}
         onChange={(_, value) => {
           const prevVersions = new Map<string, string | null | undefined>();
