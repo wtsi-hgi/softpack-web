@@ -69,7 +69,7 @@ export function wrapRecipe(pkg: Package, node: JSX.Element, recipeDescriptions: 
 		return <Tooltip title={description} placement="top">{node}</Tooltip>
 	}
 
-	return <Tooltip title="abc" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
+	return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
 }
 
 
