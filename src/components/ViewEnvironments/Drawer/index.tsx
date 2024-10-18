@@ -14,6 +14,7 @@ import {
   Drawer,
   Icon,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -34,6 +35,8 @@ type DrawerParams = {
   env?: Environment;
   open: boolean;
   onClose: () => void;
+  recipeDescriptions: Record<string, string>;
+  getRecipeDescription: (recipe: string) => void;
 };
 
 export const breadcrumbs = (path: string) => (
@@ -50,13 +53,28 @@ export function isInterpreter(env: Environment, pkg: Package) {
 	return pkg.name === "r" && env.interpreters.r || pkg.name === "python" && env.interpreters.python;
 }
 
+export function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Element, recipeDescriptions: Record<string, string>, getRecipeDescription: (recipe: string) => void) {
+	if (isInterpreter(env, pkg)) {
+		return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
+	}
+
+	const description = recipeDescriptions[pkg.name];
+
+	if (typeof description === "string") {
+		return <Tooltip title={description} placement="top">{node}</Tooltip>
+	}
+
+	return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
+}
+
+
 function packagesWithoutInterpreters(env: Environment) {
 	return env.packages.filter(pkg => !isInterpreter(env, pkg));
 }
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
-function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
+function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDescription }: DrawerParams) {
   const [addTag, addTagMutation] = useMutation(ADD_TAG, {
     refetchQueries: [ALL_ENVIRONMENTS],
     onCompleted: (data) => {
@@ -282,7 +300,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
         <Box style={{ padding: "0 18px" }}>
           <h1>Packages</h1>
           {(env?.packages ?? []).map((pkg, i) => {
-            return (
+            return wrapIfInterpreted(env!, pkg,
               <Box key={i} sx={{ float: "left" }}>
                 <Chip
 		  className={isInterpreter(env!, pkg) ? " interpreter" : ""}
@@ -294,7 +312,7 @@ function EnvironmentDrawer({ env, open, onClose }: DrawerParams) {
                     backgroundColor: "transparent",
                   }}
                 />
-              </Box>
+              </Box>, recipeDescriptions, getRecipeDescription
             );
           })}
         </Box>
