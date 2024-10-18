@@ -5,6 +5,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Chip, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { anyPackageVersion } from "../CreateEnvironment/packageValidation";
+import { wrapRecipe } from '../ViewEnvironments/Drawer';
 
 //import { PackageContext } from "../CreateEnvironment/PackageContext";
 
@@ -14,6 +15,8 @@ type DropdownChipParams = {
   selectedVersion: string | null | undefined;
   onChange: (version: string | null) => void;
   onDelete: () => void;
+  recipeDescriptions: Record<string, string>;
+  getRecipeDescription: (recipe: string) => void;
 };
 
 // DropdownChip is an MUI chip that comes with a dropdown. It is used to display
@@ -32,8 +35,7 @@ function DropdownChip(props: DropdownChipParams) {
   };
 
   return (
-    <div>
-      <Chip
+    <div>{wrapRecipe({"name": props.name, "version": ""}, <Chip
         label={
           props.selectedVersion
             ? `${props.name} (${props.selectedVersion})`
@@ -46,7 +48,7 @@ function DropdownChip(props: DropdownChipParams) {
         deleteIcon={<CancelIcon />}
         avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         onDelete={props.onDelete}
-      />
+      />, props.recipeDescriptions, props.getRecipeDescription)}
       <Menu
         anchorEl={anchorEl}
         open={!!anchorEl}
