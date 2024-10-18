@@ -1,19 +1,16 @@
-import { useState } from "react";
-
 import { compareEnvironments, compareStrings } from "../../../strings";
 
 import type { Environment, Environments, Package } from "../../../queries";
-import EnvironmentDrawer, { isInterpreter } from "../Drawer";
-import { useSearchParams } from "react-router-dom";
+import { isInterpreter } from "../Drawer";
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
-
+import type { Environment as EnvironmentType } from "../../../queries";
 
 type EnvironmentTableProps = {
   environments: Environments;
   highlightPackages?: Package[];
-  modifyUrl?: boolean;
+  setSelectedEnv: (v: EnvironmentType) => void;
 };
 
 function toTitle(s: string) {
@@ -29,31 +26,12 @@ function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Element) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const [selectedEnv, setSelectedEnv] = useState<Environment | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [open, setOpen] = useState(false);
-
-  const modifyUrl = props.modifyUrl ?? false
-  const environments = props.environments.toSorted((a, b) =>
-    compareEnvironments(a, b),
-  );
+  const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b));
 
   const allHighlightedPackages = new Set<string>();
   props.highlightPackages?.forEach(({ name, version }) => {
     allHighlightedPackages.add(version ? `${name}@${version}` : name);
   });
-
-  if (modifyUrl) {
-    const searchEnv = searchParams.get("envId")
-    const env = environments.find((e) => `${e.path}/${e.name}` == searchEnv)
-    if (selectedEnv != env && env != undefined) {
-      setSelectedEnv(env)
-      setOpen(true)
-    } else if (env == undefined && open) {
-      setSelectedEnv(null)
-      setOpen(false)
-    }
-  }
 
   return (
     <>
@@ -79,14 +57,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
             <li
               key={`${env.path}/${env.name}`}
               className={env.type + " " + env.state ?? "queued"}
-              onClick={() => {
-                setSelectedEnv(env)
-                setOpen(true)
-                if (modifyUrl) {
-                  searchParams.set('envId', `${env.path}/${env.name}`)
-                  setSearchParams(searchParams)
-                }
-              }}
+              onClick={() => props.setSelectedEnv(env)}
             >
               <Tooltip title={toTitle(String(env.state)) ?? "Queued"} placement="top">
                 <span className={"colourBar " + env.state ?? "queued"} />
@@ -150,16 +121,6 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           );
         })}
       </Masonry>
-      <EnvironmentDrawer
-        env={selectedEnv!}
-        open={open}
-        onClose={() => {
-          setSelectedEnv(null)
-          setOpen(false)
-          searchParams.delete('envId')
-          setSearchParams(searchParams)
-        }}
-      />
     </>
   );
 }

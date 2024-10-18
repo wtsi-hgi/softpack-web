@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 import type { Package } from "../../queries";
 import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
@@ -124,6 +124,25 @@ export default function CreateEnvironment() {
     },
   );
 
+  const packages = useMemo(() => {
+    const packages = new Map<string, string[]>();
+
+    data?.packageCollections.forEach(({ name, versions }) => {
+      packages.set(name, [""].concat(versions));
+    });
+
+    requestedRecipes.forEach(({ name, version }) => {
+      const rname = "*"+name,
+            rr = packages.get(rname) ?? [];
+
+      rr.push(version);
+
+      packages.set(rname, rr);
+    });
+
+    return packages;
+  }, [data?.packageCollections, requestedRecipes]);
+
   if (loading || environmentsQuery.loading) {
     return <div>loading...</div>;
   }
@@ -132,21 +151,6 @@ export default function CreateEnvironment() {
   if (e) {
     return <div style={{ color: "red" }}>{e.message}</div>;
   }
-
-  const packages = new Map<string, string[]>();
-
-  data?.packageCollections.forEach(({ name, versions }) => {
-    packages.set(name, [""].concat(versions));
-  });
-
-  requestedRecipes.forEach(({ name, version }) => {
-    const rname = "*"+name,
-	  rr = packages.get(rname) ?? [];
-
-    rr.push(version);
-
-    packages.set(rname, rr);
-  });
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 

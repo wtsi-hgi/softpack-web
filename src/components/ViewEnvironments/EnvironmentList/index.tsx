@@ -18,8 +18,9 @@ import * as semver from "semver";
 
 import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
-import { ALL_ENVIRONMENTS, ALL_PACKAGES, Package } from "../../../queries";
+import { ALL_ENVIRONMENTS, Environment as EnvironmentType, ALL_PACKAGES, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
+import EnvironmentDrawer from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
@@ -69,7 +70,7 @@ const EnvironmentList = () => {
   );
   const { username, groups } = useContext(UserContext);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [packages, setPackages] = useState<string[]>([]);
 
@@ -202,12 +203,7 @@ const EnvironmentList = () => {
   }
 
   const searchEnv = searchParams.get("envId")
-  if (searchEnv) {
-    const extraEnv = data.environments.find((e) => `${e.path}/${e.name}` == searchEnv)
-    if (extraEnv && !filteredEnvironments.includes(extraEnv))
-      filteredEnvironments.push(extraEnv)
-  }
-
+  const selectedEnv = data.environments.find((e) => `${e.path}/${e.name}` == searchEnv)
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
   const allTagsSet = new Set<string>();
@@ -388,7 +384,10 @@ const EnvironmentList = () => {
           <EnvironmentTable
             environments={filteredEnvironments}
             highlightPackages={highlightPackages}
-            modifyUrl={true}
+	    setSelectedEnv={(env: EnvironmentType) => {
+              searchParams.set("envId", `${env.path}/${env.name}`);
+	      setSearchParams(searchParams);
+	    }}
           />
         ) : (
           <CreateEnvPrompt
@@ -396,6 +395,14 @@ const EnvironmentList = () => {
             pkgs={packages}
           />
         )}
+        <EnvironmentDrawer
+          env={selectedEnv}
+          open={!!selectedEnv}
+          onClose={() => {
+            searchParams.delete('envId');
+            setSearchParams(searchParams);
+          }}
+        />
       </Container>
     </>
   );

@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Box, Button, Grid } from "@mui/material";
 
 import { Package } from "../../../queries";
 import { HelpIcon } from "../../HelpIcon";
 import MatchingEnvs from "../MatchingEnvs";
 import PackageSelect from "../PackageSelect";
+import EnvironmentDrawer from "../../ViewEnvironments/Drawer";
+import type { Environment as EnvironmentType } from "../../../queries";
 
 type PackageMatcherParams = {
   packages: Map<string, string[]>;
@@ -17,6 +20,8 @@ type PackageMatcherParams = {
 // packages to build the environment with, and suggesting existing environments
 // that they may be able to use instead.
 function PackageMatcher(props: PackageMatcherParams) {
+  const [selectedEnv, setSelectedEnv] = useState<EnvironmentType | null>(null)
+
   return (
     <>
       <Grid container spacing={1}>
@@ -43,13 +48,19 @@ function PackageMatcher(props: PackageMatcherParams) {
 	  }))}>Reset Versions</Button>
         </Grid>
       </Grid>
-      {props.selectedPackages.length > 0 && (
+      {props.selectedPackages.length > 0 && <>
         <MatchingEnvs
           selectedPackages={props.selectedPackages}
           runEnvironmentBuild={props.runEnvironmentBuild}
           envBuildInFlight={props.envBuildInFlight}
+	  setSelectedEnv={setSelectedEnv}
         />
-      )}
+        <EnvironmentDrawer
+          env={selectedEnv!}
+          open={!!selectedEnv}
+          onClose={() => setSelectedEnv(null)}
+        />
+      </>}
     </>
   );
 }
