@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -45,9 +45,10 @@ export const breadcrumbs = (path: string) => (
       <span key={i}>{p}</span>
     ))}
   </Breadcrumbs>
-);
+),
+recipeDescriptionContext = createContext<[Record<string, string>, (recipe: string) => void]>([{}, () => {}]);
 
-const descAddedToPath = "\n\nThe following executables are added to your PATH:"
+const descAddedToPath = "\n\nThe following executables are added to your PATH:";
 
 export function isInterpreter(env: Environment, pkg: Package) {
 	return pkg.name === "r" && env.interpreters.r || pkg.name === "python" && env.interpreters.python;
@@ -58,13 +59,17 @@ export function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Elem
 		return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
 	}
 
+	return wrapRecipe(pkg, node, recipeDescriptions, getRecipeDescription);
+}
+
+export function wrapRecipe(pkg: Package, node: JSX.Element, recipeDescriptions: Record<string, string>, getRecipeDescription: (recipe: string) => void) {
 	const description = recipeDescriptions[pkg.name];
 
 	if (typeof description === "string") {
 		return <Tooltip title={description} placement="top">{node}</Tooltip>
 	}
 
-	return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
+	return <Tooltip title="abc" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
 }
 
 

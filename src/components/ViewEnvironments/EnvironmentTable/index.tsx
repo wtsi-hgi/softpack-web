@@ -1,12 +1,12 @@
 import { compareEnvironments, compareStrings } from "../../../strings";
 
 import type { Environments, Package } from "../../../queries";
-import { isInterpreter, wrapIfInterpreted } from "../Drawer";
+import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
+import { useContext } from "react";
+
 import { Masonry } from "@mui/lab";
-import { useState } from "react";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
-import CoreURL from "../../../core";
 import type { Environment as EnvironmentType } from "../../../queries";
 
 type EnvironmentTableProps = {
@@ -21,19 +21,7 @@ function toTitle(s: string) {
 
 function EnvironmentTable(props: EnvironmentTableProps) {
   const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b)),
-	[recipeDescriptions, setRecipeDescriptions] = useState<Record<string, string>>({}),
-	getRecipeDescription = (recipe: string) => {
-		if (recipe in recipeDescriptions) {
-			return;
-		}
-
-		fetch(CoreURL + "getRecipeDescription", {"method": "POST", "body": JSON.stringify({recipe})})
-		.then(r => r.json())
-		.then(desc => {
-			recipeDescriptions[recipe] = desc["description"] ?? "";
-			setRecipeDescriptions({...recipeDescriptions});
-		})
-	};
+	[recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   const allHighlightedPackages = new Set<string>();
   props.highlightPackages?.forEach(({ name, version }) => {
