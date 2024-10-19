@@ -23,7 +23,7 @@
     "buildrun": "npm run build && go build server.go && mv server ./dist && cd ./dist && ./server"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.9",
+    "@apollo/client": "^3.11.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.1",
