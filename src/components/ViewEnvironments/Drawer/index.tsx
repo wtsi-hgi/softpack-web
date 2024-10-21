@@ -202,6 +202,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
           }
           <Typography variant="h3" marginTop="0.5em">{env?.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env?.path ?? "")}</Typography>
+	  {env?.created ? <div style={{paddingTop: "0.4em", paddingBottom: "1.2em", fontSize: "0.85em", color: "rgba(0, 0, 0, 0.6)"}}>{"Created: " + new Date(env.created * 1000).toLocaleString("en-GB")}</div> : ""}
           <EnvironmentTags tags={env?.tags ?? []} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>
             <TagSelect
