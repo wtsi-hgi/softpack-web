@@ -1,7 +1,9 @@
 import { compareEnvironments, compareStrings } from "../../../strings";
 
-import type { Environment, Environments, Package } from "../../../queries";
-import { isInterpreter } from "../Drawer";
+import type { Environments, Package } from "../../../queries";
+import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
+import { useContext } from "react";
+
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
@@ -17,16 +19,9 @@ function toTitle(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Element) {
-	if (isInterpreter(env, pkg)) {
-		return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
-	}
-
-	return node;
-}
-
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b));
+  const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b)),
+	[recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   const allHighlightedPackages = new Set<string>();
   props.highlightPackages?.forEach(({ name, version }) => {
@@ -87,12 +82,12 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   <li key={pkg.name} className={"selected" + (isInterpreter(env, pkg) ? " interpreter" : "")}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
-                ))}
+                , recipeDescriptions, getRecipeDescription))}
                 {normalPackages.map((pkg) => wrapIfInterpreted(env, pkg,
                   <li className={isInterpreter(env, pkg) ? "interpreter" : ""} key={pkg.name}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
-                ))}
+                , recipeDescriptions, getRecipeDescription))}
               </ul>
               {env.state === "queued" && (
                 <>

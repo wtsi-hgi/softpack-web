@@ -1,11 +1,12 @@
 import { Alert, Autocomplete, Box, TextField } from "@mui/material";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useContext, useMemo, useState } from "react";
 
 import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
 import { stripPackageSearchPunctuation } from "../../../strings";
 import { validatePackages } from "../packageValidation";
+import { recipeDescriptionContext } from '../../ViewEnvironments/Drawer';
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -16,33 +17,54 @@ type PackageSelectParams = {
 // Displays an autocomplete box, where the option(s) selected are MUI chips,
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
-  const [recipeFilter, setRecipeFilter] = useState(""),
-        [validPackages, invalidSelectedPackages, invalidSelectedVersionPackages] = useMemo(() => validatePackages(props.selectedPackages, props.packages), [props.selectedPackages]),
-        selectedPackageNames = useMemo(() => validPackages.map(({ name }) => name), [validPackages]),
-        selectedPackageVersions = useMemo(() => validPackages.map(({ version }) => version), [validPackages]),
+  const validPackages: Package[] = []
+  const invalidSelectedPackages: Package[] = []
+  const invalidSelectedVersionPackages: Package[] = []
+  const [recipeFilter, setRecipeFilter] = useState("");
+
+  useMemo(
+    () => {
+      validPackages.length = 0;
+      const validated = validatePackages(props.selectedPackages, props.packages)
+      validPackages.push(...validated[0])
+      invalidSelectedPackages.push(...validated[1])
+      invalidSelectedVersionPackages.push(...validated[2])
+    },
+    [props.selectedPackages],
+  );
+
+  const selectedPackageNames = useMemo(
+    () => validPackages.map(({ name }) => name),
+    [validPackages],
+  );
+  const selectedPackageVersions = useMemo(
+    () => validPackages.map(({ version }) => version),
+    [validPackages],
+  );
+  const [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
+
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
-        renderTags = (tags: string[]) => {
-          return tags.map((packageName, index) => (
-            <DropdownChip
-              key={packageName}
-              name={packageName}
-              versions={props.packages.get(packageName) ?? []}
-              selectedVersion={selectedPackageVersions[index] || null}
-              onChange={(version) =>
-                props.setSelectedPackages(
-                  validPackages.toSpliced(index, 1, {
-                    name: packageName,
-                    version: version || null,
-                  }),
-                )
-              }
-              onDelete={() =>
-                props.setSelectedPackages(validPackages.toSpliced(index, 1))
-              }
-            />
-          ));
-        };
+  const renderTags = (tags: string[]) => {
+    return tags.map((packageName, index) => <DropdownChip
+        key={packageName}
+        name={packageName}
+        versions={props.packages.get(packageName) ?? []}
+        selectedVersion={selectedPackageVersions[index] || null}
+        onChange={(version) =>
+          props.setSelectedPackages(
+            validPackages.toSpliced(index, 1, {
+              name: packageName,
+              version: version || null,
+            }),
+          )
+        }
+        onDelete={() =>
+          props.setSelectedPackages(validPackages.toSpliced(index, 1))
+        }
+        recipeDescriptions={recipeDescriptions} getRecipeDescription={getRecipeDescription}
+      />);
+  };
 
   return (
     <Box>
