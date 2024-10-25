@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Box, Button, Grid } from "@mui/material";
 
 import { Package } from "../../../queries";
 import { HelpIcon } from "../../HelpIcon";
 import MatchingEnvs from "../MatchingEnvs";
 import PackageSelect from "../PackageSelect";
-import EnvironmentDrawer from "../../ViewEnvironments/Drawer";
+import EnvironmentDrawer, { recipeDescriptionContext } from "../../ViewEnvironments/Drawer";
 import type { Environment as EnvironmentType } from "../../../queries";
 
 type PackageMatcherParams = {
@@ -20,7 +20,8 @@ type PackageMatcherParams = {
 // packages to build the environment with, and suggesting existing environments
 // that they may be able to use instead.
 function PackageMatcher(props: PackageMatcherParams) {
-  const [selectedEnv, setSelectedEnv] = useState<EnvironmentType | null>(null)
+  const [selectedEnv, setSelectedEnv] = useState<EnvironmentType | null>(null),
+    [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   return (
     <>
@@ -40,12 +41,12 @@ function PackageMatcher(props: PackageMatcherParams) {
             />
           </Box>
           <Button disabled={!props.selectedPackages.some(p => p.version)} onClick={() => props.setSelectedPackages(props.selectedPackages.map(p => {
-		if (!p.name.startsWith("*")) {
-			p.version = null;
-		}
+            if (!p.name.startsWith("*")) {
+              p.version = null;
+            }
 
-		return  p;
-	  }))}>Reset Versions</Button>
+            return p;
+          }))}>Reset Versions</Button>
         </Grid>
       </Grid>
       {props.selectedPackages.length > 0 && <>
@@ -53,12 +54,14 @@ function PackageMatcher(props: PackageMatcherParams) {
           selectedPackages={props.selectedPackages}
           runEnvironmentBuild={props.runEnvironmentBuild}
           envBuildInFlight={props.envBuildInFlight}
-	  setSelectedEnv={setSelectedEnv}
+          setSelectedEnv={setSelectedEnv}
         />
         <EnvironmentDrawer
           env={selectedEnv!}
           open={!!selectedEnv}
           onClose={() => setSelectedEnv(null)}
+          recipeDescriptions={recipeDescriptions}
+          getRecipeDescription={getRecipeDescription}
         />
       </>}
     </>
