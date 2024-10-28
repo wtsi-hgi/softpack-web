@@ -20,7 +20,7 @@ import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearc
 import { humanize } from "../../../humanize";
 import { ALL_ENVIRONMENTS, Environment as EnvironmentType, ALL_PACKAGES, Package } from "../../../queries";
 import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
-import EnvironmentDrawer from "../Drawer";
+import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
 import EnvironmentTable from "../EnvironmentTable";
@@ -74,6 +74,8 @@ const EnvironmentList = () => {
 
   const [packages, setPackages] = useState<string[]>([]);
 
+  const [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
+
   useEffect(() => {
     const fetchData = async () => {
       const pkgs: string[] = [];
@@ -120,10 +122,12 @@ const EnvironmentList = () => {
 
   let filteredEnvironments = data.environments.slice().map(env => Object.assign(
     Object.assign({}, env),
-    {"packages": env.packages.toSpliced(0, 0, ...[
-      (env.interpreters.python ? {"name": "python", "version": env.interpreters.python} : null) as any,
-      (env.interpreters.r ? {"name": "r", "version": env.interpreters.r} : null) as any
-    ].filter(e => e))}));
+    {
+      "packages": env.packages.toSpliced(0, 0, ...[
+        (env.interpreters.python ? { "name": "python", "version": env.interpreters.python } : null) as any,
+        (env.interpreters.r ? { "name": "r", "version": env.interpreters.r } : null) as any
+      ].filter(e => e))
+    }));
 
   // filter by name/package
   const highlightPackagesSet = new Set<Package>();
@@ -359,16 +363,17 @@ const EnvironmentList = () => {
               onChange={(_, checked) => setShowHidden(checked)}
             />
           </FormGroup>
-	  <Button disabled={filterUsers.length === 0 && filterGroups.length === 0 && filterTags.length === 0 && filterText.length === 0 && !showOldVersions && !showHidden && !ignoreReady} variant="outlined" onClick={() => {
-		setFilterUsers([]);
-		setFilterGroups([]);
-		setFilterTags([]);
-		setFilterText("");
-		setFilter("");
-		setShowOldVersions(false);
-		setShowHidden(false);
-		setIgnoreReady(false);
-	  }}>Reset</Button>
+          <Button disabled={filterUsers.length === 0 && filterGroups.length === 0 && filterTags.length === 0 && filterText.length === 0 && !showOldVersions && !showHidden && !ignoreReady} variant="outlined"
+            onClick={() => {
+              setFilterUsers([]);
+              setFilterGroups([]);
+              setFilterTags([]);
+              setFilterText("");
+              setFilter("");
+              setShowOldVersions(false);
+              setShowHidden(false);
+              setIgnoreReady(false);
+            }}>Reset</Button>
         </Stack>
         {filteredEnvironments.some((e) => e.state === "queued") ||
           ignoreReady ? (
@@ -384,10 +389,10 @@ const EnvironmentList = () => {
           <EnvironmentTable
             environments={filteredEnvironments}
             highlightPackages={highlightPackages}
-	    setSelectedEnv={(env: EnvironmentType) => {
+            setSelectedEnv={(env: EnvironmentType) => {
               searchParams.set("envId", `${env.path}/${env.name}`);
-	      setSearchParams(searchParams);
-	    }}
+              setSearchParams(searchParams);
+            }}
           />
         ) : (
           <CreateEnvPrompt
@@ -402,6 +407,8 @@ const EnvironmentList = () => {
             searchParams.delete('envId');
             setSearchParams(searchParams);
           }}
+          recipeDescriptions={recipeDescriptions}
+          getRecipeDescription={getRecipeDescription}
         />
       </Container>
     </>
