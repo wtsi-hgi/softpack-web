@@ -31,6 +31,7 @@ export const ALL_ENVIRONMENTS = gql(`
       buildDone
       avgWaitSecs
       created
+      failureReason
       interpreters {
         python
         r

@@ -21,7 +21,7 @@ function toTitle(s: string) {
 
 function EnvironmentTable(props: EnvironmentTableProps) {
   const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b)),
-	[recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
+    [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   const allHighlightedPackages = new Set<string>();
   props.highlightPackages?.forEach(({ name, version }) => {
@@ -51,11 +51,11 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           return (
             <li
               key={`${env.path}/${env.name}`}
-              className={env.type + " " + env.state ?? "queued"}
+              className={env.type + " " + (env.state ?? "queued")}
               onClick={() => props.setSelectedEnv(env)}
             >
               <Tooltip title={toTitle(String(env.state)) ?? "Queued"} placement="top">
-                <span className={"colourBar " + env.state ?? "queued"} />
+                <span className={"colourBar " + (env.state ?? "queued")} />
               </Tooltip>
               <Tooltip title={
                 env.type === "softpack"
@@ -82,13 +82,18 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   <li key={pkg.name} className={"selected" + (isInterpreter(env, pkg) ? " interpreter" : "")}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
-                , recipeDescriptions, getRecipeDescription))}
+                  , recipeDescriptions, getRecipeDescription))}
                 {normalPackages.map((pkg) => wrapIfInterpreted(env, pkg,
                   <li className={isInterpreter(env, pkg) ? "interpreter" : ""} key={pkg.name}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
-                , recipeDescriptions, getRecipeDescription))}
+                  , recipeDescriptions, getRecipeDescription))}
               </ul>
+              {(env.state === "failed") &&
+                <div style={{ fontSize: "1.1em", fontWeight: "bold", backgroundColor: env.failureReason === "concretization" ? "#fd0" : "#faa", borderRadius: "1em", textAlign: "center", "padding": "0.5em 0" }}>{env.failureReason === "concretization" ?
+                  "Version Conflict: Try relaxing which versions you've specified." :
+                  "Build Error: Contact your softpack administrator."}</div>
+              }
               {env.state === "queued" && (
                 <>
                   <LinearProgress style={{ borderTopRightRadius: "4px", borderTopLeftRadius: "4px" }} />
