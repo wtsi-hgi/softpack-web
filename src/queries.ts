@@ -58,7 +58,7 @@ export const ALL_PACKAGES = gql(`
 `);
 
 export const CREATE_ENV = gql(`
-  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!, $tags: [String!]) {
+  mutation Create($name: String!, $description: String!, $path: String!, $packages: [PackageInput!]!, $tags: [String!], $username: String!) {
     createEnvironment(
       env: {
         name: $name,
@@ -66,6 +66,7 @@ export const CREATE_ENV = gql(`
         path: $path,
         packages: $packages,
         tags: $tags,
+        username: $username,
       }
     ) {
       __typename

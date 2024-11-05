@@ -54,7 +54,7 @@ export default function CreateEnvironment() {
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
-  const [ requestedRecipes ] = useContext(RequestedRecipesContext);
+  const [requestedRecipes] = useContext(RequestedRecipesContext);
 
   const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
 
@@ -132,8 +132,8 @@ export default function CreateEnvironment() {
     });
 
     requestedRecipes.forEach(({ name, version }) => {
-      const rname = "*"+name,
-            rr = packages.get(rname) ?? [];
+      const rname = "*" + name,
+        rr = packages.get(rname) ?? [];
 
       rr.push(version);
 
@@ -156,7 +156,7 @@ export default function CreateEnvironment() {
 
   const runEnvironmentBuild = () => {
     createEnvironment({
-      variables: { name, description, path, packages: validPackages, tags },
+      variables: { name, description, path, packages: validPackages, tags, username },
     });
   };
 
