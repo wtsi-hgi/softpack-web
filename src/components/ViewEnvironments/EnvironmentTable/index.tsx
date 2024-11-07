@@ -13,6 +13,7 @@ type EnvironmentTableProps = {
   environments: Environments;
   highlightPackages?: Package[];
   setSelectedEnv: (v: EnvironmentType) => void;
+  buildStatuses: Record<string, string> | null;
 };
 
 function toTitle(s: string) {
@@ -79,12 +80,12 @@ function EnvironmentTable(props: EnvironmentTableProps) {
               <div>{env.description.split("\n")[0]}</div>
               <ul>
                 {highlightPackages.map((pkg) => wrapIfInterpreted(env, pkg,
-                  <li key={pkg.name} className={"selected" + (isInterpreter(env, pkg) ? " interpreter" : "")}>
+                  <li key={pkg.name + "@" + pkg.version} className={"selected" + (isInterpreter(env, pkg) ? " interpreter" : "")}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
                   , recipeDescriptions, getRecipeDescription))}
                 {normalPackages.map((pkg) => wrapIfInterpreted(env, pkg,
-                  <li className={isInterpreter(env, pkg) ? "interpreter" : ""} key={pkg.name}>
+                  <li key={pkg.name + "@" + pkg.version} className={isInterpreter(env, pkg) ? "interpreter" : ""}>
                     {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   </li>
                   , recipeDescriptions, getRecipeDescription))}
@@ -100,17 +101,15 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   <div className="queue">
                     Queued:{" "}
                     {humanize(
-                      (env.buildStart
-                        ? Date.parse(env.buildStart)
-                        : Date.now()) - Date.parse(env.requested),
+                      (props.buildStatuses?.[env.name]
+                        ? Date.parse(props.buildStatuses[env.name])
+                        : Date.now()) - env.created * 1000,
                     )}
-                    {env.buildStart ? (
+                    {props.buildStatuses?.[env.name] ? (
                       <>
                         ; Building:{" "}
                         {humanize(
-                          (env.buildDone
-                            ? Date.parse(env.buildDone)
-                            : Date.now()) - Date.parse(env.buildStart),
+                          Date.now() - Date.parse(props.buildStatuses[env.name])
                         )}
                       </>
                     ) : null}
