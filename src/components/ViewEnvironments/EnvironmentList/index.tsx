@@ -23,15 +23,9 @@ import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
-import EnvironmentTable from "../EnvironmentTable";
+import EnvironmentTable, { BuildStatusContext } from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
-import CoreURL from '../../../core';
-
-export type BuildStatus = {
-  avg: number;
-  statuses: Record<string, string>;
-}
 
 const SECOND = 1000;
 const MAX_REFETCH_INTERVAL = 10 * SECOND;
@@ -43,6 +37,7 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useContext(EnvironmentsQueryContext);
+  const buildStatuses = useContext(BuildStatusContext);
   const [filter, setFilter] = useState("");
   const [filterText, setFilterText] = useState("");
   const client = useApolloClient();
@@ -82,8 +77,6 @@ const EnvironmentList = () => {
 
   const [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
-  const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       const pkgs: string[] = [];
@@ -111,9 +104,6 @@ const EnvironmentList = () => {
     return () => clearInterval(interval);
   }, [loading, error, refetchInterval]);
 
-  useEffect(() => {
-    fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json()).then(setBuildStatuses);
-  }, []);
 
   if (loading) {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;

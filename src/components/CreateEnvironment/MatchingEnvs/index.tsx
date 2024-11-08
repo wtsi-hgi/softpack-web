@@ -2,9 +2,10 @@ import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 
 import { ALL_ENVIRONMENTS, Package } from "../../../queries";
-import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
+import EnvironmentTable, { BuildStatusContext } from "../../ViewEnvironments/EnvironmentTable";
 import { anyPackageVersion } from "../packageValidation";
 import type { Environment as EnvironmentType } from "../../../queries";
+import { useContext } from "react";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
@@ -18,6 +19,7 @@ type MatchingEnvsParams = {
 // environment they are trying to create already exists.
 export default function matchingEnvs(props: MatchingEnvsParams) {
   const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
+  const buildStatuses = useContext(BuildStatusContext);
 
   if (loading) {
     return <div>...</div>;
@@ -46,9 +48,10 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
             </Typography>
           </Box>
           <EnvironmentTable
+            buildStatuses={buildStatuses?.statuses ?? null}
             environments={matchingEnvironments}
             highlightPackages={props.selectedPackages}
-	    setSelectedEnv={props.setSelectedEnv}
+            setSelectedEnv={props.setSelectedEnv}
           />
           <Typography variant="subtitle1" gutterBottom align="right">
             Or, create a new environment:
