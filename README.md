@@ -33,12 +33,3 @@ This is done by,
 
 Once complete, you should be able to use the app and explore the range of features which Softpack Web has to offer!
 
-## Development
-
-### Regenerating GraphQL types
-
-The types of data returned by GraphQL queries are automatically generated from the softpack-core GraphQL schema.
-To regenerate the types after schema changes, first regenerate the upstream softpack-core schema (using `strawberry`, see the softpack-core README), then run `npm run gen`.
-This assumes that the upstream schema is located at `../softpack-core/schema.graphql` (edit `codegen.ts` if that's not the case).
-
-The generated code is committed to the repository to avoid everyone having to do this to get the code to run at all.
