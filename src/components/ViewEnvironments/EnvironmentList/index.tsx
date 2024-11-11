@@ -19,10 +19,10 @@ import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearc
 import { humanize } from "../../../humanize";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
-import EnvironmentTable, { BuildStatusContext } from "../EnvironmentTable";
+import EnvironmentTable from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
-import { Environment, EnvironmentsContext, Package, PackagesContext, UserContext } from "../../../endpoints";
+import { BuildStatusContext, Environment, EnvironmentsContext, Package, PackagesContext, UserContext } from "../../../endpoints";
 
 function arrayEqual<T>(a: T[], b: T[]): boolean {
   return a.length === b.length && a.every((val, idx) => val === b[idx]);

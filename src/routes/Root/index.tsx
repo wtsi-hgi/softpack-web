@@ -15,13 +15,8 @@ import { AvailableTagsContext } from "../../components/AvailableTagsContext";
 import { recipeDescriptionContext } from "../../components/ViewEnvironments/Drawer";
 import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
-import { BuildStatusContext } from "../../components/ViewEnvironments/EnvironmentTable";
-import { Environment, EnvironmentsContext, getEnvironments, getGroups, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 
-export type BuildStatus = {
-  avg: number;
-  statuses: Record<string, string>;
-}
+import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
@@ -67,7 +62,7 @@ const Root = () => {
 
   const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
   useEffect(() => {
-    fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json()).then(setBuildStatuses);
+    getBuildStatus().then(setBuildStatuses);
   }, []);
 
   const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });

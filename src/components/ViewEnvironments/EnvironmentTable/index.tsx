@@ -1,13 +1,12 @@
 import { compareEnvironments, compareStrings } from "../../../strings";
 
 import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
-import type { Environment, Package } from "../../../endpoints";
-import { BuildStatus } from "../../../routes/Root";
+import { Environment, Package } from "../../../endpoints";
 
 type EnvironmentTableProps = {
   environments: Environment[];
@@ -15,9 +14,6 @@ type EnvironmentTableProps = {
   setSelectedEnv: (v: Environment) => void;
   buildStatuses: Record<string, string> | null;
 };
-
-export const BuildStatusContext =
-  createContext<BuildStatus | null>(null);
 
 function toTitle(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);

@@ -1,9 +1,8 @@
 import { Box, Typography } from "@mui/material";
-
-import EnvironmentTable, { BuildStatusContext } from "../../ViewEnvironments/EnvironmentTable";
+import EnvironmentTable from "../../ViewEnvironments/EnvironmentTable";
 import { anyPackageVersion } from "../packageValidation";
 import { useContext } from "react";
-import { Environment, EnvironmentsContext, Package } from "../../../endpoints";
+import { BuildStatusContext, Environment, EnvironmentsContext, Package } from "../../../endpoints";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];

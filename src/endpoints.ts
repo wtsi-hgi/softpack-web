@@ -42,10 +42,16 @@ export type RequestedRecipe = {
 	username: string;
 }
 
+export type BuildStatus = {
+	avg: number;
+	statuses: Record<string, string>;
+}
+
 export const PackagesContext = createContext<{data: PackageVersions[], error: string}>({data:[], error: ""});
 export const EnvironmentsContext = createContext<[{data: Environment[], error: string}, () => void]>([{data:[], error: ""}, () => {}]);
 export const UserContext = createContext<{username: string, groups: string[]}>({username: "",groups: []});
 export const RequestedRecipesContext = createContext<readonly [RequestedRecipe[], () => void]>([[], () => {}]);
+export const BuildStatusContext = createContext<BuildStatus | null>(null);
 
 const handle = (r: Response) => r.json().then(o => {
 	if ("error" in o) {
@@ -84,4 +90,8 @@ export function getGroups(username: string): Promise<string[]> {
 
 export function getRequestedRecipes(): Promise<RequestedRecipe[]> {
 	return fetch(CoreURL + "requestedRecipes").then(handle)
+}
+
+export function getBuildStatus(): Promise<BuildStatus> {
+	return fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json());
 }

@@ -14,7 +14,6 @@ import { useContext, useMemo, useState } from "react";
 
 import type { Package } from "../../endpoints";
 import EnvironmentSettings from "./EnvironmentSettings";
-import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
 import { validatePackages } from "./packageValidation";
@@ -48,7 +47,7 @@ export default function CreateEnvironment() {
   const [path, setPath] = useLocalStorage("environments-selectedpath", "");
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [selectedPackages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
-  const [testPackages, setTestPackages] = useState<string[]>([]);
+
   const { username, groups } = useContext(UserContext);
   const [requestedRecipes] = useContext(RequestedRecipesContext);
   const [envBuildInFlight, setEnvBuildInFlight] = useState(false);
@@ -199,17 +198,13 @@ export default function CreateEnvironment() {
               path={path}
               setPath={setPath}
             />
-            <PackageContext.Provider
-              value={{ testPackages, setTestPackages }}
-            >
-              <PackageMatcher
-                packages={packages}
-                selectedPackages={selectedPackages}
-                setSelectedPackages={setSelectedPackages}
-                runEnvironmentBuild={runEnvironmentBuild}
-                envBuildInFlight={envBuildInFlight}
-              />
-            </PackageContext.Provider>
+            <PackageMatcher
+              packages={packages}
+              selectedPackages={selectedPackages}
+              setSelectedPackages={setSelectedPackages}
+              runEnvironmentBuild={runEnvironmentBuild}
+              envBuildInFlight={envBuildInFlight}
+            />
           </Typography>
           <Box>
             <Button
