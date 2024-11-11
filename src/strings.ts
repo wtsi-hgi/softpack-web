@@ -1,5 +1,5 @@
 import * as semver from "semver";
-import { Environment } from "./queries";
+import { Environment } from "./endpoints";
 
 const zero = semver.coerce("0")!;
 

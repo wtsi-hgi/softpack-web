@@ -1,41 +1,39 @@
-import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 
-import { ALL_ENVIRONMENTS, Package } from "../../../queries";
 import EnvironmentTable, { BuildStatusContext } from "../../ViewEnvironments/EnvironmentTable";
 import { anyPackageVersion } from "../packageValidation";
-import type { Environment as EnvironmentType } from "../../../queries";
 import { useContext } from "react";
+import { Environment, EnvironmentsContext, Package } from "../../../endpoints";
 
 type MatchingEnvsParams = {
   selectedPackages: Package[];
   envBuildInFlight: boolean;
   runEnvironmentBuild: () => void;
-  setSelectedEnv: (v: EnvironmentType) => void;
+  setSelectedEnv: (v: Environment) => void;
 };
 
 // matchingEnvs is a hardcoded table that shows an illustration of what the
 // program should look like, as it informs users in real-time that they
 // environment they are trying to create already exists.
 export default function matchingEnvs(props: MatchingEnvsParams) {
-  const { loading, data, error } = useQuery(ALL_ENVIRONMENTS);
+  const [data] = useContext(EnvironmentsContext);
   const buildStatuses = useContext(BuildStatusContext);
 
-  if (loading) {
-    return <div>...</div>;
+  if (data.data.length === 0) {
+    return <></>;
   }
-  if (error) {
-    return "error";
+  if (data.error) {
+    return data.error;
   }
 
-  const matchingEnvironments = data!.environments.filter((e) =>
+  const matchingEnvironments = data.data.filter((e) =>
     props.selectedPackages.every((pkg) =>
       e.packages.some(
-        (envPkg) =>
+        envPkg =>
           pkg.name === envPkg.name &&
-          (!pkg.version || pkg.version === envPkg.version || pkg.version === anyPackageVersion),
-      ),
-    ),
+          (!pkg.version || pkg.version === envPkg.version || pkg.version === anyPackageVersion)
+      )
+    )
   );
 
   return (

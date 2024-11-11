@@ -1,7 +1,7 @@
 import { Box, Chip, Typography } from "@mui/material"
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { NavLink } from "react-router-dom";
-import { Package } from "../../../queries";
+import { Package } from "../../../endpoints";
 
 export default function CreateEnvPrompt({ name, pkgs }: { name: string, pkgs: string[] }) {
 	const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);

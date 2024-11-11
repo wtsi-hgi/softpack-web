@@ -1,4 +1,3 @@
-import { useMutation } from "@apollo/client";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -17,19 +16,18 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { ADD_TAG, ALL_ENVIRONMENTS, Environment, Package, SET_HIDDEN } from "../../../queries";
+import { addTag, Environment, EnvironmentsContext, Package, setHidden } from "../../../endpoints";
 import { TagSelect } from "../../TagSelect";
 import { EnvironmentTags } from "../EnvironmentTags";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { HelpIcon } from "../../HelpIcon";
 import { NavLink } from "react-router-dom";
 import { parseEnvironmentToNamePathAndVersion } from "../../../strings";
-import { Type } from "../../../__generated__/graphql";
 
 type DrawerParams = {
   env?: Environment;
@@ -46,64 +44,51 @@ export const breadcrumbs = (path: string) => (
     ))}
   </Breadcrumbs>
 ),
-recipeDescriptionContext = createContext<[Record<string, string>, (recipe: string) => void]>([{}, () => {}]);
+  recipeDescriptionContext = createContext<[Record<string, string>, (recipe: string) => void]>([{}, () => { }]);
 
 const descAddedToPath = "\n\nThe following executables are added to your PATH:";
 
 export function isInterpreter(env: Environment, pkg: Package) {
-	return pkg.name === "r" && env.interpreters.r || pkg.name === "python" && env.interpreters.python;
+  return pkg.name === "r" && env.interpreters.r || pkg.name === "python" && env.interpreters.python;
 }
 
 export function wrapIfInterpreted(env: Environment, pkg: Package, node: JSX.Element, recipeDescriptions: Record<string, string>, getRecipeDescription: (recipe: string) => void) {
-	if (isInterpreter(env, pkg)) {
-		return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
-	}
+  if (isInterpreter(env, pkg)) {
+    return <Tooltip title="Not requested: interpreter" placement="top">{node}</Tooltip>
+  }
 
-	return wrapRecipe(pkg, node, recipeDescriptions, getRecipeDescription);
+  return wrapRecipe(pkg, node, recipeDescriptions, getRecipeDescription);
 }
 
 export function wrapRecipe(pkg: Package, node: JSX.Element, recipeDescriptions: Record<string, string>, getRecipeDescription: (recipe: string) => void) {
-	const description = recipeDescriptions[pkg.name];
+  const description = recipeDescriptions[pkg.name];
 
-	if (typeof description === "string") {
-		return <Tooltip title={description} placement="top">{node}</Tooltip>
-	}
+  if (typeof description === "string") {
+    return <Tooltip title={description} placement="top">{node}</Tooltip>
+  }
 
-	return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
+  return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
 }
 
 
 function packagesWithoutInterpreters(env: Environment) {
-	return env.packages.filter(pkg => !isInterpreter(env, pkg));
+  return env.packages.filter(pkg => !isInterpreter(env, pkg));
 }
 
 // EnvironmentDrawer is a right-hand side drawer that displays information about
 // the selected environment.
 function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDescription }: DrawerParams) {
-  const [addTag, addTagMutation] = useMutation(ADD_TAG, {
-    refetchQueries: [ALL_ENVIRONMENTS],
-    onCompleted: (data) => {
-      if (data.addTag.__typename === "AddTagSuccess") {
-        setSelectedTag(null);
-      }
-    },
-  });
   const [hideButtonDisable, setHideButtonDisable] = useState(false);
-  const [setHidden] = useMutation(SET_HIDDEN, {
-    refetchQueries: [ALL_ENVIRONMENTS],
-    awaitRefetchQueries: true,
-    onCompleted: () => {
-      setHideButtonDisable(false)
-    }
-  })
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [addTagLoading, setAddTagLoading] = useState(false);
 
   const [name, setName] = useLocalStorage<string>("environments-selectedname", "");
   const [description, setDescription] = useLocalStorage<string>("environments-selecteddesc", "");
   const [, setPath] = useLocalStorage<string>("environments-selectedpath", "");
   const [tags, setTags] = useLocalStorage<string[]>("environments-selectedtags", []);
   const [packages, setSelectedPackages] = useLocalStorage<Package[]>("environments-selectedpackages", []);
+  const [, updateEnvironments] = useContext(EnvironmentsContext)
 
   useEffect(() => {
     setAlertOpen(false);
@@ -170,7 +155,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
           flexDirection={"column"}
           alignItems={"center"}
         >
-          {env?.type === Type.Softpack &&
+          {env?.type === "softpack" &&
             <Box
               display="flex"
               alignItems="left"
@@ -202,7 +187,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
           }
           <Typography variant="h3" marginTop="0.5em">{env?.name}</Typography>
           <Typography variant="h4">{breadcrumbs(env?.path ?? "")}</Typography>
-	  {env?.created ? <div style={{paddingTop: "0.4em", paddingBottom: "1.2em", fontSize: "0.85em", color: "rgba(0, 0, 0, 0.6)"}}>{"Created: " + new Date(env.created * 1000).toLocaleString("en-GB")}</div> : ""}
+          {env?.created ? <div style={{ paddingTop: "0.4em", paddingBottom: "1.2em", fontSize: "0.85em", color: "rgba(0, 0, 0, 0.6)" }}>{"Created: " + new Date(env.created * 1000).toLocaleString("en-GB")}</div> : ""}
           <EnvironmentTags tags={env?.tags ?? []} />
           <Stack mt={1} direction="row" width="100%" spacing={1}>
             <TagSelect
@@ -213,16 +198,13 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
             <LoadingButton
               variant="outlined"
               disabled={selectedTag == null}
-              loading={addTagMutation.loading}
+              loading={addTagLoading}
               onClick={() => {
                 if (env) {
-                  addTag({
-                    variables: {
-                      name: env.name,
-                      path: env.path,
-                      tag: selectedTag!,
-                    },
-                  });
+                  setAddTagLoading(true);
+                  addTag(env.name, env.path, selectedTag!)
+                    .then(() => updateEnvironments())
+                    .finally(() => setAddTagLoading(false));
                 }
               }}
             >
@@ -309,7 +291,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
             return wrapIfInterpreted(env!, pkg,
               <Box key={i} sx={{ float: "left" }}>
                 <Chip
-		  className={isInterpreter(env!, pkg) ? " interpreter" : ""}
+                  className={isInterpreter(env!, pkg) ? " interpreter" : ""}
                   label={pkg.name + (pkg.version ? `@${pkg.version}` : "")}
                   sx={{
                     m: "4px",
@@ -323,7 +305,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
           })}
         </Box>
       </Box>
-      {env?.type === Type.Softpack &&
+      {env?.type === "softpack" &&
         <Button
           variant="outlined"
           color={env?.hidden ? "info" : "error"}
@@ -333,13 +315,9 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
             if (!env?.hidden) {
               setAlertOpen(true);
             } else {
-              setHidden({
-                variables: {
-                  path: env.path,
-                  name: env.name,
-                  hidden: !env.hidden
-                }
-              });
+              setHidden(env.name, env.path, !env.hidden)
+                .then(() => updateEnvironments())
+                .finally(() => setHideButtonDisable(false));
               setHideButtonDisable(true);
               setAlertOpen(false);
             }
@@ -360,18 +338,14 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
           color="error"
           disabled={hideButtonDisable}
           onClick={() => {
+            console.log(env);
             env &&
-              setHidden({
-                variables: {
-                  path: env.path,
-                  name: env.name,
-                  hidden: !env.hidden
-                }
-              });
+              setHidden(env.name, env.path, !env.hidden)
+                .then(() => updateEnvironments())
+                .finally(() => setHideButtonDisable(false));
             setHideButtonDisable(true);
             setAlertOpen(false);
-          }
-          }
+          }}
         >
           Hide
         </Button>

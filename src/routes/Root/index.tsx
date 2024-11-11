@@ -1,5 +1,3 @@
-import type { RequestedRecipe } from "../../components/RequestRecipe";
-import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import { InputAdornment, TextField, Tooltip } from "@mui/material";
@@ -14,14 +12,11 @@ import Logo from '../../../softpack.svg';
 import CoreURL from "../../core";
 
 import { AvailableTagsContext } from "../../components/AvailableTagsContext";
-import { EnvironmentsQueryContext } from "../../components/EnvironmentsQueryContext";
-import { RequestedRecipesContext } from "../../components/RequestRecipe";
 import { recipeDescriptionContext } from "../../components/ViewEnvironments/Drawer";
 import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
-import { UserContext } from "../../components/UserContext";
-import { ALL_ENVIRONMENTS, Environments, GROUPS } from "../../queries";
 import { BuildStatusContext } from "../../components/ViewEnvironments/EnvironmentTable";
+import { Environment, EnvironmentsContext, getEnvironments, getGroups, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 
 export type BuildStatus = {
   avg: number;
@@ -30,34 +25,31 @@ export type BuildStatus = {
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
-function getAvailableTags(environments: Environments): string[] {
+function getAvailableTags(environments: Environment[]): string[] {
   return environments.flatMap((e) => e.tags);
 }
 
-let recipesTimer = -1 as unknown as NodeJS.Timeout;
+let recipesTimer = -1 as unknown as NodeJS.Timeout,
+  environmentsTimer = -1 as unknown as NodeJS.Timeout;
 
 const Root = () => {
   const [username, setUsername] = useLocalStorage("username", "");
-  const { data, error: rawError } = useQuery(GROUPS, {
-    variables: { username },
-  });
-  const groups = data?.groups.map((g) => g.name) ?? [];
-  const error = rawError
-    ? `Error: ${rawError}`
-    : (data?.groups ?? []).length == 0
-      ? "Invalid username"
-      : null;
+  const [groups, setGroups] = useState<string[]>([]);
+  useEffect(() => {
+    getGroups(username)
+      .then(setGroups)
+      .catch(() => setGroups([]));
+  }, [username])
 
-  const environmentsQuery = useQuery(ALL_ENVIRONMENTS);
-
-  const availableTags = [
-    ...new Set(getAvailableTags(environmentsQuery.data?.environments ?? [])),
-  ];
+  const error = groups.length == 0
+    ? "Invalid username"
+    : null;
 
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
-    [getRequestedRecipes, setGetRequestRecipes] = useState({}),
-    updateRequestedRecipes = () => setGetRequestRecipes({}),
-    requestedRecipes = () => [requested, updateRequestedRecipes] as const,
+    [loadRequestedRecipes, setLoadRequestRecipes] = useState({}),
+    [refetchEnvironments, setRefetchEnvironments] = useState({}),
+    updateRequestedRecipes = () => setLoadRequestRecipes({}),
+    updateEnvironments = () => setRefetchEnvironments({}),
     [recipeDescriptions, setRecipeDescriptions] = useState<Record<string, string>>({}),
     getRecipeDescription = (recipe: string) => {
       if (recipe in recipeDescriptions) {
@@ -78,16 +70,36 @@ const Root = () => {
     fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json()).then(setBuildStatuses);
   }, []);
 
+  const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
+  useEffect(() => {
+    getPackages()
+      .then(data => setPackageList({ data, error: "" }))
+      .catch(error => setPackageList({ data: [], error }));
+  }, []);
+
+
+  const [environmentsList, setEnvironmentsList] = useState<{ data: Environment[], error: string }>({ data: [], error: "" });
+
+  useEffect(() => {
+    clearTimeout(environmentsTimer);
+
+    getEnvironments()
+      .then(data => setEnvironmentsList({ data, error: "" }))
+      .catch(error => setEnvironmentsList({ data: [], error }))
+      .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
+  }, [refetchEnvironments]);
+
+  const availableTags = [
+    ...new Set(getAvailableTags(environmentsList.data)),
+  ];
+
   useEffect(() => {
     clearTimeout(recipesTimer);
 
-    fetch(CoreURL + "requestedRecipes")
-      .then(r => r.json())
-      .then(rr => {
-        setRequested(rr);
-        recipesTimer = setTimeout(updateRequestedRecipes, 10000);
-      });
-  }, [getRequestedRecipes]);
+    getRequestedRecipes()
+      .then(r => setRequested(r))
+      .finally(() => recipesTimer = setTimeout(updateRequestedRecipes, 10000));
+  }, [loadRequestedRecipes]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -137,20 +149,22 @@ const Root = () => {
         </Toolbar>
       </AppBar>
       <recipeDescriptionContext.Provider value={[recipeDescriptions, getRecipeDescription]}>
-        <BuildStatusContext.Provider value={buildStatuses}>
-          <UserContext.Provider value={{ username, groups }}>
-            <EnvironmentsQueryContext.Provider value={environmentsQuery}>
-              <RequestedRecipesContext.Provider value={requestedRecipes()}>
-                <AvailableTagsContext.Provider value={availableTags}>
-                  <Box component="main" sx={{ mx: 2, width: "100%" }}>
-                    <Toolbar />
-                    <Outlet />
-                  </Box>
-                </AvailableTagsContext.Provider>
-              </RequestedRecipesContext.Provider>
-            </EnvironmentsQueryContext.Provider>
-          </UserContext.Provider>
-        </BuildStatusContext.Provider>
+        <PackagesContext.Provider value={packageList}>
+          <EnvironmentsContext.Provider value={[environmentsList, updateEnvironments]}>
+            <BuildStatusContext.Provider value={buildStatuses}>
+              <UserContext.Provider value={{ username, groups }}>
+                <RequestedRecipesContext.Provider value={[requested, updateRequestedRecipes]}>
+                  <AvailableTagsContext.Provider value={availableTags}>
+                    <Box component="main" sx={{ mx: 2, width: "100%" }}>
+                      <Toolbar />
+                      <Outlet />
+                    </Box>
+                  </AvailableTagsContext.Provider>
+                </RequestedRecipesContext.Provider>
+              </UserContext.Provider>
+            </BuildStatusContext.Provider>
+          </EnvironmentsContext.Provider>
+        </PackagesContext.Provider>
       </recipeDescriptionContext.Provider>
     </Box>
   );

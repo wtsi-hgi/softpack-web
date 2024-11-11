@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import {
   Alert,
@@ -13,22 +12,19 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useContext, useMemo, useState } from "react";
 
-import type { Package } from "../../queries";
-import { ALL_ENVIRONMENTS, ALL_PACKAGES, CREATE_ENV } from "../../queries";
-import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
+import type { Package } from "../../endpoints";
 import EnvironmentSettings from "./EnvironmentSettings";
 import { PackageContext } from "./PackageContext";
 import PackageMatcher from "./PackageMatcher";
 import { PopUpDialog } from "./PopUpDialog";
-import { UserContext } from "../UserContext";
 import { validatePackages } from "./packageValidation";
 import { useNavigate } from "react-router-dom"
-import { RequestedRecipesContext } from "../RequestRecipe";
+import { createEnvironment, EnvironmentsContext, PackagesContext, RequestedRecipesContext, UserContext } from "../../endpoints";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
-  const { loading, data, error } = useQuery(ALL_PACKAGES);
-  const environmentsQuery = useContext(EnvironmentsQueryContext);
+  const { data, error } = useContext(PackagesContext);
+  const [environmentsQuery] = useContext(EnvironmentsContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
     message: "",
@@ -55,6 +51,7 @@ export default function CreateEnvironment() {
   const [testPackages, setTestPackages] = useState<string[]>([]);
   const { username, groups } = useContext(UserContext);
   const [requestedRecipes] = useContext(RequestedRecipesContext);
+  const [envBuildInFlight, setEnvBuildInFlight] = useState(false);
 
   const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
 
@@ -68,20 +65,42 @@ export default function CreateEnvironment() {
     setSelectedPackages([])
   }
 
-  const [createEnvironment, { loading: envBuildInFlight }] = useMutation(
-    CREATE_ENV,
-    {
-      refetchQueries: [ALL_ENVIRONMENTS],
-      // onCompleted will pick up any errors which the backend itself raises, like
-      // an environment name already existing.
-      onCompleted: (data) => {
-        if (
-          data.createEnvironment.__typename === "CreateEnvironmentSuccess" ||
-          data.createEnvironment.__typename === "BuilderError"
-        ) {
-          if (
-            data.createEnvironment.__typename === "CreateEnvironmentSuccess"
-          ) {
+  const packages = useMemo(() => {
+    const packages = new Map<string, string[]>();
+
+    data.forEach(({ name, versions }) => {
+      packages.set(name, [""].concat(versions));
+    });
+
+    requestedRecipes.forEach(({ name, version }) => {
+      const rname = "*" + name,
+        rr = packages.get(rname) ?? [];
+
+      rr.push(version);
+
+      packages.set(rname, rr);
+    });
+
+    return packages;
+  }, [data, requestedRecipes]);
+
+  if (environmentsQuery.data.length === 0) {
+    return <div>loading...</div>;
+  }
+
+  const e = error || environmentsQuery.error;
+  if (e) {
+    return <div style={{ color: "red" }}>{e}</div>;
+  }
+
+  const [validPackages] = validatePackages(selectedPackages, packages)
+
+  const runEnvironmentBuild = () => {
+    setEnvBuildInFlight(true);
+    createEnvironment(name, path, description, validPackages, username, tags)
+      .then(({ message }) => {
+        if (message.includes("success") || message.includes("build")) {
+          if (message.includes("success")) {
             setEnvBuildResult({
               title: "Your environment was successfully scheduled!",
               message:
@@ -108,56 +127,18 @@ export default function CreateEnvironment() {
         } else {
           setEnvBuildResult({
             title: "Environment build failed",
-            message: data.createEnvironment.message,
+            message,
           });
         }
-      },
-      // onError looks at GraphQL errors specifically.
-      onError: (error) => {
-        const messages = error.graphQLErrors[0].message;
-        console.error("GraphQL ERROR: ", messages);
+      })
+      .catch(() => {
+        console.error("Endpoint error");
         setEnvBuildResult({
           title: "Environment build failed",
-          message: messages,
+          message: "some error",
         });
-      },
-    },
-  );
-
-  const packages = useMemo(() => {
-    const packages = new Map<string, string[]>();
-
-    data?.packageCollections.forEach(({ name, versions }) => {
-      packages.set(name, [""].concat(versions));
-    });
-
-    requestedRecipes.forEach(({ name, version }) => {
-      const rname = "*" + name,
-        rr = packages.get(rname) ?? [];
-
-      rr.push(version);
-
-      packages.set(rname, rr);
-    });
-
-    return packages;
-  }, [data?.packageCollections, requestedRecipes]);
-
-  if (loading || environmentsQuery.loading) {
-    return <div>loading...</div>;
-  }
-
-  const e = error || environmentsQuery.error;
-  if (e) {
-    return <div style={{ color: "red" }}>{e.message}</div>;
-  }
-
-  const [validPackages] = validatePackages(selectedPackages, packages)
-
-  const runEnvironmentBuild = () => {
-    createEnvironment({
-      variables: { name, description, path, packages: validPackages, tags, username },
-    });
+      })
+      .finally(() => setEnvBuildInFlight(false));
   };
 
   const disabled = envBuildInFlight || name.length === 0 || description.length === 0 || path.length === 0 || (path !== "users/" + username && !groups.includes(path.split("/")[1])) || validPackages.length === 0;

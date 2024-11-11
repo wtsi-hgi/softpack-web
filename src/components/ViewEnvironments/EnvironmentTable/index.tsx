@@ -1,19 +1,18 @@
 import { compareEnvironments, compareStrings } from "../../../strings";
 
-import type { Environments, Package } from "../../../queries";
 import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
 import { createContext, useContext } from "react";
 
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
-import type { Environment as EnvironmentType } from "../../../queries";
+import type { Environment, Package } from "../../../endpoints";
 import { BuildStatus } from "../../../routes/Root";
 
 type EnvironmentTableProps = {
-  environments: Environments;
+  environments: Environment[];
   highlightPackages?: Package[];
-  setSelectedEnv: (v: EnvironmentType) => void;
+  setSelectedEnv: (v: Environment) => void;
   buildStatuses: Record<string, string> | null;
 };
 
@@ -95,7 +94,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   , recipeDescriptions, getRecipeDescription))}
               </ul>
               {(env.state === "failed") &&
-                <div style={{ fontSize: "1.1em", fontWeight: "bold", backgroundColor: env.failureReason === "concretization" ? "#fd0" : "#faa", borderRadius: "1em", textAlign: "center", "padding": "0.5em 0" }}>{env.failureReason === "concretization" ?
+                <div style={{ fontSize: "1.1em", fontWeight: "bold", backgroundColor: env.failure_reason === "concretization" ? "#fd0" : "#faa", borderRadius: "1em", textAlign: "center", "padding": "0.5em 0" }}>{env.failure_reason === "concretization" ?
                   "Version Conflict: Try relaxing which versions you've specified." :
                   "Build Error: Contact your softpack administrator."}</div>
               }
