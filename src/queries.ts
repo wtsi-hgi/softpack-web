@@ -26,10 +26,6 @@ export const ALL_ENVIRONMENTS = gql(`
       readme
       type
       state
-      requested
-      buildStart
-      buildDone
-      avgWaitSecs
       created
       failureReason
       interpreters {

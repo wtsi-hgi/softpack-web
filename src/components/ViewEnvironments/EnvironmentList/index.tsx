@@ -23,7 +23,7 @@ import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
 import { UserContext } from "../../UserContext";
-import EnvironmentTable from "../EnvironmentTable";
+import EnvironmentTable, { BuildStatusContext } from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
 
@@ -37,6 +37,7 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
   const { loading, data, error } = useContext(EnvironmentsQueryContext);
+  const buildStatuses = useContext(BuildStatusContext);
   const [filter, setFilter] = useState("");
   const [filterText, setFilterText] = useState("");
   const client = useApolloClient();
@@ -103,6 +104,7 @@ const EnvironmentList = () => {
     return () => clearInterval(interval);
   }, [loading, error, refetchInterval]);
 
+
   if (loading) {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
@@ -113,19 +115,14 @@ const EnvironmentList = () => {
     );
   }
 
-  const environmentsInProgress = data.environments.filter(
-    (e) => e.state == "queued",
-  );
-
-  const avgWaitSecs = data.environments.find((e) => e.avgWaitSecs != null)
-    ?.avgWaitSecs;
+  const environmentsInProgress = data.environments.reduce((c, e) => c + +(e.state == "queued"), 0);
 
   let filteredEnvironments = data.environments.slice().map(env => Object.assign(
     Object.assign({}, env),
     {
       "packages": env.packages.toSpliced(0, 0, ...[
-        (env.interpreters.python ? { "name": "python", "version": env.interpreters.python } : null) as any,
-        (env.interpreters.r ? { "name": "r", "version": env.interpreters.r } : null) as any
+        (env.interpreters.python ? { "name": "python", "version": env.interpreters.python } : null) as typeof env.packages[0],
+        (env.interpreters.r ? { "name": "r", "version": env.interpreters.r } : null) as typeof env.packages[0]
       ].filter(e => e))
     }));
 
@@ -378,15 +375,16 @@ const EnvironmentList = () => {
         {filteredEnvironments.some((e) => e.state === "queued") ||
           ignoreReady ? (
           <Alert severity="info">
-            There are currently {environmentsInProgress.length} environments in
+            There are currently {environmentsInProgress} environments in
             the build queue. Average wait time:{" "}
-            {avgWaitSecs != null ? humanize(avgWaitSecs * 1000) : "unknown"}.
+            {buildStatuses != null ? humanize(buildStatuses.avg * 1000) : "unknown"}.
           </Alert>
         ) : null}
       </Box>
       <Container id="environment_table">
         {filteredEnvironments.length > 0 ? (
           <EnvironmentTable
+            buildStatuses={buildStatuses?.statuses ?? null}
             environments={filteredEnvironments}
             highlightPackages={highlightPackages}
             setSelectedEnv={(env: EnvironmentType) => {

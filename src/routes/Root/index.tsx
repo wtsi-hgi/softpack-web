@@ -1,4 +1,4 @@
-import type {RequestedRecipe} from "../../components/RequestRecipe";
+import type { RequestedRecipe } from "../../components/RequestRecipe";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
@@ -21,6 +21,12 @@ import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../components/UserContext";
 import { ALL_ENVIRONMENTS, Environments, GROUPS } from "../../queries";
+import { BuildStatusContext } from "../../components/ViewEnvironments/EnvironmentTable";
+
+export type BuildStatus = {
+  avg: number;
+  statuses: Record<string, string>;
+}
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
@@ -49,33 +55,38 @@ const Root = () => {
   ];
 
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
-	[getRequestedRecipes, setGetRequestRecipes] = useState({}),
-	updateRequestedRecipes = () => setGetRequestRecipes({}),
-	requestedRecipes = () => [requested, updateRequestedRecipes] as const,
-	[recipeDescriptions, setRecipeDescriptions] = useState<Record<string, string>>({}),
-	getRecipeDescription = (recipe: string) => {
-		if (recipe in recipeDescriptions) {
-			return;
-		}
+    [getRequestedRecipes, setGetRequestRecipes] = useState({}),
+    updateRequestedRecipes = () => setGetRequestRecipes({}),
+    requestedRecipes = () => [requested, updateRequestedRecipes] as const,
+    [recipeDescriptions, setRecipeDescriptions] = useState<Record<string, string>>({}),
+    getRecipeDescription = (recipe: string) => {
+      if (recipe in recipeDescriptions) {
+        return;
+      }
 
-		fetch(CoreURL + "getRecipeDescription", {"method": "POST", "body": JSON.stringify({recipe})})
-		.then(r => r.json())
-		.then(desc => {
-			recipeDescriptions[recipe] = desc["description"] ?? "Unknown Module Package";
-			setRecipeDescriptions({...recipeDescriptions});
-		})
-	};
+      fetch(CoreURL + "getRecipeDescription", { "method": "POST", "body": JSON.stringify({ recipe }) })
+        .then(r => r.json())
+        .then(desc => {
+          recipeDescriptions[recipe] = desc["description"] ?? "Unknown Module Package";
+          setRecipeDescriptions({ ...recipeDescriptions });
+        })
+    };
 
+
+  const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
+  useEffect(() => {
+    fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json()).then(setBuildStatuses);
+  }, []);
 
   useEffect(() => {
-	clearTimeout(recipesTimer);
+    clearTimeout(recipesTimer);
 
-	fetch(CoreURL + "requestedRecipes")
-	.then(r => r.json())
-	.then(rr => {
-		setRequested(rr);
-		recipesTimer = setTimeout(updateRequestedRecipes, 10000);
-	});
+    fetch(CoreURL + "requestedRecipes")
+      .then(r => r.json())
+      .then(rr => {
+        setRequested(rr);
+        recipesTimer = setTimeout(updateRequestedRecipes, 10000);
+      });
   }, [getRequestedRecipes]);
 
   return (
@@ -126,18 +137,20 @@ const Root = () => {
         </Toolbar>
       </AppBar>
       <recipeDescriptionContext.Provider value={[recipeDescriptions, getRecipeDescription]}>
-        <UserContext.Provider value={{ username, groups }}>
-          <EnvironmentsQueryContext.Provider value={environmentsQuery}>
-            <RequestedRecipesContext.Provider value={requestedRecipes()}>
-              <AvailableTagsContext.Provider value={availableTags}>
-                <Box component="main" sx={{ mx: 2, width: "100%" }}>
-                  <Toolbar />
-                  <Outlet />
-                </Box>
-              </AvailableTagsContext.Provider>
-            </RequestedRecipesContext.Provider>
-          </EnvironmentsQueryContext.Provider>
-        </UserContext.Provider>
+        <BuildStatusContext.Provider value={buildStatuses}>
+          <UserContext.Provider value={{ username, groups }}>
+            <EnvironmentsQueryContext.Provider value={environmentsQuery}>
+              <RequestedRecipesContext.Provider value={requestedRecipes()}>
+                <AvailableTagsContext.Provider value={availableTags}>
+                  <Box component="main" sx={{ mx: 2, width: "100%" }}>
+                    <Toolbar />
+                    <Outlet />
+                  </Box>
+                </AvailableTagsContext.Provider>
+              </RequestedRecipesContext.Provider>
+            </EnvironmentsQueryContext.Provider>
+          </UserContext.Provider>
+        </BuildStatusContext.Provider>
       </recipeDescriptionContext.Provider>
     </Box>
   );
