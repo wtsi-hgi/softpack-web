@@ -1,5 +1,3 @@
-import { compareEnvironments, compareStrings } from "../../../strings";
-
 import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
 import { useContext } from "react";
 
@@ -20,7 +18,7 @@ function toTitle(s: string) {
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b)),
+  const environments = props.environments,
     [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   const allHighlightedPackages = new Set<string>();
@@ -35,7 +33,6 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           const highlightPackages: Package[] = [];
           const normalPackages: Package[] = [];
           env.packages
-            .toSorted((a, b) => compareStrings(a.name, b.name))
             .forEach((pkg) => {
               // const matchCandidate = highlightedPackageVersions.get(pkg.name);
               // if (matchCandidate === null || pkg.version === matchCandidate) {

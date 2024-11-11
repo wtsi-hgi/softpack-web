@@ -17,6 +17,7 @@ import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
 
 import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
+import { compareEnvironments } from "../../strings";
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
@@ -79,7 +80,7 @@ const Root = () => {
     clearTimeout(environmentsTimer);
 
     getEnvironments()
-      .then(data => setEnvironmentsList({ data, error: "" }))
+      .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
       .catch(error => setEnvironmentsList({ data: [], error }))
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
