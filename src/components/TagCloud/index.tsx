@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import { TagCloud as ReactTagCloud, Tag } from "react-tagcloud";
 
 import { compareStrings } from "../../strings";
-import { EnvironmentsQueryContext } from "../EnvironmentsQueryContext";
+import { EnvironmentsContext } from "../../endpoints";
 
 export const TagCloud = () => {
-  const environmentsQuery = useContext(EnvironmentsQueryContext);
+  const [environmentsQuery] = useContext(EnvironmentsContext);
   const [, setFilterUsers] = useLocalStorage<string[]>(
     "environments-filterusers",
     [],
@@ -22,18 +22,18 @@ export const TagCloud = () => {
     [],
   );
 
-  if (environmentsQuery.loading) {
+  if (!environmentsQuery.data?.length) {
     return <></>;
   }
 
   if (environmentsQuery.error) {
     return (
-      <div style={{ color: "red" }}>{environmentsQuery.error.message}</div>
+      <div style={{ color: "red" }}>{environmentsQuery.error}</div>
     );
   }
 
   const tagCounts: Record<string, number> = {};
-  environmentsQuery.data?.environments.forEach((env) => {
+  environmentsQuery?.data.forEach((env) => {
     env.tags.forEach((tag) => {
       if (!Object.hasOwn(tagCounts, tag)) {
         tagCounts[tag] = 0;

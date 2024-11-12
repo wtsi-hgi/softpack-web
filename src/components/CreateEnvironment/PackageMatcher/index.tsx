@@ -1,12 +1,11 @@
 import { useContext, useState } from 'react';
 import { Box, Button, Grid } from "@mui/material";
 
-import { Package } from "../../../queries";
+import { Environment, Package } from "../../../endpoints";
 import { HelpIcon } from "../../HelpIcon";
 import MatchingEnvs from "../MatchingEnvs";
 import PackageSelect from "../PackageSelect";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../../ViewEnvironments/Drawer";
-import type { Environment as EnvironmentType } from "../../../queries";
 
 type PackageMatcherParams = {
   packages: Map<string, string[]>;
@@ -20,7 +19,7 @@ type PackageMatcherParams = {
 // packages to build the environment with, and suggesting existing environments
 // that they may be able to use instead.
 function PackageMatcher(props: PackageMatcherParams) {
-  const [selectedEnv, setSelectedEnv] = useState<EnvironmentType | null>(null),
+  const [selectedEnv, setSelectedEnv] = useState<Environment | null>(null),
     [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   return (

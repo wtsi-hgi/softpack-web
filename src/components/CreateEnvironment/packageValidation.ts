@@ -1,4 +1,4 @@
-import { Package } from "../../queries"
+import { Package } from "../../endpoints"
 
 export const anyPackageVersion = "[any]";
 

@@ -1,13 +1,10 @@
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-//import { useContext } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Chip, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { anyPackageVersion } from "../CreateEnvironment/packageValidation";
 import { wrapRecipe } from '../ViewEnvironments/Drawer';
-
-//import { PackageContext } from "../CreateEnvironment/PackageContext";
 
 type DropdownChipParams = {
   name: string;
@@ -35,20 +32,20 @@ function DropdownChip(props: DropdownChipParams) {
   };
 
   return (
-    <div>{wrapRecipe({"name": props.name, "version": ""}, <Chip
-        label={
-          props.selectedVersion
-            ? `${props.name} (${props.selectedVersion})`
-            : props.name
-        }
-        onClick={(event) => {
-          setAnchorEl(event.currentTarget);
-          setOpen(!open);
-        }}
-        deleteIcon={<CancelIcon />}
-        avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        onDelete={props.onDelete}
-      />, props.recipeDescriptions, props.getRecipeDescription)}
+    <div>{wrapRecipe({ "name": props.name, "version": "" }, <Chip
+      label={
+        props.selectedVersion
+          ? `${props.name} (${props.selectedVersion})`
+          : props.name
+      }
+      onClick={(event) => {
+        setAnchorEl(event.currentTarget);
+        setOpen(!open);
+      }}
+      deleteIcon={<CancelIcon />}
+      avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+      onDelete={props.onDelete}
+    />, props.recipeDescriptions, props.getRecipeDescription)}
       <Menu
         anchorEl={anchorEl}
         open={!!anchorEl}

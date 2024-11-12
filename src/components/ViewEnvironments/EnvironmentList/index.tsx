@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import {
   Alert,
   Autocomplete,
@@ -13,22 +12,17 @@ import {
 } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import * as semver from "semver";
 
 import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
 import { humanize } from "../../../humanize";
-import { ALL_ENVIRONMENTS, Environment as EnvironmentType, ALL_PACKAGES, Package } from "../../../queries";
-import { EnvironmentsQueryContext } from "../../EnvironmentsQueryContext";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
-import { UserContext } from "../../UserContext";
-import EnvironmentTable, { BuildStatusContext } from "../EnvironmentTable";
+import EnvironmentTable from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
-
-const SECOND = 1000;
-const MAX_REFETCH_INTERVAL = 10 * SECOND;
+import { BuildStatusContext, Environment, EnvironmentsContext, Package, PackagesContext, UserContext } from "../../../endpoints";
 
 function arrayEqual<T>(a: T[], b: T[]): boolean {
   return a.length === b.length && a.every((val, idx) => val === b[idx]);
@@ -36,12 +30,11 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-  const { loading, data, error } = useContext(EnvironmentsQueryContext);
+  const [{ data, error }] = useContext(EnvironmentsContext);
   const buildStatuses = useContext(BuildStatusContext);
+  const { data: packages } = useContext(PackagesContext);
   const [filter, setFilter] = useState("");
   const [filterText, setFilterText] = useState("");
-  const client = useApolloClient();
-  const [refetchInterval, setRefetchInterval] = useState(SECOND);
   const [filterUserText, setFilterUserText] = useState("");
   const [filterGroupText, setFilterGroupText] = useState("");
   const [filterTagText, setFilterTagText] = useState("");
@@ -73,51 +66,16 @@ const EnvironmentList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [packages, setPackages] = useState<string[]>([]);
-
   const [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const pkgs: string[] = [];
-      const result = await client.query({ query: ALL_PACKAGES });
-      if (result.error) {
-        pkgs.push("errorpackage");
-      }
-      result.data?.packageCollections.forEach(({ name }: { name: string }) => {
-        pkgs.push(name);
-      });
-      setPackages(pkgs);
-    };
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!loading && !error) {
-        client.refetchQueries({ include: [ALL_ENVIRONMENTS] });
-      }
-      if (refetchInterval < MAX_REFETCH_INTERVAL) {
-        setRefetchInterval(refetchInterval * 2);
-      }
-    }, refetchInterval);
-    return () => clearInterval(interval);
-  }, [loading, error, refetchInterval]);
-
-
-  if (loading) {
+  if (data.length === 0) {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
-  if (error || !data) {
-    return (
-      <div style={{ color: "red" }}>{error?.message || "Unknown error"}</div>
-    );
-  }
+  const environmentsInProgress = data.reduce((c, e) => c + +(e.state == "queued"), 0);
 
-  const environmentsInProgress = data.environments.reduce((c, e) => c + +(e.state == "queued"), 0);
-
-  let filteredEnvironments = data.environments.slice().map(env => Object.assign(
+  let filteredEnvironments = data.slice().map(env => Object.assign(
     Object.assign({}, env),
     {
       "packages": env.packages.toSpliced(0, 0, ...[
@@ -204,11 +162,11 @@ const EnvironmentList = () => {
   }
 
   const searchEnv = searchParams.get("envId")
-  const selectedEnv = data.environments.find((e) => `${e.path}/${e.name}` == searchEnv)
+  const selectedEnv = data.find((e) => `${e.path}/${e.name}` === searchEnv)
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
   const allTagsSet = new Set<string>();
-  data.environments.map((env) => {
+  data.map((env) => {
     if (env.path.startsWith("users/")) {
       allUsersSet.add(env.path.split("/")[1]);
     } else {
@@ -222,6 +180,7 @@ const EnvironmentList = () => {
 
   return (
     <>
+      {(error || !data) && <div style={{ color: "red" }}>{error || "Unknown error"}</div>}
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
@@ -387,7 +346,7 @@ const EnvironmentList = () => {
             buildStatuses={buildStatuses?.statuses ?? null}
             environments={filteredEnvironments}
             highlightPackages={highlightPackages}
-            setSelectedEnv={(env: EnvironmentType) => {
+            setSelectedEnv={(env: Environment) => {
               searchParams.set("envId", `${env.path}/${env.name}`);
               setSearchParams(searchParams);
             }}
@@ -395,7 +354,7 @@ const EnvironmentList = () => {
         ) : (
           <CreateEnvPrompt
             name={filter}
-            pkgs={packages}
+            pkgs={packages.map(({ name }) => name)}
           />
         )}
         <EnvironmentDrawer

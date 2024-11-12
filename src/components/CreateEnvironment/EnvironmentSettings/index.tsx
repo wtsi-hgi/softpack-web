@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 
 import { HelpIcon } from "../../HelpIcon";
 import { TagSelect } from "../../TagSelect";
-import { UserContext } from "../../UserContext";
+import { UserContext } from "../../../endpoints";
 
 type EnvironmentSettingsProps = {
   name: string;
@@ -45,7 +45,7 @@ function EnvironmentSettings(props: EnvironmentSettingsProps) {
         <TextField
           id="name-field"
           variant="standard"
-	  helperText={/[-_][0-9][.\-0-9]*$/.test(props.name) ? <>Version not required <HelpIcon style={{paddingTop:"0.5em", paddingLeft: "0"}} title="Versions are automatically managed by SoftPack" /></> : ""}
+          helperText={/[-_][0-9][.\-0-9]*$/.test(props.name) ? <>Version not required <HelpIcon style={{ paddingTop: "0.5em", paddingLeft: "0" }} title="Versions are automatically managed by SoftPack" /></> : ""}
           value={props.name}
           onChange={(e) => props.setName((e.target as HTMLInputElement).value)}
         />

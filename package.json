@@ -23,7 +23,6 @@
     "buildrun": "npm run build && go build server.go && mv server ./dist && cd ./dist && ./server"
   },
   "dependencies": {
-    "@apollo/client": "^3.11.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.1",
@@ -46,7 +45,6 @@
     "react-window": "^1.8.10"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",

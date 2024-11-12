@@ -1,5 +1,5 @@
 import * as semver from "semver";
-import { Environment } from "./queries";
+import { Environment } from "./endpoints";
 
 const zero = semver.coerce("0")!;
 
@@ -24,8 +24,13 @@ export function parseEnvironmentToNamePathAndVersion(env: Environment): [string,
 }
 
 export function compareEnvironments(a: Environment, b: Environment) {
-  const [, namePathA, semVerA] = parseEnvironmentToNamePathAndVersion(a)
-  const [, namePathB, semVerB] = parseEnvironmentToNamePathAndVersion(b)
+  const [nameA, namePathA, semVerA] = parseEnvironmentToNamePathAndVersion(a)
+  const [nameB, namePathB, semVerB] = parseEnvironmentToNamePathAndVersion(b)
+  const nameCompare = compareStrings(nameA, nameB);
+
+  if (nameCompare) {
+    return nameCompare;
+  }
 
   if (namePathA != namePathB) {
     return compareStrings(namePathA, namePathB)

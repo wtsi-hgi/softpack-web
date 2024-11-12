@@ -1,31 +1,24 @@
-import { compareEnvironments, compareStrings } from "../../../strings";
-
-import type { Environments, Package } from "../../../queries";
 import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 
 import { Masonry } from "@mui/lab";
 import { LinearProgress, Tooltip } from "@mui/material";
 import { humanize } from "../../../humanize";
-import type { Environment as EnvironmentType } from "../../../queries";
-import { BuildStatus } from "../../../routes/Root";
+import { Environment, Package } from "../../../endpoints";
 
 type EnvironmentTableProps = {
-  environments: Environments;
+  environments: Environment[];
   highlightPackages?: Package[];
-  setSelectedEnv: (v: EnvironmentType) => void;
+  setSelectedEnv: (v: Environment) => void;
   buildStatuses: Record<string, string> | null;
 };
-
-export const BuildStatusContext =
-  createContext<BuildStatus | null>(null);
 
 function toTitle(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function EnvironmentTable(props: EnvironmentTableProps) {
-  const environments = props.environments.toSorted((a, b) => compareEnvironments(a, b)),
+  const environments = props.environments,
     [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   const allHighlightedPackages = new Set<string>();
@@ -40,7 +33,6 @@ function EnvironmentTable(props: EnvironmentTableProps) {
           const highlightPackages: Package[] = [];
           const normalPackages: Package[] = [];
           env.packages
-            .toSorted((a, b) => compareStrings(a.name, b.name))
             .forEach((pkg) => {
               // const matchCandidate = highlightedPackageVersions.get(pkg.name);
               // if (matchCandidate === null || pkg.version === matchCandidate) {
@@ -95,7 +87,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   , recipeDescriptions, getRecipeDescription))}
               </ul>
               {(env.state === "failed") &&
-                <div style={{ fontSize: "1.1em", fontWeight: "bold", backgroundColor: env.failureReason === "concretization" ? "#fd0" : "#faa", borderRadius: "1em", textAlign: "center", "padding": "0.5em 0" }}>{env.failureReason === "concretization" ?
+                <div style={{ fontSize: "1.1em", fontWeight: "bold", backgroundColor: env.failure_reason === "concretization" ? "#fd0" : "#faa", borderRadius: "1em", textAlign: "center", "padding": "0.5em 0" }}>{env.failure_reason === "concretization" ?
                   "Version Conflict: Try relaxing which versions you've specified." :
                   "Build Error: Contact your softpack administrator."}</div>
               }

@@ -1,12 +1,12 @@
 import { Alert, Autocomplete, Box, TextField } from "@mui/material";
 import { ReactNode, useContext, useMemo, useState } from "react";
 
-import { Package } from "../../../queries";
 import DropdownChip from "../../PackageChip";
 import { Listbox } from "./Listbox";
 import { stripPackageSearchPunctuation } from "../../../strings";
 import { validatePackages } from "../packageValidation";
 import { recipeDescriptionContext } from '../../ViewEnvironments/Drawer';
+import { Package } from "../../../endpoints";
 
 type PackageSelectParams = {
   packages: Map<string, string[]>;
@@ -18,38 +18,38 @@ type PackageSelectParams = {
 // each with their own dropdown to display package versions.
 export default function PackageSelect(props: PackageSelectParams) {
   const [recipeFilter, setRecipeFilter] = useState(""),
-        [validPackages, invalidSelectedPackages, invalidSelectedVersionPackages] = useMemo(() => validatePackages(props.selectedPackages, props.packages), [props.selectedPackages]),
-        selectedPackageNames = useMemo(() => validPackages.map(({ name }) => name), [validPackages]),
-        selectedPackageVersions = useMemo(() => validPackages.map(({ version }) => version), [validPackages]),
-        [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
+    [validPackages, invalidSelectedPackages, invalidSelectedVersionPackages] = useMemo(() => validatePackages(props.selectedPackages, props.packages), [props.selectedPackages]),
+    selectedPackageNames = useMemo(() => validPackages.map(({ name }) => name), [validPackages]),
+    selectedPackageVersions = useMemo(() => validPackages.map(({ version }) => version), [validPackages]),
+    [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
   // renderTags displays each selected autocomplete option as an MUI chip which
   // contains a dropdown, hence the custom name, DropdownChip.
   const renderTags = (tags: string[]) => {
     return tags.map((packageName, index) => <DropdownChip
-        key={packageName}
-        name={packageName}
-        versions={props.packages.get(packageName) ?? []}
-        selectedVersion={selectedPackageVersions[index] || null}
-        onChange={(version) =>
-          props.setSelectedPackages(
-            validPackages.toSpliced(index, 1, {
-              name: packageName,
-              version: version || null,
-            }),
-          )
-        }
-        onDelete={() =>
-          props.setSelectedPackages(validPackages.toSpliced(index, 1))
-        }
-        recipeDescriptions={recipeDescriptions} getRecipeDescription={getRecipeDescription}
-      />);
+      key={packageName}
+      name={packageName}
+      versions={props.packages.get(packageName) ?? []}
+      selectedVersion={selectedPackageVersions[index] || null}
+      onChange={(version) =>
+        props.setSelectedPackages(
+          validPackages.toSpliced(index, 1, {
+            name: packageName,
+            version: version || null,
+          }),
+        )
+      }
+      onDelete={() =>
+        props.setSelectedPackages(validPackages.toSpliced(index, 1))
+      }
+      recipeDescriptions={recipeDescriptions} getRecipeDescription={getRecipeDescription}
+    />);
   };
 
   return (
     <Box>
       <Autocomplete
-	key="def"
+        key="def"
         multiple
         openOnFocus
         disableCloseOnSelect
@@ -77,9 +77,9 @@ export default function PackageSelect(props: PackageSelectParams) {
         renderInput={(params) => {
           return (
             <TextField
-	      key="abc"
+              key="abc"
               {...params}
-	      value={params.inputProps.value}
+              value={params.inputProps.value}
               variant="standard"
               label={props.selectedPackages.length ? "" : "Search..."}
             />
