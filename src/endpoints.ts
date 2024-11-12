@@ -63,25 +63,25 @@ const handle = (r: Response) => r.json().then(o => {
 sendData = (path: string, params: unknown) => fetch(CoreURL+path, {"method": "post", "body": JSON.stringify(params), "headers": {"Content-Type": "application/json"}}).then(handle);
 
 export function getEnvironments(): Promise<Environment[]> {
-	return fetch(CoreURL + "getEnvironments").then(handle);
+	return fetch(CoreURL + "get-environments").then(handle);
 }
 
 export function createEnvironment(name: string, path: string, description: string, packages: Package[], username: string, tags?: string[]): Promise<{message: string}> {
-	return sendData("createEnvironment", {
+	return sendData("create-environment", {
 		name, path, description, packages, username, tags
 	});
 }
 
 export function addTag(name: string, path: string, tag: string): Promise<unknown> {
-	return sendData("addTag", {name, path, tag});
+	return sendData("add-tag", {name, path, tag});
 }
 
 export function setHidden(name: string, path: string, hidden: boolean): Promise<unknown> {
-	return sendData("setHidden", {name, path, hidden});
+	return sendData("set-hidden", {name, path, hidden});
 }
 
 export function getPackages(): Promise<PackageVersions[]> {
-	return fetch(CoreURL + "packageCollection").then(handle);
+	return fetch(CoreURL + "package-pollection").then(handle);
 }
 
 export function getGroups(username: string): Promise<string[]> {
@@ -89,9 +89,9 @@ export function getGroups(username: string): Promise<string[]> {
 }
 
 export function getRequestedRecipes(): Promise<RequestedRecipe[]> {
-	return fetch(CoreURL + "requestedRecipes").then(handle)
+	return fetch(CoreURL + "requested-recipes").then(handle)
 }
 
 export function getBuildStatus(): Promise<BuildStatus> {
-	return fetch(CoreURL + "buildStatus", { "method": "post" }).then(j => j.json());
+	return fetch(CoreURL + "build-status", { "method": "post" }).then(j => j.json());
 }

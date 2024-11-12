@@ -52,7 +52,7 @@ const Root = () => {
         return;
       }
 
-      fetch(CoreURL + "getRecipeDescription", { "method": "POST", "body": JSON.stringify({ recipe }) })
+      fetch(CoreURL + "get-recipe-description", { "method": "POST", "body": JSON.stringify({ recipe }) })
         .then(r => r.json())
         .then(desc => {
           recipeDescriptions[recipe] = desc["description"] ?? "Unknown Module Package";

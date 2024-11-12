@@ -120,7 +120,7 @@ export default function RequestRecipe() {
 				].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 				onClick={() => {
 					setInFlight(true);
-					fetch(CoreURL + "requestRecipe", { "method": "POST", "body": JSON.stringify({ name, version, url, description, username }) })
+					fetch(CoreURL + "request-recipe", { "method": "POST", "body": JSON.stringify({ name, version, url, description, username }) })
 						.then(r => r.json())
 						.then((d: RequestResponse) => {
 							if (d["error"] !== undefined) {
