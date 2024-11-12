@@ -16,13 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { PopUpDialog } from "../CreateEnvironment/PopUpDialog";
 import { HelpIcon } from "../HelpIcon";
-import CoreURL from "../../core";
-import { RequestedRecipesContext, UserContext } from "../../endpoints";
-
-type RequestResponse = {
-	message?: string;
-	error?: string;
-}
+import { RequestedRecipesContext, requestRecipe, UserContext } from "../../endpoints";
 
 export default function RequestRecipe() {
 	const [requested, updateRequested] = useContext(RequestedRecipesContext),
@@ -120,17 +114,13 @@ export default function RequestRecipe() {
 				].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 				onClick={() => {
 					setInFlight(true);
-					fetch(CoreURL + "request-recipe", { "method": "POST", "body": JSON.stringify({ name, version, url, description, username }) })
-						.then(r => r.json())
-						.then((d: RequestResponse) => {
-							if (d["error"] !== undefined) {
-								setRequestResult(["Error", d["error"]!])
-							} else {
-								setRequestResult(["Recipe Requested", d["message"]!]);
-								requested.push({ name, version, url, description, username });
-								updateRequested();
-							}
-						});
+					requestRecipe(name, version, url, description, username)
+						.then(d => {
+							setRequestResult(["Recipe Requested", d["message"]]);
+							requested.push({ name, version, url, description, username });
+							updateRequested();
+						})
+						.catch(error => setRequestResult(["Error", error]));
 				}}>
 				Request
 			</Button>

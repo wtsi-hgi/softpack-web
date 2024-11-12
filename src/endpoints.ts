@@ -99,3 +99,7 @@ export function getBuildStatus(): Promise<BuildStatus> {
 export function getPackageDescription(recipe: string): Promise<{description: string}> {
 	return sendData("get-recipe-description", recipe);
 }
+
+export function requestRecipe(name: string, version: string, url: string, description: string, username: string): Promise<{message: string}> {
+	return sendData("request-recipe", {name, version, url, description, username});
+}
