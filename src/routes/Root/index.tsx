@@ -9,14 +9,13 @@ import Typography from "@mui/material/Typography";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { NavLink, Outlet } from "react-router-dom";
 import Logo from '../../../softpack.svg';
-import CoreURL from "../../core";
 
 import { AvailableTagsContext } from "../../components/AvailableTagsContext";
 import { recipeDescriptionContext } from "../../components/ViewEnvironments/Drawer";
 import { HelpIcon } from "../../components/HelpIcon";
 import Menu from "../../components/Menu";
 
-import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
+import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackageDescription, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 import { compareEnvironments } from "../../strings";
 
 // getAvailableTags returns all tags, including duplicates, currently used by
@@ -52,8 +51,7 @@ const Root = () => {
         return;
       }
 
-      fetch(CoreURL + "get-recipe-description", { "method": "POST", "body": JSON.stringify({ recipe }) })
-        .then(r => r.json())
+      getPackageDescription(recipe)
         .then(desc => {
           recipeDescriptions[recipe] = desc["description"] ?? "Unknown Module Package";
           setRecipeDescriptions({ ...recipeDescriptions });

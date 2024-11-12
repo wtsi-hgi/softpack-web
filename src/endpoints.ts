@@ -95,3 +95,7 @@ export function getRequestedRecipes(): Promise<RequestedRecipe[]> {
 export function getBuildStatus(): Promise<BuildStatus> {
 	return fetch(CoreURL + "build-status", { "method": "post" }).then(j => j.json());
 }
+
+export function getPackageDescription(recipe: string): Promise<{description: string}> {
+	return sendData("get-recipe-description", recipe);
+}
