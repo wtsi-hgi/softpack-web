@@ -88,9 +88,6 @@ export default function CreateEnvironment() {
   }
 
   const e = error || environmentsQuery.error;
-  if (e) {
-    return <div style={{ color: "red" }}>{e}</div>;
-  }
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 
@@ -142,7 +139,8 @@ export default function CreateEnvironment() {
 
   const disabled = envBuildInFlight || name.length === 0 || description.length === 0 || path.length === 0 || (path !== "users/" + username && !groups.includes(path.split("/")[1])) || validPackages.length === 0;
 
-  return (
+  return <>
+    {e && <div style={{ color: "red" }}>{e}</div>}
     <Grid
       container
       direction="row"
@@ -242,5 +240,5 @@ export default function CreateEnvironment() {
         )
       }
     </Grid>
-  );
+  </>;
 }

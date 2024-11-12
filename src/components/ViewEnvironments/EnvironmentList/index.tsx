@@ -73,12 +73,6 @@ const EnvironmentList = () => {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
-  if (error || !data) {
-    return (
-      <div style={{ color: "red" }}>{error || "Unknown error"}</div>
-    );
-  }
-
   const environmentsInProgress = data.reduce((c, e) => c + +(e.state == "queued"), 0);
 
   let filteredEnvironments = data.slice().map(env => Object.assign(
@@ -186,6 +180,7 @@ const EnvironmentList = () => {
 
   return (
     <>
+      {(error || !data) && <div style={{ color: "red" }}>{error || "Unknown error"}</div>}
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >

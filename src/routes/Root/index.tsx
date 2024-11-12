@@ -68,7 +68,7 @@ const Root = () => {
   useEffect(() => {
     getPackages()
       .then(data => setPackageList({ data, error: "" }))
-      .catch(error => setPackageList({ data: [], error }));
+      .catch(error => setPackageList({ data: packageList.data, error }));
   }, []);
 
 
@@ -79,7 +79,7 @@ const Root = () => {
 
     getEnvironments()
       .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
-      .catch(error => setEnvironmentsList({ data: [], error }))
+      .catch(error => setEnvironmentsList({ data: environmentsList.data, error }))
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
 
