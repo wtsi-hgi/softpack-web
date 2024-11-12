@@ -81,7 +81,7 @@ export function setHidden(name: string, path: string, hidden: boolean): Promise<
 }
 
 export function getPackages(): Promise<PackageVersions[]> {
-	return fetch(CoreURL + "package-pollection").then(handle);
+	return fetch(CoreURL + "package-collection").then(handle);
 }
 
 export function getGroups(username: string): Promise<string[]> {
