@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
-import { InputAdornment, TextField, Tooltip } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
+import { Tooltip } from '../../components/Tooltip';
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -52,8 +53,9 @@ const Root = () => {
       }
 
       getPackageDescription(recipe)
+        .catch(() => ({ "description": "Unknown Module Package" }))
         .then(desc => {
-          recipeDescriptions[recipe] = desc["description"] ?? "Unknown Module Package";
+          recipeDescriptions[recipe] = desc["description"];
           setRecipeDescriptions({ ...recipeDescriptions });
         })
     };

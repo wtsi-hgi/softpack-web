@@ -2,7 +2,8 @@ import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../D
 import { useContext } from "react";
 
 import { Masonry } from "@mui/lab";
-import { LinearProgress, Tooltip } from "@mui/material";
+import { LinearProgress } from "@mui/material";
+import { Tooltip } from '../../Tooltip';
 import { humanize } from "../../../humanize";
 import { Environment, Package } from "../../../endpoints";
 
