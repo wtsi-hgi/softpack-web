@@ -4,7 +4,6 @@ import {
   Box,
   Breadcrumbs,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +12,9 @@ import {
   Drawer,
   Icon,
   Stack,
-  Tooltip,
   Typography,
 } from "@mui/material";
+import { Tooltip } from '../../Tooltip';
 import { createContext, useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -67,7 +66,7 @@ export function wrapRecipe(pkg: Package, node: JSX.Element, recipeDescriptions: 
     return <Tooltip title={description} placement="top">{node}</Tooltip>
   }
 
-  return <Tooltip title="" onMouseOver={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
+  return <Tooltip title="" onMouseEnter={() => getRecipeDescription(pkg.name)}>{node}</Tooltip>
 }
 
 
@@ -287,22 +286,14 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
         <Divider />
         <Box style={{ padding: "0 18px" }}>
           <h1>Packages</h1>
-          {(env?.packages ?? []).map((pkg, i) => {
-            return wrapIfInterpreted(env!, pkg,
-              <Box key={i} sx={{ float: "left" }}>
-                <Chip
-                  className={isInterpreter(env!, pkg) ? " interpreter" : ""}
-                  label={pkg.name + (pkg.version ? `@${pkg.version}` : "")}
-                  sx={{
-                    m: "4px",
-                    color: "#5569ff",
-                    border: "1px solid rgba(85, 105, 255, 0.7)",
-                    backgroundColor: "transparent",
-                  }}
-                />
-              </Box>, recipeDescriptions, getRecipeDescription
-            );
-          })}
+          <ul className="packages">
+            {(env?.packages ?? []).map((pkg, i) => wrapIfInterpreted(env!, pkg,
+              <li key={i} className={isInterpreter(env!, pkg) ? " interpreter" : ""}>
+                {pkg.name + (pkg.version ? `@${pkg.version}` : "")}
+              </li>,
+              recipeDescriptions, getRecipeDescription
+            ))}
+          </ul>
         </Box>
       </Box>
       {env?.type === "softpack" &&

@@ -216,7 +216,7 @@ summary {
   overflow-y: auto;
 }
 
-#environments > li > ul:nth-of-type(3) li {
+#environments > li > ul:nth-of-type(3) li, .packages li {
   font-size: 0.8125rem;
   color: #5569ff;
   border: 1px solid rgba(85, 105, 255, 0.7);
@@ -316,4 +316,28 @@ button:disabled[data-reason]:not([data-reason=""]):hover:after {
 	box-shadow: rgba(159, 162, 191, 0.18) 0px 9px 16px, rgba(159, 162, 191, 0.32) 0px 2px 2px;
 	border-radius: 10px;
 	z-index: 100;
+}
+
+[data-tooltip] svg {
+  pointer-events: none;
+}
+
+#tooltip {
+  position: absolute;
+  z-index: 10000;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #2d3c5c;
+  color: #fff;
+  border-radius: 0.25em;
+  white-space: pre;
+}
+
+.packages {
+  list-style: none;
+  padding: 0;
+}
+
+.packages li {
+  display: inline-block;
 }

@@ -1,5 +1,5 @@
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Tooltip } from "@mui/material";
+import { Tooltip } from "../Tooltip";
 
 export type HelpIconProps = {
   title: string;
@@ -9,13 +9,15 @@ export type HelpIconProps = {
 export const HelpIcon = (props: HelpIconProps) => {
   return (
     <Tooltip style={props.style ?? {}} title={props.title}>
-      <HelpOutlineIcon
-        sx={{
-          color: "rgba(34, 51, 84, 0.7)",
-          padding: "0 0 0 8px",
-          fontSize: "25px",
-        }}
-      />
+      <span>
+        <HelpOutlineIcon
+          sx={{
+            color: "rgba(34, 51, 84, 0.7)",
+            padding: "0 0 0 8px",
+            fontSize: "25px",
+          }}
+        />
+      </span>
     </Tooltip>
   );
 };
