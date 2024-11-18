@@ -95,8 +95,8 @@ export default function CreateEnvironment() {
     setEnvBuildInFlight(true);
     createEnvironment(name, path, description, validPackages, username, tags)
       .then(({ message }) => {
-        if (message.includes("success") || message.includes("build")) {
-          if (message.includes("success")) {
+        if (message.includes("uccess") || message.includes("build")) {
+          if (message.includes("uccess")) {
             setEnvBuildResult({
               title: "Your environment was successfully scheduled!",
               message:
