@@ -318,7 +318,7 @@ button:disabled[data-reason]:not([data-reason=""]):hover:after {
 	z-index: 100;
 }
 
-[data-tooltip] svg {
+[data-tooltip]:not(.packageChip) svg {
   pointer-events: none;
 }
 
