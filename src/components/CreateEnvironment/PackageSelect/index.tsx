@@ -77,7 +77,6 @@ export default function PackageSelect(props: PackageSelectParams) {
         renderInput={(params) => {
           return (
             <TextField
-              key="abc"
               {...params}
               value={params.inputProps.value}
               variant="standard"

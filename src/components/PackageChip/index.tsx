@@ -42,6 +42,7 @@ function DropdownChip(props: DropdownChipParams) {
         setAnchorEl(event.currentTarget);
         setOpen(!open);
       }}
+      className="packageChip"
       deleteIcon={<CancelIcon />}
       avatar={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
       onDelete={props.onDelete}
