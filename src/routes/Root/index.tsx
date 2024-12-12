@@ -63,7 +63,7 @@ const Root = () => {
 
   const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
   useEffect(() => {
-    getBuildStatus().then(setBuildStatuses);
+    getBuildStatus().then(setBuildStatuses).catch(error => console.error(error));
   }, []);
 
   const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
@@ -94,6 +94,7 @@ const Root = () => {
 
     getRequestedRecipes()
       .then(r => setRequested(r))
+      .catch(error => console.error(error))
       .finally(() => recipesTimer = setTimeout(updateRequestedRecipes, 10000));
   }, [loadRequestedRecipes]);
 
