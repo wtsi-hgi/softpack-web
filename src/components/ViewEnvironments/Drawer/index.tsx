@@ -308,6 +308,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
             } else {
               setHidden(env.name, env.path, !env.hidden)
                 .then(() => updateEnvironments())
+		.catch(error => console.error(error))
                 .finally(() => setHideButtonDisable(false));
               setHideButtonDisable(true);
               setAlertOpen(false);
@@ -333,6 +334,7 @@ function EnvironmentDrawer({ env, open, onClose, recipeDescriptions, getRecipeDe
             env &&
               setHidden(env.name, env.path, !env.hidden)
                 .then(() => updateEnvironments())
+		.catch(error => console.error(error))
                 .finally(() => setHideButtonDisable(false));
             setHideButtonDisable(true);
             setAlertOpen(false);
