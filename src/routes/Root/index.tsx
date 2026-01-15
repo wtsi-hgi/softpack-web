@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
-import { InputAdornment, TextField } from "@mui/material";
+import { Alert, InputAdornment, Snackbar, TextField } from "@mui/material";
 import { Tooltip } from '../../components/Tooltip';
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -41,6 +41,15 @@ const Root = () => {
     ? "Invalid username"
     : null;
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorOpen, setErrorOpen] = useState(false);
+
+  const showError = (err: unknown, fallback = "Something went wrong") => {
+    const message = err instanceof Error ? err.message : fallback;
+    setErrorMessage(message);
+    setErrorOpen(true);
+  };
+
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
     [loadRequestedRecipes, setLoadRequestRecipes] = useState({}),
     [refetchEnvironments, setRefetchEnvironments] = useState({}),
@@ -63,14 +72,17 @@ const Root = () => {
 
   const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
   useEffect(() => {
-    getBuildStatus().then(setBuildStatuses).catch(error => console.error(error));
+    getBuildStatus().then(setBuildStatuses).catch(error => showError(error));
   }, []);
 
   const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
   useEffect(() => {
     getPackages()
       .then(data => setPackageList({ data, error: "" }))
-      .catch(error => setPackageList({ data: packageList.data, error }));
+      .catch(error => {
+        showError(error);
+        setPackageList({ data: packageList.data, error })
+      });
   }, []);
 
 
@@ -81,7 +93,10 @@ const Root = () => {
 
     getEnvironments()
       .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
-      .catch(error => setEnvironmentsList({ data: environmentsList.data, error }))
+      .catch(error => {
+        showError(error);
+        setEnvironmentsList({ data: environmentsList.data, error })
+      })
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
 
@@ -94,7 +109,7 @@ const Root = () => {
 
     getRequestedRecipes()
       .then(r => setRequested(r))
-      .catch(error => console.error(error))
+      .catch(error => showError(error))
       .finally(() => recipesTimer = setTimeout(updateRequestedRecipes, 10000));
   }, [loadRequestedRecipes]);
 
@@ -106,6 +121,17 @@ const Root = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         color="inherit"
       >
+        <Snackbar
+          open={errorOpen}
+          autoHideDuration={6000}
+          onClose={() => setErrorOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert severity="error">
+            {errorMessage ?? "Unexpected error"}
+          </Alert>
+        </Snackbar>
+
         <Toolbar style={{ paddingLeft: "20px" }}>
           <Box display="contents" component={NavLink} to="/">
             <img
