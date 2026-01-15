@@ -62,8 +62,10 @@ const Root = () => {
       }
 
       getPackageDescription(recipe)
-        .catch(() => ({ "description": "Unknown Module Package" }))
-        .then(desc => {
+        .catch(err => {
+          showError(err, "Failed to load package description");
+          return { description: "Unknown Module Package" };
+        }).then(desc => {
           recipeDescriptions[recipe] = desc["description"];
           setRecipeDescriptions({ ...recipeDescriptions });
         })
