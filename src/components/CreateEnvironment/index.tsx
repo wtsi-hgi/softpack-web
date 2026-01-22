@@ -19,6 +19,7 @@ import { PopUpDialog } from "./PopUpDialog";
 import { validatePackages } from "./packageValidation";
 import { useNavigate } from "react-router-dom"
 import { createEnvironment, EnvironmentsContext, PackagesContext, RequestedRecipesContext, UserContext } from "../../endpoints";
+import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -89,6 +90,8 @@ export default function CreateEnvironment() {
 
   const e = error || environmentsQuery.error;
 
+  const { showError, snackbar } = ErrorSnackbar();
+
   const [validPackages] = validatePackages(selectedPackages, packages)
 
   const runEnvironmentBuild = () => {
@@ -127,8 +130,9 @@ export default function CreateEnvironment() {
           });
         }
       })
-      .catch(() => {
+      .catch((error) => {
         console.error("Endpoint error");
+        showError(error);
         setEnvBuildResult({
           title: "Environment build failed",
           message: "some error",
@@ -141,6 +145,7 @@ export default function CreateEnvironment() {
 
   return <>
     {e && <div style={{ color: "red" }}>{e}</div>}
+    {snackbar}
     <Grid
       container
       direction="row"

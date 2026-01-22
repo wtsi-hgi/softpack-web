@@ -164,7 +164,6 @@ export default function RequestRecipe() {
 					message={requestResult[1]}
 					onClose={() => {
 						setRequestResult(null);
-						setInFlight(false);
 					}}
 				/>
 			)
