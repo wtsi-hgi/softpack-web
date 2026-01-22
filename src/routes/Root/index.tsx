@@ -18,6 +18,7 @@ import Menu from "../../components/Menu";
 
 import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackageDescription, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 import { compareEnvironments } from "../../strings";
+import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
@@ -41,6 +42,8 @@ const Root = () => {
     ? "Invalid username"
     : null;
 
+  const { showError, snackbar } = ErrorSnackbar();
+
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
     [loadRequestedRecipes, setLoadRequestRecipes] = useState({}),
     [refetchEnvironments, setRefetchEnvironments] = useState({}),
@@ -63,14 +66,21 @@ const Root = () => {
 
   const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
   useEffect(() => {
-    getBuildStatus().then(setBuildStatuses).catch(error => console.error(error));
+    getBuildStatus().then(setBuildStatuses).catch((error) => {
+      showError(error);
+      console.error(error);
+    }
+    );
   }, []);
 
   const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
   useEffect(() => {
     getPackages()
       .then(data => setPackageList({ data, error: "" }))
-      .catch(error => setPackageList({ data: packageList.data, error }));
+      .catch((error) => {
+        showError(error);
+        setPackageList({ data: packageList.data, error })
+      });
   }, []);
 
 
@@ -81,7 +91,11 @@ const Root = () => {
 
     getEnvironments()
       .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
-      .catch(error => setEnvironmentsList({ data: environmentsList.data, error }))
+      .catch((error) => {
+        showError(error);
+        console.error(error);
+        setEnvironmentsList({ data: environmentsList.data, error })
+      })
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
 
@@ -106,6 +120,7 @@ const Root = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         color="inherit"
       >
+        {snackbar}
         <Toolbar style={{ paddingLeft: "20px" }}>
           <Box display="contents" component={NavLink} to="/">
             <img

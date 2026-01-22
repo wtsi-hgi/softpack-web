@@ -106,21 +106,26 @@ export default function RequestRecipe() {
 				startIcon={<AddIcon />}
 				disabled={inFlight || disabled}
 				data-reason={inFlight ? "" : disabled ? [
-					[username === "", "Username"],
-					[name === "", "Name"],
-					[version === "", "Version"],
-					[url === "", "URL"],
-					[description === "", "Details"],
+					[username.trim() === "", "Username"],
+					[name.trim() === "", "Name"],
+					[version.trim() === "", "Version"],
+					[url.trim() === "", "URL"],
+					[description.trim() === "", "Details"],
 				].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 				onClick={() => {
 					setInFlight(true);
-					requestRecipe(name, version, url, description, username)
+					requestRecipe(name.trim(), version.trim(), url.trim(), description.trim(), username.trim())
 						.then(d => {
 							setRequestResult(["Recipe Requested", d["message"]]);
 							requested.push({ name, version, url, description, username });
 							updateRequested();
 						})
-						.catch(error => setRequestResult(["Error", error]));
+						.catch(error => {
+							setRequestResult(["Error", error])
+						})
+						.finally(() => {
+							setInFlight(false);
+						});
 				}}>
 				Request
 			</Button>
@@ -159,7 +164,6 @@ export default function RequestRecipe() {
 					message={requestResult[1]}
 					onClose={() => {
 						setRequestResult(null);
-						setInFlight(false);
 					}}
 				/>
 			)
