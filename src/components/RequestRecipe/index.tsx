@@ -1,12 +1,10 @@
 import { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import {
-	Alert,
 	Box,
 	Button,
 	Divider,
 	Grid,
-	Snackbar,
 	Stack,
 	TextField,
 	Typography,
@@ -19,6 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import { PopUpDialog } from "../CreateEnvironment/PopUpDialog";
 import { HelpIcon } from "../HelpIcon";
 import { RequestedRecipesContext, requestRecipe, UserContext } from "../../endpoints";
+import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 export default function RequestRecipe() {
 	const [requested, updateRequested] = useContext(RequestedRecipesContext),
@@ -31,14 +30,8 @@ export default function RequestRecipe() {
 		{ username } = useContext(UserContext),
 		disabled = username === "" || name === "" || version === "" || url === "" || description === "";
 
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [errorOpen, setErrorOpen] = useState(false);
+	const { showError, snackbar } = ErrorSnackbar();
 
-	const showError = (err: unknown, fallback = "Something went wrong") => {
-		const message = err instanceof Error ? err.message : fallback;
-		setErrorMessage(message);
-		setErrorOpen(true);
-	};
 
 	return <>
 		<Grid item xs={11}>
@@ -166,16 +159,7 @@ export default function RequestRecipe() {
 				</Table>
 			</>}
 		</Grid>
-		<Snackbar
-			open={errorOpen}
-			autoHideDuration={6000}
-			onClose={() => setErrorOpen(false)}
-			anchorOrigin={{ vertical: "top", horizontal: "center" }}
-		>
-			<Alert severity="error">
-				{errorMessage ?? "Unexpected error"}
-			</Alert>
-		</Snackbar>
+		{snackbar}
 		{
 			requestResult && (
 				<PopUpDialog

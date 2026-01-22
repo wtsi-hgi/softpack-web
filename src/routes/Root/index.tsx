@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
-import { Alert, InputAdornment, Snackbar, TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import { Tooltip } from '../../components/Tooltip';
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,6 +18,7 @@ import Menu from "../../components/Menu";
 
 import { BuildStatus, BuildStatusContext, Environment, EnvironmentsContext, getBuildStatus, getEnvironments, getGroups, getPackageDescription, getPackages, getRequestedRecipes, PackagesContext, PackageVersions, RequestedRecipe, RequestedRecipesContext, UserContext } from "../../endpoints";
 import { compareEnvironments } from "../../strings";
+import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 // getAvailableTags returns all tags, including duplicates, currently used by
 // the passed environments.
@@ -41,14 +42,8 @@ const Root = () => {
     ? "Invalid username"
     : null;
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [errorOpen, setErrorOpen] = useState(false);
+  const { showError, snackbar } = ErrorSnackbar();
 
-  const showError = (err: unknown, fallback = "Something went wrong") => {
-    const message = err instanceof Error ? err.message : fallback;
-    setErrorMessage(message);
-    setErrorOpen(true);
-  };
 
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
     [loadRequestedRecipes, setLoadRequestRecipes] = useState({}),
@@ -123,17 +118,7 @@ const Root = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         color="inherit"
       >
-        <Snackbar
-          open={errorOpen}
-          autoHideDuration={6000}
-          onClose={() => setErrorOpen(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity="error">
-            {errorMessage ?? "Unexpected error"}
-          </Alert>
-        </Snackbar>
-
+        {snackbar}
         <Toolbar style={{ paddingLeft: "20px" }}>
           <Box display="contents" component={NavLink} to="/">
             <img
