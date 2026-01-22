@@ -17,7 +17,6 @@ import TableRow from '@mui/material/TableRow';
 import { PopUpDialog } from "../CreateEnvironment/PopUpDialog";
 import { HelpIcon } from "../HelpIcon";
 import { RequestedRecipesContext, requestRecipe, UserContext } from "../../endpoints";
-import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 export default function RequestRecipe() {
 	const [requested, updateRequested] = useContext(RequestedRecipesContext),
@@ -29,25 +28,6 @@ export default function RequestRecipe() {
 		[inFlight, setInFlight] = useState(false),
 		{ username } = useContext(UserContext),
 		disabled = username === "" || name === "" || version === "" || url === "" || description === "";
-
-	const { showError, snackbar } = ErrorSnackbar();
-
-	const validateForm = () => {
-		if (!username.trim()) return "Username is required";
-		if (!name.trim()) return "Name is required";
-		if (!version.trim()) return "Version is required";
-		if (!url.trim()) return "URL is required";
-		if (!description.trim()) return "Details are required";
-
-		try {
-			new URL(url.trim());
-		} catch {
-			return "URL must be a valid URL";
-		}
-
-		return null;
-	};
-
 
 	return <>
 		<Grid item xs={11}>
@@ -126,21 +106,14 @@ export default function RequestRecipe() {
 				startIcon={<AddIcon />}
 				disabled={inFlight || disabled}
 				data-reason={inFlight ? "" : disabled ? [
-					[username === "", "Username"],
-					[name === "", "Name"],
-					[version === "", "Version"],
-					[url === "", "URL"],
-					[description === "", "Details"],
+					[username.trim() === "", "Username"],
+					[name.trim() === "", "Name"],
+					[version.trim() === "", "Version"],
+					[url.trim() === "", "URL"],
+					[description.trim() === "", "Details"],
 				].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 				onClick={() => {
-					const validationError = validateForm();
-					if (validationError) {
-						showError(new Error(validationError));
-						return;
-					}
-
 					setInFlight(true);
-
 					requestRecipe(name.trim(), version.trim(), url.trim(), description.trim(), username.trim())
 						.then(d => {
 							setRequestResult(["Recipe Requested", d["message"]]);
@@ -148,7 +121,6 @@ export default function RequestRecipe() {
 							updateRequested();
 						})
 						.catch(error => {
-							showError(error);
 							setRequestResult(["Error", error])
 						})
 						.finally(() => {
@@ -185,7 +157,6 @@ export default function RequestRecipe() {
 				</Table>
 			</>}
 		</Grid >
-		{snackbar}
 		{
 			requestResult && (
 				<PopUpDialog

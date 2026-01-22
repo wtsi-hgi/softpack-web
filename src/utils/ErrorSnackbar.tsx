@@ -16,7 +16,7 @@ export const ErrorSnackbar = () => {
         snackbar: (
             <Snackbar
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={60000}
                 onClose={() => setOpen(false)}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >
