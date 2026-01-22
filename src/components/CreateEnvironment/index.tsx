@@ -19,6 +19,7 @@ import { PopUpDialog } from "./PopUpDialog";
 import { validatePackages } from "./packageValidation";
 import { useNavigate } from "react-router-dom"
 import { createEnvironment, EnvironmentsContext, PackagesContext, RequestedRecipesContext, UserContext } from "../../endpoints";
+import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
@@ -53,6 +54,9 @@ export default function CreateEnvironment() {
   const [envBuildInFlight, setEnvBuildInFlight] = useState(false);
 
   const [hideInstructions, setHideInstructions] = useLocalStorage("clone-instructions-viewed", false);
+
+  const { showError, snackbar } = ErrorSnackbar();
+
 
   const navigate = useNavigate()
 
@@ -91,7 +95,34 @@ export default function CreateEnvironment() {
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 
+  const validateEnvironmentBuild = () => {
+    if (!name) return "Name is required";
+    if (!description) return "Description is required";
+
+    const expectedUserPath = `users/${username}`;
+    const folder = path.split("/")[1];
+
+    if (!folder) return "Invalid environment path";
+
+    if (path !== expectedUserPath && !groups.includes(folder)) {
+      return "You do not have permission to use this folder";
+    }
+
+    if (validPackages.length === 0) {
+      return "At least one package must be selected";
+    }
+
+    return null;
+  };
+
   const runEnvironmentBuild = () => {
+    const validationError = validateEnvironmentBuild();
+
+    if (validationError) {
+      showError(new Error(validationError));
+      return;
+    }
+
     setEnvBuildInFlight(true);
     createEnvironment(name, path, description, validPackages, username, tags)
       .then(({ message }) => {
@@ -127,7 +158,8 @@ export default function CreateEnvironment() {
           });
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        showError(err);
         console.error("Endpoint error");
         setEnvBuildResult({
           title: "Environment build failed",
@@ -141,6 +173,7 @@ export default function CreateEnvironment() {
 
   return <>
     {e && <div style={{ color: "red" }}>{e}</div>}
+    {snackbar}
     <Grid
       container
       direction="row"

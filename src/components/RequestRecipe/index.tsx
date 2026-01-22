@@ -32,6 +32,22 @@ export default function RequestRecipe() {
 
 	const { showError, snackbar } = ErrorSnackbar();
 
+	const validateForm = () => {
+		if (!username.trim()) return "Username is required";
+		if (!name.trim()) return "Name is required";
+		if (!version.trim()) return "Version is required";
+		if (!url.trim()) return "URL is required";
+		if (!description.trim()) return "Details are required";
+
+		try {
+			new URL(url.trim());
+		} catch {
+			return "URL must be a valid URL";
+		}
+
+		return null;
+	};
+
 
 	return <>
 		<Grid item xs={11}>
@@ -117,8 +133,15 @@ export default function RequestRecipe() {
 					[description === "", "Details"],
 				].reduce((t, v) => t + (v[0] ? "\n• " + v[1] : ""), "The following need completing:") : ""}
 				onClick={() => {
+					const validationError = validateForm();
+					if (validationError) {
+						showError(new Error(validationError));
+						return;
+					}
+
 					setInFlight(true);
-					requestRecipe(name, version, url, description, username)
+
+					requestRecipe(name.trim(), version.trim(), url.trim(), description.trim(), username.trim())
 						.then(d => {
 							setRequestResult(["Recipe Requested", d["message"]]);
 							requested.push({ name, version, url, description, username });
@@ -127,6 +150,9 @@ export default function RequestRecipe() {
 						.catch(error => {
 							showError(error);
 							setRequestResult(["Error", error])
+						})
+						.finally(() => {
+							setInFlight(false);
 						});
 				}}>
 				Request
@@ -158,7 +184,7 @@ export default function RequestRecipe() {
 					</TableBody>
 				</Table>
 			</>}
-		</Grid>
+		</Grid >
 		{snackbar}
 		{
 			requestResult && (

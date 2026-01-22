@@ -69,14 +69,18 @@ const Root = () => {
 
   const [buildStatuses, setBuildStatuses] = useState<BuildStatus | null>(null);
   useEffect(() => {
-    getBuildStatus().then(setBuildStatuses).catch(error => showError(error));
+    getBuildStatus().then(setBuildStatuses).catch((error) => {
+      showError(error);
+      console.error(error);
+    }
+    );
   }, []);
 
   const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
   useEffect(() => {
     getPackages()
       .then(data => setPackageList({ data, error: "" }))
-      .catch(error => {
+      .catch((error) => {
         showError(error);
         setPackageList({ data: packageList.data, error })
       });
@@ -90,8 +94,9 @@ const Root = () => {
 
     getEnvironments()
       .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
-      .catch(error => {
+      .catch((error) => {
         showError(error);
+        console.error(error);
         setEnvironmentsList({ data: environmentsList.data, error })
       })
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
