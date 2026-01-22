@@ -44,7 +44,6 @@ const Root = () => {
 
   const { showError, snackbar } = ErrorSnackbar();
 
-
   const [requested, setRequested] = useState<RequestedRecipe[]>([]),
     [loadRequestedRecipes, setLoadRequestRecipes] = useState({}),
     [refetchEnvironments, setRefetchEnvironments] = useState({}),

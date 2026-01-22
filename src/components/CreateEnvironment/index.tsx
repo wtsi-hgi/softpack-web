@@ -91,7 +91,6 @@ export default function CreateEnvironment() {
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 
-
   const runEnvironmentBuild = () => {
     setEnvBuildInFlight(true);
     createEnvironment(name, path, description, validPackages, username, tags)
