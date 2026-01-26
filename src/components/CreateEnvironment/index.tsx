@@ -84,13 +84,14 @@ export default function CreateEnvironment() {
     return packages;
   }, [data, requestedRecipes]);
 
+  const { showError, snackbar } = ErrorSnackbar();
+
   if (environmentsQuery.data.length === 0) {
     return <div>loading...</div>;
   }
 
   const e = error || environmentsQuery.error;
 
-  const { showError, snackbar } = ErrorSnackbar();
 
   const [validPackages] = validatePackages(selectedPackages, packages)
 
