@@ -97,7 +97,7 @@ function EnvironmentTable(props: EnvironmentTableProps) {
 
                 return (
                   <>
-                    <LinearProgress style={{ borderTopRightRadius: 4, borderTopLeftRadius: 4 }} />
+                    <LinearProgress style={{ borderTopRightRadius: "4px", borderTopLeftRadius: "4px" }} />
                     <div className="queue">
                       {estimate.isBuilding ? (
                         <>
