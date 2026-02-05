@@ -96,31 +96,32 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                 if (!estimate) return null;
 
                 return (
-                  <div className="queue">
-                    {estimate.isBuilding ? (
-                      <>
-                        <b>Build in progress</b>
-                        <LinearProgress variant="determinate"
-                          value={(estimate.elapsedSeconds / estimate.buildSeconds) * 100} style={{ borderTopRightRadius: 4, borderTopLeftRadius: 4 }} />
-                        <br />
-                        Running for {formatTime(estimate.elapsedSeconds)}
-                      </>
-                    ) : (
-                      <>
-                        <b>Queued</b>
-                        <br />
-                        {estimate.jobsAhead > 0 && (
-                          <>
-                            {estimate.jobsAhead} job{estimate.jobsAhead > 1 ? "s" : ""} ahead
-                            <br />
-                          </>
-                        )}
-                        Estimated start: {formatTime(estimate.queueSeconds)}
-                        <br />
-                        Estimated build time: {formatTime(estimate.buildSeconds)}
-                      </>
-                    )}
-                  </div>
+                  <>
+                    <LinearProgress style={{ borderTopRightRadius: 4, borderTopLeftRadius: 4 }} />
+                    <div className="queue">
+                      {estimate.isBuilding ? (
+                        <>
+                          <b>Build in progress</b>
+                          <br />
+                          Running for {formatTime(estimate.elapsedSeconds)}
+                        </>
+                      ) : (
+                        <>
+                          <b>Queued</b>
+                          <br />
+                          {estimate.jobsAhead > 0 && (
+                            <>
+                              {estimate.jobsAhead} job{estimate.jobsAhead > 1 ? "s" : ""} ahead
+                              <br />
+                            </>
+                          )}
+                          Estimated start: {formatTime(estimate.queueSeconds)}
+                          <br />
+                          Estimated build time: {formatTime(estimate.buildSeconds)}
+                        </>
+                      )}
+                    </div>
+                  </>
                 );
               })()}
             </li>
