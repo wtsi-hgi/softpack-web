@@ -99,7 +99,6 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   <div className="queue">
                     {estimate.isBuilding ? (
                       <>
-
                         <b>Build in progress</b>
                         <LinearProgress variant="determinate"
                           value={(estimate.elapsedSeconds / estimate.buildSeconds) * 100} style={{ borderTopRightRadius: 4, borderTopLeftRadius: 4 }} />
