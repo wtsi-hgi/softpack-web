@@ -16,13 +16,13 @@ import { useContext, useState } from "react";
 import * as semver from "semver";
 
 import { compareStrings, parseEnvironmentToNamePathAndVersion, stripPackageSearchPunctuation } from "../../../strings";
-import { humanize } from "../../../humanize";
 import EnvironmentDrawer, { recipeDescriptionContext } from "../Drawer";
 import { HelpIcon } from "../../HelpIcon";
 import EnvironmentTable from "../EnvironmentTable";
 import { useSearchParams } from "react-router-dom";
 import CreateEnvPrompt from "../CreateEnvPrompt";
 import { BuildStatusContext, Environment, EnvironmentsContext, Package, PackagesContext, UserContext } from "../../../endpoints";
+import { formatTime } from "../utils/build";
 
 function arrayEqual<T>(a: T[], b: T[]): boolean {
   return a.length === b.length && a.every((val, idx) => val === b[idx]);
@@ -73,7 +73,8 @@ const EnvironmentList = () => {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
-  const environmentsInProgress = data.reduce((c, e) => c + +(e.state == "queued"), 0);
+  const queuedCount = buildStatuses?.queue.length ?? 0;
+  const buildingCount = buildStatuses?.building.length ?? 0;
 
   let filteredEnvironments = data.slice().map(env => Object.assign(
     Object.assign({}, env),
@@ -334,16 +335,22 @@ const EnvironmentList = () => {
         {filteredEnvironments.some((e) => e.state === "queued") ||
           ignoreReady ? (
           <Alert severity="info">
-            There are currently {environmentsInProgress} environments in
-            the build queue. Average wait time:{" "}
-            {buildStatuses != null ? humanize(buildStatuses.avg * 1000) : "unknown"}.
+            There are currently <b>{queuedCount}</b> environments waiting to build
+            and <b>{buildingCount}</b> building.
+            <br />
+            Average build time:{" "}
+            <b>{buildStatuses?.avgBuildSeconds != null
+              ? formatTime(buildStatuses.avgBuildSeconds)
+              : "unknown"}
+            </b>
           </Alert>
+
         ) : null}
       </Box>
       <Container id="environment_table">
         {filteredEnvironments.length > 0 ? (
           <EnvironmentTable
-            buildStatuses={buildStatuses?.statuses ?? null}
+            buildStatuses={buildStatuses}
             environments={filteredEnvironments}
             highlightPackages={highlightPackages}
             setSelectedEnv={(env: Environment) => {

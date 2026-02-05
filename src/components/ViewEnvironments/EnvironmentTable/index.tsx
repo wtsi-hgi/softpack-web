@@ -1,17 +1,16 @@
 import { isInterpreter, recipeDescriptionContext, wrapIfInterpreted } from "../Drawer";
 import { useContext } from "react";
-
 import { Masonry } from "@mui/lab";
-import { LinearProgress } from "@mui/material";
 import { Tooltip } from '../../Tooltip';
-import { humanize } from "../../../humanize";
-import { Environment, Package } from "../../../endpoints";
+import { BuildStatus, Environment, Package } from "../../../endpoints";
+import { estimateWaitForEnv, formatTime } from "../utils/build";
+import { LinearProgress } from "@mui/material";
 
 type EnvironmentTableProps = {
   environments: Environment[];
   highlightPackages?: Package[];
   setSelectedEnv: (v: Environment) => void;
-  buildStatuses: Record<string, string> | null;
+  buildStatuses: BuildStatus | null;
 };
 
 function toTitle(s: string) {
@@ -92,27 +91,39 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                   "Version Conflict: Try relaxing which versions you've specified." :
                   "Build Error: Contact your softpack administrator."}</div>
               }
-              {env.state === "queued" && (
-                <>
-                  <LinearProgress style={{ borderTopRightRadius: "4px", borderTopLeftRadius: "4px" }} />
+              {props.buildStatuses && (() => {
+                const estimate = estimateWaitForEnv(`${env.path}/${env.name}`, props.buildStatuses!, 3);
+                if (!estimate) return null;
+
+                return (
                   <div className="queue">
-                    Queued:{" "}
-                    {humanize(
-                      (props.buildStatuses?.[env.name]
-                        ? Date.parse(props.buildStatuses[env.name])
-                        : Date.now()) - env.created * 1000,
-                    )}
-                    {props.buildStatuses?.[env.name] ? (
+                    {estimate.isBuilding ? (
                       <>
-                        ; Building:{" "}
-                        {humanize(
-                          Date.now() - Date.parse(props.buildStatuses[env.name])
-                        )}
+
+                        <b>Build in progress</b>
+                        <LinearProgress variant="determinate"
+                          value={(estimate.elapsedSeconds / estimate.buildSeconds) * 100} style={{ borderTopRightRadius: 4, borderTopLeftRadius: 4 }} />
+                        <br />
+                        Running for {formatTime(estimate.elapsedSeconds)}
                       </>
-                    ) : null}
+                    ) : (
+                      <>
+                        <b>Queued</b>
+                        <br />
+                        {estimate.jobsAhead > 0 && (
+                          <>
+                            {estimate.jobsAhead} job{estimate.jobsAhead > 1 ? "s" : ""} ahead
+                            <br />
+                          </>
+                        )}
+                        Estimated start: {formatTime(estimate.queueSeconds)}
+                        <br />
+                        Estimated build time: {formatTime(estimate.buildSeconds)}
+                      </>
+                    )}
                   </div>
-                </>
-              )}
+                );
+              })()}
             </li>
           );
         })}
