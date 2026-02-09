@@ -45,11 +45,23 @@
 }
 
 .interpreter.selected {
-  background: repeating-linear-gradient(45deg, #5569ff, #5569ff 10px, #5559ee 10px, #5559ee 20px);
+  background: repeating-linear-gradient(
+    45deg,
+    #5569ff,
+    #5569ff 10px,
+    #5559ee 10px,
+    #5559ee 20px
+  );
 }
 
 .interpreter {
-  background: repeating-linear-gradient(45deg, #fff, #fff 10px, #eee 10px, #eee 20px);
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 10px,
+    #eee 10px,
+    #eee 20px
+  );
 }
 
 #about {
@@ -110,7 +122,7 @@ summary {
 }
 
 #environments > li:hover {
-  box-shadow: rgba(159, 162, 191, 0.90) 0 0 20px;
+  box-shadow: rgba(159, 162, 191, 0.9) 0 0 20px;
   transition: box-shadow 50ms ease-out;
 }
 
@@ -216,7 +228,8 @@ summary {
   overflow-y: auto;
 }
 
-#environments > li > ul:nth-of-type(3) li, .packages li {
+#environments > li > ul:nth-of-type(3) li,
+.packages li {
   font-size: 0.8125rem;
   color: #5569ff;
   border: 1px solid rgba(85, 105, 255, 0.7);
@@ -253,6 +266,7 @@ summary {
   line-height: 1.43;
   background-color: rgb(229, 246, 253);
   display: flex;
+  flex-direction: column;
   padding: 14px 16px;
   color: rgb(51, 194, 255);
 }
@@ -295,27 +309,29 @@ summary {
 }
 
 button:disabled[data-reason]:not([data-reason=""]) {
-	pointer-events: auto !important;
-	position: relative;
+  pointer-events: auto !important;
+  position: relative;
 }
 
 button:disabled[data-reason]:not([data-reason=""]):hover:after {
-	content: attr(data-reason);
-	position: absolute;
-	top: 0;
-	left: 0;
-	color: rgba(34, 51, 84, 0.7);
-	transform: translateX(-100%) translateY(-100%);
-	text-transform: none;
-	min-width: 20em;
-	text-align: left;
-	white-space: pre-wrap;
-	padding: 1em 2em;
-	margin: 8px;
-	background-color: #fbfbfc;
-	box-shadow: rgba(159, 162, 191, 0.18) 0px 9px 16px, rgba(159, 162, 191, 0.32) 0px 2px 2px;
-	border-radius: 10px;
-	z-index: 100;
+  content: attr(data-reason);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: rgba(34, 51, 84, 0.7);
+  transform: translateX(-100%) translateY(-100%);
+  text-transform: none;
+  min-width: 20em;
+  text-align: left;
+  white-space: pre-wrap;
+  padding: 1em 2em;
+  margin: 8px;
+  background-color: #fbfbfc;
+  box-shadow:
+    rgba(159, 162, 191, 0.18) 0px 9px 16px,
+    rgba(159, 162, 191, 0.32) 0px 2px 2px;
+  border-radius: 10px;
+  z-index: 100;
 }
 
 [data-tooltip]:not(.packageChip) svg {

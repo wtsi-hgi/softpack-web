@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Masonry } from "@mui/lab";
 import { Tooltip } from '../../Tooltip';
 import { BuildStatus, Environment, Package } from "../../../endpoints";
-import { estimateWaitForEnv, formatTime } from "../utils/build";
+import { estimateWaitForEnv, formatTime, ordinal } from "../utils/build";
 import { LinearProgress } from "@mui/material";
 
 type EnvironmentTableProps = {
@@ -102,22 +102,21 @@ function EnvironmentTable(props: EnvironmentTableProps) {
                       {estimate.isBuilding ? (
                         <>
                           <b>Build in progress</b>
-                          <br />
-                          Running for {formatTime(estimate.elapsedSeconds)}
+                          <div>Running for {formatTime(estimate.elapsedSeconds)}</div>
+
                         </>
                       ) : (
                         <>
                           <b>Queued</b>
-                          <br />
-                          {estimate.jobsAhead > 0 && (
-                            <>
-                              {estimate.jobsAhead} job{estimate.jobsAhead > 1 ? "s" : ""} ahead
-                              <br />
-                            </>
-                          )}
-                          Estimated start: {formatTime(estimate.queueSeconds)}
-                          <br />
-                          Estimated build time: {formatTime(estimate.buildSeconds)}
+                          <div>
+                            {ordinal(estimate.jobsAhead + 1)} in queue
+                          </div>
+                          <div>
+                            Estimated start: {formatTime(estimate.queueSeconds)}
+                          </div>
+                          <div>
+                            Estimated build time: {formatTime(estimate.buildSeconds)}
+                          </div>
                         </>
                       )}
                     </div>
