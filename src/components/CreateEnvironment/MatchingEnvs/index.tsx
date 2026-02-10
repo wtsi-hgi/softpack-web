@@ -45,7 +45,7 @@ export default function matchingEnvs(props: MatchingEnvsParams) {
             </Typography>
           </Box>
           <EnvironmentTable
-            buildStatuses={buildStatuses?.statuses ?? null}
+            buildStatuses={buildStatuses}
             environments={matchingEnvironments}
             highlightPackages={props.selectedPackages}
             setSelectedEnv={props.setSelectedEnv}
