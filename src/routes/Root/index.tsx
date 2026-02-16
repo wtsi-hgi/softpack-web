@@ -79,7 +79,10 @@ const Root = () => {
       .then(data => setPackageList({ data, error: "" }))
       .catch((error) => {
         showError(error);
-        setPackageList({ data: packageList.data, error })
+        setPackageList(prev => ({
+          data: prev.data,
+          error: ""
+        }));
       });
   }, []);
 
@@ -94,7 +97,10 @@ const Root = () => {
       .catch((error) => {
         showError(error);
         console.error(error);
-        setEnvironmentsList({ data: environmentsList.data, error })
+        setEnvironmentsList(prev => ({
+          data: prev.data,
+          error: ""
+        }));
       })
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
@@ -106,10 +112,18 @@ const Root = () => {
   useEffect(() => {
     clearTimeout(recipesTimer);
 
-    getRequestedRecipes()
-      .then(r => setRequested(r))
-      .catch(error => console.error(error))
-      .finally(() => recipesTimer = setTimeout(updateRequestedRecipes, 10000));
+    const loadRecipes = async () => {
+      try {
+        const r = await getRequestedRecipes();
+        setRequested(r);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        recipesTimer = setTimeout(updateRequestedRecipes, 10000);
+      }
+    };
+
+    loadRecipes();
   }, [loadRequestedRecipes]);
 
   return (
