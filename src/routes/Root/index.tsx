@@ -79,10 +79,6 @@ const Root = () => {
       .then(data => setPackageList({ data, error: "" }))
       .catch((error) => {
         showError(error);
-        setPackageList(prev => ({
-          data: prev.data,
-          error: ""
-        }));
       });
   }, []);
 
@@ -97,10 +93,6 @@ const Root = () => {
       .catch((error) => {
         showError(error);
         console.error(error);
-        setEnvironmentsList(prev => ({
-          data: prev.data,
-          error: ""
-        }));
       })
       .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
   }, [refetchEnvironments]);
