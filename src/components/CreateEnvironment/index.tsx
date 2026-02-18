@@ -23,7 +23,7 @@ import { ErrorSnackbar } from "../../utils/ErrorSnackbar";
 
 // CreateEnvironment displays the 'create environment' page.
 export default function CreateEnvironment() {
-  const { data, error } = useContext(PackagesContext);
+  const packagesArray = useContext(PackagesContext);
   const [environmentsQuery] = useContext(EnvironmentsContext);
   const [envBuildResult, setEnvBuildResult] = useState({
     title: "",
@@ -65,10 +65,10 @@ export default function CreateEnvironment() {
     setSelectedPackages([])
   }
 
-  const packages = useMemo(() => {
+  const packagesMap = useMemo(() => {
     const packages = new Map<string, string[]>();
 
-    data.forEach(({ name, versions }) => {
+    packagesArray.forEach(({ name, versions }) => {
       packages.set(name, [""].concat(versions));
     });
 
@@ -82,18 +82,15 @@ export default function CreateEnvironment() {
     });
 
     return packages;
-  }, [data, requestedRecipes]);
+  }, [packagesArray, requestedRecipes]);
 
   const { showError, snackbar } = ErrorSnackbar();
 
-  if (environmentsQuery.data.length === 0) {
+  if (environmentsQuery.length === 0) {
     return <div>loading...</div>;
   }
 
-  const e = error || environmentsQuery.error;
-
-
-  const [validPackages] = validatePackages(selectedPackages, packages)
+  const [validPackages] = validatePackages(selectedPackages, packagesMap)
 
   const runEnvironmentBuild = () => {
     setEnvBuildInFlight(true);
@@ -145,7 +142,6 @@ export default function CreateEnvironment() {
   const disabled = envBuildInFlight || name.length === 0 || description.length === 0 || path.length === 0 || (path !== "users/" + username && !groups.includes(path.split("/")[1])) || validPackages.length === 0;
 
   return <>
-    {e && <div style={{ color: "red" }}>{e}</div>}
     {snackbar}
     <Grid
       container
@@ -203,7 +199,7 @@ export default function CreateEnvironment() {
               setPath={setPath}
             />
             <PackageMatcher
-              packages={packages}
+              packages={packagesMap}
               selectedPackages={selectedPackages}
               setSelectedPackages={setSelectedPackages}
               runEnvironmentBuild={runEnvironmentBuild}

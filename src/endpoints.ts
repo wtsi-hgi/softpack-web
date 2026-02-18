@@ -55,14 +55,12 @@ export type BuildStatus = {
   }[];
 };
 
-export const PackagesContext = createContext<{
-  data: PackageVersions[];
-  error: string;
-}>({ data: [], error: "" });
+export const PackagesContext = createContext<PackageVersions[]>([]);
 
-export const EnvironmentsContext = createContext<
-  [{ data: Environment[]; error: string }, () => void]
->([{ data: [], error: "" }, () => {}]);
+export const EnvironmentsContext = createContext<[Environment[], () => void]>([
+  [],
+  () => {},
+]);
 
 export const UserContext = createContext<{
   username: string;
