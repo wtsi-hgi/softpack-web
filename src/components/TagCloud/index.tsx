@@ -22,18 +22,13 @@ export const TagCloud = () => {
     [],
   );
 
-  if (!environmentsQuery.data?.length) {
+  if (!environmentsQuery?.length) {
     return <></>;
   }
 
-  if (environmentsQuery.error) {
-    return (
-      <div style={{ color: "red" }}>{environmentsQuery.error}</div>
-    );
-  }
 
   const tagCounts: Record<string, number> = {};
-  environmentsQuery?.data.forEach((env) => {
+  environmentsQuery?.forEach((env) => {
     env.tags.forEach((tag) => {
       if (!Object.hasOwn(tagCounts, tag)) {
         tagCounts[tag] = 0;

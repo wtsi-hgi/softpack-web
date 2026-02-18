@@ -73,43 +73,55 @@ const Root = () => {
     );
   }, []);
 
-  const [packageList, setPackageList] = useState<{ data: PackageVersions[], error: string }>({ data: [], error: "" });
+  const [packageList, setPackageList] = useState<PackageVersions[]>([]);
   useEffect(() => {
     getPackages()
-      .then(data => setPackageList({ data, error: "" }))
+      .then(data => setPackageList(data))
       .catch((error) => {
         showError(error);
-        setPackageList({ data: packageList.data, error })
       });
   }, []);
 
 
-  const [environmentsList, setEnvironmentsList] = useState<{ data: Environment[], error: string }>({ data: [], error: "" });
+  const [environmentsList, setEnvironmentsList] = useState<Environment[]>([]);
 
   useEffect(() => {
     clearTimeout(environmentsTimer);
 
-    getEnvironments()
-      .then(data => setEnvironmentsList({ data: data.sort((a, b) => compareEnvironments(a, b)), error: "" }))
-      .catch((error) => {
-        showError(error);
+    const loadEnvironments = async () => {
+      try {
+        const data = await getEnvironments();
+        setEnvironmentsList(data.sort((a, b) => compareEnvironments(a, b)));
+      } catch (error) {
         console.error(error);
-        setEnvironmentsList({ data: environmentsList.data, error })
-      })
-      .finally(() => environmentsTimer = setTimeout(updateEnvironments, 30000));
+        showError(error);
+      } finally {
+        environmentsTimer = setTimeout(updateEnvironments, 30000);
+      }
+    };
+
+    loadEnvironments();
   }, [refetchEnvironments]);
 
   const availableTags = [
-    ...new Set(getAvailableTags(environmentsList.data)),
+    ...new Set(getAvailableTags(environmentsList)),
   ];
 
   useEffect(() => {
     clearTimeout(recipesTimer);
 
-    getRequestedRecipes()
-      .then(r => setRequested(r))
-      .catch(error => console.error(error))
-      .finally(() => recipesTimer = setTimeout(updateRequestedRecipes, 10000));
+    const loadRecipes = async () => {
+      try {
+        const r = await getRequestedRecipes();
+        setRequested(r);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        recipesTimer = setTimeout(updateRequestedRecipes, 10000);
+      }
+    };
+
+    loadRecipes();
   }, [loadRequestedRecipes]);
 
   return (

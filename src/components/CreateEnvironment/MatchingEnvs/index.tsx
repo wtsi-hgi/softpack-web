@@ -15,17 +15,14 @@ type MatchingEnvsParams = {
 // program should look like, as it informs users in real-time that they
 // environment they are trying to create already exists.
 export default function matchingEnvs(props: MatchingEnvsParams) {
-  const [data] = useContext(EnvironmentsContext);
+  const [environments] = useContext(EnvironmentsContext);
   const buildStatuses = useContext(BuildStatusContext);
 
-  if (data.data.length === 0) {
+  if (environments.length === 0) {
     return <></>;
   }
-  if (data.error) {
-    return data.error;
-  }
 
-  const matchingEnvironments = data.data.filter((e) =>
+  const matchingEnvironments = environments.filter((e) =>
     props.selectedPackages.every((pkg) =>
       e.packages.some(
         envPkg =>

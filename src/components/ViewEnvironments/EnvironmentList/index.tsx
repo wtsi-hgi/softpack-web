@@ -30,9 +30,9 @@ function arrayEqual<T>(a: T[], b: T[]): boolean {
 
 // EnvironmentList displays the 'view environments' page of the program.
 const EnvironmentList = () => {
-  const [{ data, error }] = useContext(EnvironmentsContext);
+  const [environmentsList] = useContext(EnvironmentsContext);
   const buildStatuses = useContext(BuildStatusContext);
-  const { data: packages } = useContext(PackagesContext);
+  const packages = useContext(PackagesContext);
   const [filter, setFilter] = useState("");
   const [filterText, setFilterText] = useState("");
   const [filterUserText, setFilterUserText] = useState("");
@@ -69,14 +69,14 @@ const EnvironmentList = () => {
   const [recipeDescriptions, getRecipeDescription] = useContext(recipeDescriptionContext);
 
 
-  if (data.length === 0) {
+  if (environmentsList.length === 0) {
     return <Box width="100%" height="300px" lineHeight="300px" textAlign="center"><CircularProgress /></Box>;
   }
 
   const queuedCount = buildStatuses?.queue.length ?? 0;
   const buildingCount = buildStatuses?.building.length ?? 0;
 
-  let filteredEnvironments = data.slice().map(env => Object.assign(
+  let filteredEnvironments = environmentsList.slice().map(env => Object.assign(
     Object.assign({}, env),
     {
       "packages": env.packages.toSpliced(0, 0, ...[
@@ -163,11 +163,11 @@ const EnvironmentList = () => {
   }
 
   const searchEnv = searchParams.get("envId")
-  const selectedEnv = data.find((e) => `${e.path}/${e.name}` === searchEnv)
+  const selectedEnv = environmentsList.find((e) => `${e.path}/${e.name}` === searchEnv)
   const allGroupsSet = new Set<string>();
   const allUsersSet = new Set<string>();
   const allTagsSet = new Set<string>();
-  data.map((env) => {
+  environmentsList.map((env) => {
     if (env.path.startsWith("users/")) {
       allUsersSet.add(env.path.split("/")[1]);
     } else {
@@ -181,7 +181,7 @@ const EnvironmentList = () => {
 
   return (
     <>
-      {(error || !data) && <div style={{ color: "red" }}>{error || "Unknown error"}</div>}
+      {(!environmentsList) && <div style={{ color: "red" }}>{"Unknown error"}</div>}
       <Box
         style={{ margin: "2em", padding: "0.5em", width: "calc(100% - 4em)" }}
       >
